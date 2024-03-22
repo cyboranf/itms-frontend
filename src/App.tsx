@@ -5,6 +5,7 @@ import { Home } from "./views/home";
 import { SignIn } from "./views/sign-in";
 import "./scss/index.scss";
 import ScrollToTop from "./hooks/scroll-to-top";
+import { SignUp, SignUp2 } from "./views/sign-up";
 
 export const Layout = () => {
 	return (
@@ -32,6 +33,14 @@ const router = createHashRouter([
 	{
 		path: "/login",
 		element: <SignIn />,
+	},
+	{
+		path: "/register",
+		element: <SignUp />,
+	},
+	{
+		path: "/register2",
+		element: <SignUp2 />,
 	},
 ]);
 
