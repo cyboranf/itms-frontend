@@ -45,21 +45,6 @@
     .form-field {
         margin-top: 20px;
 
-        input[type="text"],
-        input[type="password"] {
-            width: calc(100% - 1.5rem);
-            padding: 12px;
-            border: 1px solid #CCC;
-            border-radius: 30px;
-            font-size: 1rem;
-            color: #6F6F6F;
-        }
-
-        input::placeholder {
-            color: #AAA;
-        }
-
-
         select {
             width: calc(100% + 1.0rem);
             padding: 12px;
