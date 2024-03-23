@@ -8,6 +8,7 @@ export const Home = () => {
 		<div>
 			<ExampleComponent />
 			<button onClick={() => navigate("/login")}>test to signin</button>
+			<button onClick={() => navigate("/register")}>test to signup</button>
 		</div>
 	);
 };
