@@ -23,9 +23,9 @@ const SignUp = () => {
 		watch,
 		setValue,
 		control,
-    trigger,
-		formState: { errors },
-	} = useForm<RegisterValuesTypes>();
+		trigger,
+		formState: { errors, isSubmitted },
+	} = useForm<RegisterValuesTypes>({ mode: "all", criteriaMode: 'all', });
 
 	const onSubmit = async ({
 		username,
@@ -57,32 +57,35 @@ const SignUp = () => {
 	};
 
 	const passwordValue = watch("password");
-
+	
 	return (
 		<div className='signin-container'>
 			<div className='signin-logo'>
 				<img src={humanLogo} alt='Human Logo' />
 			</div>
-			{currentStep === 0 && (
-				<SignUpForm
-					register={register}
-					setCurrentStep={setCurrentStep}
-					setValue={setValue}
-					roleOptions={roleOptions}
-					passwordValue={passwordValue}
-					errors={errors}
-          trigger={trigger}
-				/>
-			)}
-			{currentStep === 1 && (
-				<SignUpForm2
-					register={register}
-					setCurrentStep={setCurrentStep}
-					errors={errors}
-          handleSubmit={handleSubmit}
-          onSubmit={onSubmit}
-				/>
-			)}
+				{currentStep === 0 && (
+					<SignUpForm
+						register={register}
+						setCurrentStep={setCurrentStep}
+						setValue={setValue}
+						roleOptions={roleOptions}
+						passwordValue={passwordValue}
+						errors={errors}
+						trigger={trigger}
+						control={control}
+						watch={watch}
+						isSubmitted={isSubmitted}
+					/>
+				)}
+				{currentStep === 1 && (
+					<SignUpForm2
+						register={register}
+						setCurrentStep={setCurrentStep}
+						errors={errors}
+						handleSubmit={handleSubmit}
+						onSubmit={onSubmit}
+					/>
+				)}
 			<div className='signin-footer'>
 				<img src={logo} alt='Logo' className='footer-logo' />
 			</div>

@@ -1,11 +1,12 @@
 import "./sign-up-form.scss";
 import Select from "react-select";
+import { useEffect, useState } from "react";
 import Input from "../../components/input/input";
 import { FieldErrors, UseFormRegister, UseFormSetValue, UseFormTrigger } from "react-hook-form";
 import { RegexpValidators } from "../../utils/reg-exp";
 import { RegisterValuesTypes } from "../../service/auth/types";
 import { SetStateAction } from "react";
-import { Controller } from 'react-hook-form';
+import { Controller, Control } from "react-hook-form";
 import { useNavigate } from "react-router-dom";
 
 type SignUpFormProps = {
@@ -16,6 +17,9 @@ type SignUpFormProps = {
 	setCurrentStep: React.Dispatch<SetStateAction<number>>;
 	passwordValue: string;
 	trigger: UseFormTrigger<FieldErrors>;
+	control: Control<T>;
+	watch: any;
+	isSubmitted: boolean;
 };
 
 export const SignUpForm: React.FC<SignUpFormProps> = ({
@@ -26,24 +30,29 @@ export const SignUpForm: React.FC<SignUpFormProps> = ({
 	passwordValue,
 	setCurrentStep,
 	trigger,
+	control,
+	watch,
+	isSubmitted,
 }) => {
 	const navigate = useNavigate();
+	const [wasSubmitted, setWasSubmitted] = useState(false);
 
-	const validateAndGoNext = async () => {
+	const validateAndGoNext = async (e) => {
+		e.preventDefault();
 		const isFirstStepValid = await trigger(["username", "email", "password", "confirm_password", "role"]);
 
 		console.log(errors);
 
-		if (isFirstStepValid) setCurrentStep(1);
+		if (isFirstStepValid) {
+			setCurrentStep(1);
+		}
 	};
-
-	console.log("X?");
 
 	return (
 		<div className='signin-form-container'>
 			<div className='signin-form'>
 				<h1>Create account</h1>
-				<form>
+				<form onSumbit={validateAndGoNext}>
 					<Input
 						placeholder='Username'
 						register={register("username", {
@@ -55,7 +64,7 @@ export const SignUpForm: React.FC<SignUpFormProps> = ({
 							},
 							required: "Required",
 						})}
-						error={errors}
+						error={wasSubmitted && errors}
 					/>
 					<Input
 						placeholder='Email'
@@ -66,19 +75,19 @@ export const SignUpForm: React.FC<SignUpFormProps> = ({
 							},
 							required: "Required",
 						})}
-						error={errors}
+						error={wasSubmitted && errors}
 					/>
 					<Input
 						type='password'
 						placeholder='Password'
 						register={register("password", {
 							validate: {
-								digits: (value) => RegexpValidators.PASSWORD_NUMBER.test(value),
-								specialChar: (value) => RegexpValidators.SPECIAL_CHARACTERS.test(value),
+								digits: (value) => RegexpValidators.PASSWORD_NUMBER.test(value) || "Must contain at least one digit",
+								specialChar: (value) => RegexpValidators.SPECIAL_CHARACTERS.test(value) || "Must contain at least one special character",
 							},
 							required: "Required",
 						})}
-						error={errors}
+						error={wasSubmitted && errors}
 					/>
 
 					<Input
@@ -92,26 +101,40 @@ export const SignUpForm: React.FC<SignUpFormProps> = ({
 							},
 							required: "Required",
 						})}
-						error={errors}
+						error={wasSubmitted && errors}
 					/>
 
 					<div className='singin-form__select'>
-						<Controller>
-							<Select
-								className='category-list__select category-list__select--wider'
-								inputId='companies'
-								options={roleOptions}
-								placeholder='Role'
-								onChange={(e) => setValue("role", e?.value || "")}
-							/>
-							{errors.role && <span>{errors.role.message}</span>}
-						</Controller>
+						<Controller
+							control={control}
+							name='role'
+							rules={{
+								required: "Role is required.", // Simply checking if role is present
+							}}
+							render={({ onChange, value, name, ref, field }) => (
+								<Select
+									ref={ref}
+									className='category-list__select category-list__select--wider'
+									inputId='companies'
+									options={roleOptions}
+									placeholder='Role'
+									value={roleOptions.find((c) => c.value === value)}
+									onChange={(val) => field.onChange(val.value)}
+								/>
+							)}
+						></Controller>
+						{wasSubmitted && errors.role && (
+							<div className='signin-form__error'>
+								<span>{errors.role.message}</span>{" "}
+							</div>
+						)}
 					</div>
 
 					<div className='form-field form-field-break'></div>
 					<button
-						onClick={() => {
-							validateAndGoNext();
+						onClick={(e) => {
+							setWasSubmitted(true);
+							validateAndGoNext(e);
 						}}
 					>
 						Next

@@ -4,6 +4,7 @@ import "./sign-up-form.scss";
 import { FieldErrors, UseFormHandleSubmit, UseFormRegister } from "react-hook-form";
 import { RegisterValuesTypes } from "../../service/auth/types";
 import { SetStateAction } from "react";
+import { RegexpValidators } from "../../utils/reg-exp";
 import Input from "../../components/input/input";
 type SignUpForm2Props = {
 	register: UseFormRegister<RegisterValuesTypes>;
@@ -48,8 +49,10 @@ export const SignUpForm2: React.FC<SignUpForm2Props> = ({
 					<Input
 						placeholder='Pesel'
 						register={register("pesel", {
-							minLength: 11,
-							maxLength: 11,
+							pattern: {
+								value: RegexpValidators.PESEL,
+								message: "Pesel must be 11 digits long",
+							},
 							required: "Required",
 						})}
 						error={errors}
@@ -58,8 +61,10 @@ export const SignUpForm2: React.FC<SignUpForm2Props> = ({
 					<Input
 						placeholder='Tel. Number'
 						register={register("phone_number", {
-							minLength: 9,
-							maxLength: 9,
+							pattern: {
+								value: RegexpValidators.PHONE_NUMBER,
+								message: "Tel. Number must be 9 digits long",
+							},
 							required: "Required",
 						})}
 						error={errors}

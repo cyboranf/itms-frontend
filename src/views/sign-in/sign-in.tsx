@@ -57,10 +57,6 @@ export const SignIn = () => {
 							register={register("password", {
 								minLength: 5,
 								maxLength: 50,
-								pattern: {
-									value: RegexpValidators.SPECIAL_CHARACTERS,
-									message: "Bad email form",
-								},
 								required: "Required",
 							})}
 							error={errors}
