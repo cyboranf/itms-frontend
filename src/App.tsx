@@ -3,6 +3,8 @@ import { Navbar } from "./components/navbar";
 import { Footer } from "./components/footer";
 import { Home } from "./views/home";
 import { SignIn } from "./views/sign-in";
+import {AdminPanel} from "./views/admin-panel/admin-users"
+import {AdminRole} from "./views/admin-panel/admin-roles"
 import "./scss/index.scss";
 import ScrollToTop from "./hooks/scroll-to-top";
 import SignUp from "./views/sign-up-main/sign-up-main";
@@ -38,7 +40,14 @@ const router = createHashRouter([
 		path: "/register",
 		element: <SignUp />,
 	},
-
+	{
+		path: "/users",
+		element: <AdminPanel />,
+	},
+	{
+		path: "/roles",
+		element: <AdminRole />,
+	},
 ]);
 
 function App() {
