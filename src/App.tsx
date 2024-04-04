@@ -10,6 +10,8 @@ import {AdminItems} from "./views/admin-panel/admin-items"
 import "./scss/index.scss";
 import ScrollToTop from "./hooks/scroll-to-top";
 import SignUp from "./views/sign-up-main/sign-up-main";
+import { AdminTask } from "./views/admin-panel/admin-tasks";
+import { AdminDoTask } from "./views/admin-panel/admin-add-task";
 
 export const Layout = () => {
 	return (
@@ -17,7 +19,7 @@ export const Layout = () => {
 			<div className='layout'>
 				<Navbar />
 				<Outlet />
-				<Footer />
+				{/* <Footer /> */}
 			</div>
 		</ScrollToTop>
 	);
@@ -57,6 +59,19 @@ const router = createHashRouter([
 	{
 		path: "/items",
 		element: <AdminItems />,
+
+		path: "/",
+		element: <Layout />,
+		children: [
+			{
+				path: "/tasks",
+				element: <AdminTask />,
+			},
+		],
+	},
+	{
+		path: "/add-task",
+		element: <AdminDoTask />,
 	},
 ]);
 
