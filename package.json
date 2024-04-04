@@ -9,6 +9,16 @@
     "preview": "vite preview"
   },
   "dependencies": {
+    "@ant-design/icons": "^5.3.6",
+    "@dnd-kit/core": "^6.1.0",
+    "@emotion/react": "^11.11.4",
+    "@emotion/styled": "^11.11.5",
+    "@mui/icons-material": "^5.15.14",
+    "@mui/material": "^5.15.14",
+    "@mui/styled-engine-sc": "^6.0.0-alpha.18",
+    "@mui/x-data-grid": "^7.1.0",
+    "@mui/x-data-grid-generator": "^7.0.0",
+    "antd": "^5.16.0",
     "axios": "^1.6.8",
     "clsx": "^2.1.0",
     "react": "^18.2.0",
@@ -16,7 +26,8 @@
     "react-hook-form": "^7.51.1",
     "react-router-dom": "^6.22.3",
     "react-select": "^5.8.0",
-    "sass": "^1.72.0"
+    "sass": "^1.72.0",
+    "styled-components": "^6.1.8"
   },
   "devDependencies": {
     "@types/react": "^18.2.64",
@@ -30,7 +41,7 @@
     "eslint-plugin-react-hooks": "^4.6.0",
     "eslint-plugin-react-refresh": "^0.4.5",
     "typescript": "^5.2.2",
-    "vite": "^5.1.6",
+    "vite": "^5.2.7",
     "vite-plugin-electron": "^0.28.4",
     "vite-plugin-electron-renderer": "^0.14.5"
   },

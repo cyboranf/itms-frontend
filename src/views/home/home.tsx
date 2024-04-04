@@ -9,6 +9,8 @@ export const Home = () => {
 			<ExampleComponent />
 			<button onClick={() => navigate("/login")}>test to signin</button>
 			<button onClick={() => navigate("/register")}>test to signup</button>
+			<button onClick={() => navigate("/users")}>test admin-panel</button>
+			<button onClick={() => navigate("/tasks")}>test tasks</button>
 		</div>
 	);
 };
