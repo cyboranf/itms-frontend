@@ -8,6 +8,7 @@ import {AdminRole} from "./views/admin-panel/admin-roles"
 import "./scss/index.scss";
 import ScrollToTop from "./hooks/scroll-to-top";
 import SignUp from "./views/sign-up-main/sign-up-main";
+import { AdminTask } from "./views/admin-panel/admin-tasks";
 
 export const Layout = () => {
 	return (
@@ -15,7 +16,7 @@ export const Layout = () => {
 			<div className='layout'>
 				<Navbar />
 				<Outlet />
-				<Footer />
+				{/* <Footer /> */}
 			</div>
 		</ScrollToTop>
 	);
@@ -47,6 +48,16 @@ const router = createHashRouter([
 	{
 		path: "/roles",
 		element: <AdminRole />,
+	},
+	{
+		path: "/",
+		element: <Layout />,
+		children: [
+			{
+				path: "/tasks",
+				element: <AdminTask />,
+			},
+		],
 	},
 ]);
 
