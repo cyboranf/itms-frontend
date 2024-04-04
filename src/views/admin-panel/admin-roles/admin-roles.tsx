@@ -26,7 +26,7 @@ import {
 import { Typography } from "@mui/material";
 import { Link } from 'react-router-dom';
 import { Breadcrumb } from 'antd';
-import { PlusOutlined, LeftOutlined } from '@ant-design/icons';
+import { PlusOutlined } from '@ant-design/icons';
 
 const initialRows: GridRowsProp = [
 	{
@@ -172,7 +172,7 @@ export const AdminRole = () => {
 		>
 		<Box
 			sx={{
-			height: 500,
+			height: "60vh",
 			width: '100%',
 			'& .actions': {
 				color: 'text.secondary',
@@ -201,11 +201,6 @@ export const AdminRole = () => {
 			>
 				Manage Role
 			</Typography>
-			<Button  style={{margin: 10}}>
-				<Link to="/users" style={{ textDecoration: 'none' }}>
-					<LeftOutlined />
-				</Link>
-			</Button>
 			<DataGrid
 			rows={rows}
 			columns={columns}

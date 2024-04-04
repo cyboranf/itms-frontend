@@ -1,4 +1,3 @@
-import "./admin-users.scss";
 import React, { useState } from 'react';
 import Box from '@mui/material/Box';
 import EditIcon from '@mui/icons-material/Edit';
@@ -23,26 +22,35 @@ import {
   randomId,
 } from '@mui/x-data-grid-generator';
 import { Typography } from "@mui/material";
-
-import { Link } from 'react-router-dom';
-import { Breadcrumb,  Col, DatePicker, Drawer, Form, Input, Row, Select, Space, Button } from 'antd';
+import { Breadcrumb, Button } from 'antd';
 import { PlusOutlined } from '@ant-design/icons';
-
-const roles = ['Market', 'Finance', 'Development']; // pobrac role z api
-
-const { Option } = Select;
-
+import { useNavigate  } from 'react-router-dom';
+import { Link } from 'react-router-dom';
 
 const initialRows: GridRowsProp = [
   {
     id: 1,
-    name: "damian",
-    last_name: "bernat",
-    pesel: 12345,
-    email: "damdam",
-	phone_number: 2123,
-	role: "Market",
-	passowrd: 123,
+	name: "produkt",
+    code: 123,
+	height: 23,
+	width: 23,
+	lenght: 23
+  },
+  {
+    id: 2,
+	name: "produkt",
+    code: 123,
+	height: 23,
+	width: 23,
+	lenght: 23
+  },
+  {
+    id: 3,
+	name: "produkt",
+    code: 123,
+	height: 23,
+	width: 23,
+	lenght: 23
   },
 ];
 
@@ -65,6 +73,8 @@ function EditToolbar(props: EditToolbarProps) {
     }));
   };
 
+  
+
   return (
     <GridToolbarContainer>
       <Button color="primary" icon={<PlusOutlined />} onClick={handleClick} style={{
@@ -73,6 +83,9 @@ function EditToolbar(props: EditToolbarProps) {
 	  }}>
         Add record
       </Button>
+	  <Button size="small" >
+          Update a row
+        </Button>
     </GridToolbarContainer>
   );
 }
@@ -80,18 +93,9 @@ function EditToolbar(props: EditToolbarProps) {
 
 
 
-export const AdminPanel = () => {
+export const AdminItems = () => {
 
-	const [open, setOpen] = useState(false);
-			const showDrawer = () => {
-				setOpen(true);
-			};
-		
-		const onClose = () => {
-			setOpen(false);
-			};
-		
-
+		const navigate = useNavigate();
 		const [rows, setRows] = React.useState(initialRows);
 		const [rowModesModel, setRowModesModel] = React.useState<GridRowModesModel>({});
 
@@ -104,7 +108,7 @@ export const AdminPanel = () => {
 		const handleEditClick = (id: GridRowId) => () => {
 			setRowModesModel({ ...rowModesModel, [id]: { mode: GridRowModes.Edit } });
 		};
-
+		
 		const handleSaveClick = (id: GridRowId) => () => {
 			setRowModesModel({ ...rowModesModel, [id]: { mode: GridRowModes.View } });
 		};
@@ -118,7 +122,7 @@ export const AdminPanel = () => {
 			...rowModesModel,
 			[id]: { mode: GridRowModes.View, ignoreModifications: true },
 		});
-
+		
 		const editedRow = rows.find((row) => row.id === id);
 		if (editedRow!.isNew) {
 			setRows(rows.filter((row) => row.id !== id));
@@ -136,48 +140,36 @@ export const AdminPanel = () => {
 		};
 
 		const columns: GridColDef[] = [										// pobrac dane z api
-		{ field: 'name', headerName: 'Name', width: 180, editable: true },
 		{
-			field: 'last_name',
-			headerName: 'Last Name',
-			width: 180,
-			align: 'left',
-			headerAlign: 'left',
-			editable: true,
-		},
-		{
-			field: 'pesel',
-			headerName: 'Pesel',
+			field: 'name',
+			headerName: 'Name',
 			width: 180,
 			editable: true,
 		},
 		{
-			field: 'email',
-			headerName: 'Email',
+			field: 'code',
+			headerName: 'Code',
 			width: 180,
 			editable: true,
 		},
 		{
-			field: 'phone_number',
-			headerName: 'Phone Number',
+			field: 'width',
+			headerName: 'Width',
 			width: 180,
 			editable: true,
 		},
 		{
-			field: 'role',
-			headerName: 'Department',
+			field: 'height',
+			headerName: 'Height',
 			width: 100,
-			editable: true,
-			type: 'singleSelect',
-			valueOptions: ['Market', 'Finance', 'Development'],
-			
+			editable: true,			
 		},
 		{
-			field: 'passowrd',
-			headerName: 'Passowrd',
+			field: 'lenght',
+			headerName: 'Lenght',
 			width: 220,
 			editable: true,
-			flex: 1,
+			flex: 1
 		},
 		{
 			field: 'actions',
@@ -247,48 +239,10 @@ export const AdminPanel = () => {
 
 			<Breadcrumb style={{ margin: '16px 0' }}>
             	<Breadcrumb.Item>Dashboard</Breadcrumb.Item>
-            	<Breadcrumb.Item>Users</Breadcrumb.Item>
+            	<Breadcrumb.Item><Link to="/warehouses" style={{ textDecoration: 'none' }}>Warehouses</Link></Breadcrumb.Item>
+				<Breadcrumb.Item>Items</Breadcrumb.Item>
           	</Breadcrumb>
 
-			<Drawer
-					title="Create a new Role"
-					width={720}
-					onClose={onClose}
-					open={open}
-					styles={{
-					body: {
-						paddingBottom: 80,
-					},
-					}}
-					extra={
-					<Space>
-						<Button onClick={onClose}>Cancel</Button>
-						<Button onClick={onClose} type="primary">
-						Submit
-						</Button>
-					</Space>
-					}
-				>
-
-					<Form layout="vertical" hideRequiredMark>
-							<Row>
-								
-								<Form.Item
-									name="name"
-									label="Role Name"
-									rules={[{ required: true, message: 'Please enter role name' }]}
-									style={{
-										flex:1,
-									}}
-								>
-									<Input placeholder="Please enter role name" />
-								</Form.Item>
-								
-							</Row>
-							
-					</Form>	
-
-			</Drawer>
 
 
 			<Typography
@@ -300,18 +254,9 @@ export const AdminPanel = () => {
 					
 				}}
 			>
-				Manage Users
+				Manage Items
 			</Typography>
-			<div style={{margin: 10}}>
-			<Button type="primary" style={{marginRight: 5}}>
-				<Link to="/roles" style={{ textDecoration: 'none' }}>
-					Show Roles
-				</Link>
-			</Button>	
-			<Button type="primary" onClick={showDrawer} icon={<PlusOutlined />}>
-				Add role
-			</Button>
-			</div>
+			
 			<DataGrid
 			rows={rows}
 			columns={columns}
@@ -333,10 +278,10 @@ export const AdminPanel = () => {
 					color: 'primary.main',
 				  },
 				'& .MuiDataGrid-footerContainer ': {
-					bgcolor: '#F1BCD9'
+					bgcolor: '#EDF05E'
 				  },
 				'& .MuiDataGrid-toolbarContainer  ': {
-					bgcolor: '#F1BCD9',
+					bgcolor: '#EDF05E',
 					
 				  },
 				'& .MuiButtonBase-root  ': {
@@ -352,4 +297,4 @@ export const AdminPanel = () => {
 };
 
 
-export default AdminPanel;
+export default AdminItems;

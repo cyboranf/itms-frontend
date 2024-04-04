@@ -5,6 +5,8 @@ import { Home } from "./views/home";
 import { SignIn } from "./views/sign-in";
 import {AdminPanel} from "./views/admin-panel/admin-users"
 import {AdminRole} from "./views/admin-panel/admin-roles"
+import {AdminWarehouse} from "./views/admin-panel/admin-warehouse"
+import {AdminItems} from "./views/admin-panel/admin-items"
 import "./scss/index.scss";
 import ScrollToTop from "./hooks/scroll-to-top";
 import SignUp from "./views/sign-up-main/sign-up-main";
@@ -51,6 +53,13 @@ const router = createHashRouter([
 		element: <AdminRole />,
 	},
 	{
+		path: "/warehouses",
+		element: <AdminWarehouse />,
+	},
+	{
+		path: "/items",
+		element: <AdminItems />,
+
 		path: "/",
 		element: <Layout />,
 		children: [
