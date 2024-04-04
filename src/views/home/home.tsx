@@ -11,6 +11,7 @@ export const Home = () => {
 			<button onClick={() => navigate("/register")}>test to signup</button>
 			<button onClick={() => navigate("/users")}>test admin-panel</button>
 			<button onClick={() => navigate("/tasks")}>test tasks</button>
+			<button onClick={() => navigate("/warehouses")}>test warehouse</button>
 		</div>
 	);
 };
