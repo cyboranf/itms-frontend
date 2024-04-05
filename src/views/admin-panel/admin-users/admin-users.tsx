@@ -25,13 +25,15 @@ import {
 import { Typography } from "@mui/material";
 
 import { Link } from 'react-router-dom';
-import { Breadcrumb,  Col, DatePicker, Drawer, Form, Input, Row, Select, Space, Button } from 'antd';
+import { Breadcrumb,  Col, DatePicker, Drawer, Form, Input, Row, Select, Space, Button, Layout } from 'antd';
 import { PlusOutlined } from '@ant-design/icons';
+import { Navbar } from "../../../components/navbar";
 
 const roles = ['Market', 'Finance', 'Development']; // pobrac role z api
 
 const { Option } = Select;
 
+const { Header, Content, Footer, Sider } = Layout;
 
 const initialRows: GridRowsProp = [
   {
@@ -229,9 +231,12 @@ export const AdminPanel = () => {
 		];
 
 		return (
-		<Box
-			p={15}	
-		>
+		<Layout style={{minHeight: "100vh"}}>
+		<Navbar/>
+		<Layout>
+		
+		<Content style={{ margin: '0 16px' }}>
+		<Box>
 		<Box
 			sx={{
 			height: "60vh",
@@ -347,6 +352,9 @@ export const AdminPanel = () => {
 			/>
 		</Box>
 		</Box>
+		</Content>
+		</Layout>
+		</Layout>
 		);
 
 };
