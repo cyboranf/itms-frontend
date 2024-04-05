@@ -221,9 +221,7 @@ export const AdminItems = () => {
 		];
 
 		return (
-		<Box
-			p={15}	
-		>
+		<Box>
 		<Box
 			sx={{
 			height: "60vh",

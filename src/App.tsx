@@ -12,15 +12,22 @@ import ScrollToTop from "./hooks/scroll-to-top";
 import SignUp from "./views/sign-up-main/sign-up-main";
 import { AdminTask } from "./views/admin-panel/admin-tasks";
 import { AdminDoTask } from "./views/admin-panel/admin-add-task";
+import { Layout } from 'antd';
 
-export const Layout = () => {
+const { Header, Content, Sider } = Layout;
+
+export const Layout1 = () => {
 	return (
 		<ScrollToTop>
-			<div className='layout'>
+			<Layout style={{minHeight: "100vh"}}>
 				<Navbar />
-				<Outlet />
+				<Layout>
+				<Content style={{ margin: '0 16px' }}>
+					<Outlet />
+				</Content>
+				</Layout>
 				{/* <Footer /> */}
-			</div>
+			</Layout>
 		</ScrollToTop>
 	);
 };
@@ -28,11 +35,33 @@ export const Layout = () => {
 const router = createHashRouter([
 	{
 		path: "/",
-		element: <Layout />,
+		element: <Layout1 />,
 		children: [
 			{
 				path: "/",
 				element: <Home />,
+			},
+			{
+				path: "/roles",
+				element: <AdminRole />,
+			},
+			
+			
+			{
+				path: "/warehouses",
+				element: <AdminWarehouse />,
+			},
+			{
+				path: "/items",
+				element: <AdminItems />,
+			},
+			{
+				path: "/add-task",
+				element: <AdminDoTask />,
+			},
+			{
+				path: "/tasks",
+				element: <AdminTask />,
 			},
 		],
 	},
@@ -48,31 +77,7 @@ const router = createHashRouter([
 		path: "/users",
 		element: <AdminPanel />,
 	},
-	{
-		path: "/roles",
-		element: <AdminRole />,
-	},
-	{
-		path: "/warehouses",
-		element: <AdminWarehouse />,
-	},
-	{
-		path: "/items",
-		element: <AdminItems />,
 
-		path: "/",
-		element: <Layout />,
-		children: [
-			{
-				path: "/tasks",
-				element: <AdminTask />,
-			},
-		],
-	},
-	{
-		path: "/add-task",
-		element: <AdminDoTask />,
-	},
 ]);
 
 function App() {
