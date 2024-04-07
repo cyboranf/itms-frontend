@@ -12,6 +12,7 @@ import ScrollToTop from "./hooks/scroll-to-top";
 import SignUp from "./views/sign-up-main/sign-up-main";
 import { AdminTask } from "./views/admin-panel/admin-tasks";
 import { AdminDoTask } from "./views/admin-panel/admin-add-task";
+import { Admindashboard } from "./views/admin-panel/admin-dashboard";
 import { Layout } from 'antd';
 
 const { Header, Content, Sider } = Layout;
@@ -62,6 +63,10 @@ const router = createHashRouter([
 			{
 				path: "/tasks",
 				element: <AdminTask />,
+			},
+			{
+				path: "/home",
+				element: <Admindashboard />
 			},
 		],
 	},
