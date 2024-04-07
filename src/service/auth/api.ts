@@ -11,12 +11,26 @@ export const loginUser = async ({ username, password }: LoginValuesType) => {
 	return userData;
 };
 
-export const registerUser = async ({ username, password, email, role }: RegisterValuesTypes) => {
+export const registerUser = async ({
+	username,
+	password,
+	email,
+	confirm_password,
+	first_name,
+	last_name,
+	pesel,
+	phone_number,
+}: RegisterValuesTypes) => {
 	const { data } = await instanceAxios.post<{ data: any }>(Paths.REGISTER, {
-		email,
 		username,
+		email,
 		password,
-		role,
+		confirmPassword: confirm_password,
+		roleId: 1, 
+		firstName: first_name, 
+		lastName: last_name,
+		pesel,
+		phoneNumber: phone_number, 
 	});
 
 	const userData = data.data;
