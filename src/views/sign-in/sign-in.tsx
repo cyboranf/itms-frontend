@@ -5,6 +5,7 @@ import { useForm } from "react-hook-form";
 import Input from "../../components/input/input";
 import { loginUser } from "../../service/auth";
 import { RegexpValidators } from "../../utils/reg-exp";
+import { useNavigate } from "react-router-dom";
 
 export type LoginValuesType = {
 	username: string;
@@ -12,6 +13,8 @@ export type LoginValuesType = {
 };
 
 export const SignIn = () => {
+	const navigate = useNavigate();
+
 	const {
 		register,
 		handleSubmit,
@@ -23,6 +26,7 @@ export const SignIn = () => {
 		try {
 			const res = await loginUser({ username, password });
 			console.log(res);
+			navigate("/");
 		} catch (err: unknown) {
 			console.log(err);
 		}
