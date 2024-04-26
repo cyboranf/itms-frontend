@@ -1,6 +1,5 @@
 import { createHashRouter, Outlet, RouterProvider } from "react-router-dom";
 import { Navbar } from "./components/navbar";
-import { Footer } from "./components/footer";
 import { Home } from "./views/home";
 import { SignIn } from "./views/sign-in";
 import {AdminPanel} from "./views/admin-panel/admin-users"
@@ -14,8 +13,10 @@ import { AdminTask } from "./views/admin-panel/admin-tasks";
 import { AdminDoTask } from "./views/admin-panel/admin-add-task";
 import { Admindashboard } from "./views/admin-panel/admin-dashboard";
 import { Layout } from 'antd';
+import { WarehouseManDashboard } from "./views/warehouseman-panel/warehouseman-dashboard";
+import { PrinterDashboard } from "./views/printer-panel/printer-dashboard";
 
-const { Header, Content, Sider } = Layout;
+const { Content } = Layout;
 
 export const Layout1 = () => {
 	return (
@@ -46,8 +47,6 @@ const router = createHashRouter([
 				path: "/roles",
 				element: <AdminRole />,
 			},
-			
-			
 			{
 				path: "/warehouses",
 				element: <AdminWarehouse />,
@@ -82,7 +81,14 @@ const router = createHashRouter([
 		path: "/users",
 		element: <AdminPanel />,
 	},
-
+	{
+		path: "/warehouseman/home",
+		element: <WarehouseManDashboard />
+	},
+	{
+		path: "/printer/home",
+		element: <PrinterDashboard />
+	},
 ]);
 
 function App() {
