@@ -1,61 +1,27 @@
 import * as React from "react";
 import Box from "@mui/material/Box";
-import Button from "@mui/material/Button";
-import AddIcon from "@mui/icons-material/Add";
 import EditIcon from "@mui/icons-material/Edit";
 import DeleteIcon from "@mui/icons-material/DeleteOutlined";
 import SaveIcon from "@mui/icons-material/Save";
 import CancelIcon from "@mui/icons-material/Close";
 import {
-	GridRowsProp,
 	GridRowModesModel,
 	GridRowModes,
 	DataGrid,
 	GridColDef,
-	GridToolbarContainer,
 	GridActionsCellItem,
 	GridEventListener,
 	GridRowId,
 	GridRowModel,
 	GridRowEditStopReasons,
-	GridSlots,
 } from "@mui/x-data-grid";
-import { randomId } from "@mui/x-data-grid-generator";
 import { Typography } from "@mui/material";
-import { green } from "@mui/material/colors";
-import { Link } from "react-router-dom";
-
 import { Breadcrumb } from "antd";
 import { getAllTasks } from "../../../service/tasks";
 import { Task } from "../../../service/tasks/types";
 
-interface EditToolbarProps {
-	setRows: (newRows: (oldRows: GridRowsProp) => GridRowsProp) => void;
-	setRowModesModel: (newModel: (oldModel: GridRowModesModel) => GridRowModesModel) => void;
-}
 
-function EditToolbar(props: EditToolbarProps) {
-	const { setRows, setRowModesModel } = props;
-
-	const handleClick = () => {
-		const id = randomId();
-		setRows((oldRows) => [...oldRows, { id, name: "", isNew: true }]);
-		setRowModesModel((oldModel) => ({
-			...oldModel,
-			[id]: { mode: GridRowModes.Edit, fieldToFocus: "name" },
-		}));
-	};
-
-	return (
-		<GridToolbarContainer>
-			<Button color='primary' startIcon={<AddIcon />} onClick={handleClick}>
-				Add record
-			</Button>
-		</GridToolbarContainer>
-	);
-}
-
-export const AdminTask = () => {
+export const PrinterDashboard = () => {
 	const [tasks, setTasks] = React.useState<Task[]>([]);
 	const [rowModesModel, setRowModesModel] = React.useState<GridRowModesModel>({});
 
@@ -90,20 +56,7 @@ export const AdminTask = () => {
 		setTasks(tasks.filter((row) => row.id !== id));
 	};
 
-	const handleCancelClick = (id: GridRowId) => () => {
-		// setRowModesModel({
-		// 	...rowModesModel,
-		// 	[id]: { mode: GridRowModes.View, ignoreModifications: true },
-		// });
-		// const editedRow = tasks.find((row) => row.id === id);
-		// if (editedRow!.isNew) {
-		// 	setTasks(tasks.filter((row) => row.id !== id));
-		// }
-	};
-
 	const processRowUpdate = (newRow: GridRowModel) => {
-		// const updatedRow = { ...newRow, isNew: false };
-		// setTasks(tasks.map((row) => (row.id === newRow.id ? updatedRow : row)));
 		return newRow;
 	};
 
@@ -173,7 +126,6 @@ export const AdminTask = () => {
 							icon={<CancelIcon />}
 							label='Cancel'
 							className='textPrimary'
-							onClick={handleCancelClick(id)}
 							color='inherit'
 						/>,
 					];
@@ -209,7 +161,6 @@ export const AdminTask = () => {
 			>
 				<Breadcrumb style={{ margin: "16px 0" }}>
 					<Breadcrumb.Item>Dashboard</Breadcrumb.Item>
-					<Breadcrumb.Item>Task</Breadcrumb.Item>
 				</Breadcrumb>
 				<Typography
 					variant='h3'
@@ -219,26 +170,8 @@ export const AdminTask = () => {
 						p: 5,
 					}}
 				>
-					Manage Tasks
+					Dashboard
 				</Typography>
-				<Link to='/add-task' style={{ textDecoration: "none" }}>
-					<Button
-						sx={[
-							{
-								bgcolor: green[400],
-								mb: 1,
-								color: "white",
-							},
-							(theme) => ({
-								"&:hover": {
-									bgcolor: green[800],
-								},
-							}),
-						]}
-					>
-						Add Task
-					</Button>
-				</Link>
 				<DataGrid
 					rows={tasks}
 					columns={columns}
@@ -247,9 +180,6 @@ export const AdminTask = () => {
 					onRowModesModelChange={handleRowModesModelChange}
 					onRowEditStop={handleRowEditStop}
 					processRowUpdate={processRowUpdate}
-					slots={{
-						toolbar: EditToolbar as GridSlots["toolbar"],
-					}}
 					slotProps={{
 						toolbar: { setRows: setTasks, setRowModesModel },
 					}}
@@ -273,4 +203,4 @@ export const AdminTask = () => {
 	);
 };
 
-export default AdminTask;
+export default PrinterDashboard;

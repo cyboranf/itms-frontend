@@ -39,3 +39,11 @@ export async function PutTask(params:TaskValuesType) {
         return false;
     }
 }
+
+import { User } from "./types";
+
+export const getAllUsers = async (): Promise<User[]> => {
+	const data = await instanceAxios.get<User[]>(Paths.ALL_USERS);
+	return data.data;
+};
+
