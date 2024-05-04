@@ -13,8 +13,6 @@ import {  Breadcrumb,
   Layout, } from "antd";
 import EditIcon from "@mui/icons-material/Edit";
 import DeleteIcon from "@mui/icons-material/DeleteOutlined";
-import SaveIcon from "@mui/icons-material/Save";
-import CancelIcon from "@mui/icons-material/Close";
 import {
   GridRowsProp,
   GridRowModesModel,
@@ -29,15 +27,8 @@ import {
   GridRowEditStopReasons,
   GridSlots,
 } from "@mui/x-data-grid";
-import { randomId } from "@mui/x-data-grid-generator";
 import { Typography } from "@mui/material";
-import { Link } from "react-router-dom";
-
-import { PlusOutlined } from "@ant-design/icons";
-import { access } from "original-fs";
-import axios from "axios";
-import instanceAxios from "../../../helpers/axios/axios";
-import { GetTasks, DeleteTasks, PostTask } from "../../../service/users";
+import { GetTasks, DeleteTasks, PostTask, PutTask } from "../../../service/users";
 import { TaskValuesType } from "../../../service/users/types";
 
 
@@ -45,6 +36,13 @@ import { TaskValuesType } from "../../../service/users/types";
 export const AdminRole = () => {
   const [rows, setRows] = useState<TaskValuesType[]>([]); // Use local state instead of props
   const [open, setOpen] = useState(false);
+  const [open1, setOpen1] = useState(false);
+  const [id, setId] = useState<GridRowId>(String);
+ 
+
+  const onClose1 = () => {
+    setOpen1(false);
+  };
 
   const showDrawer = () => {
     setOpen(true);
@@ -64,11 +62,9 @@ export const AdminRole = () => {
     }
   };
 
-  const handleEditClick = (id: GridRowId) => () => {
-  
-  };
 
-  const handleDeleteClick = (id: number) => async () => {
+
+  const handleDeleteClick = (id: string) => async () => {
     const success = await DeleteTasks(id);
     if (success) {
       // Jeśli usunięto zadanie pomyślnie, odświeżamy listę zadań
@@ -81,32 +77,55 @@ export const AdminRole = () => {
   
   const handleSubmitClick = async () => {
     try {
-      // Pobieramy dane z formularza
-      
-     
-      console.log(formData)
-      // Sprawdzamy, czy wszystkie wymagane pola zostały uzupełnione
-   
   
-      // Tworzymy obiekt zawierający dane nowego zadania
       const newTask: TaskValuesType = {
-        id: 123, // Przykładowe generowanie identyfikatora, możesz dostosować to do swoich potrzeb
+        id: '123', 
         name: formData,
       };
   
-      // Dodajemy nowe zadanie za pomocą funkcji PutTask
+      
       const success = await PostTask(newTask);
   
       if (success) {
-        
         test();
-        
         onClose();
       } else {
-        // Wyświetl błąd użytkownikowi w przypadku niepowodzenia
+        
         console.error("Błąd podczas dodawania zadania.");
       }
     } catch (error) {
+      console.error("Błąd podczas przetwarzania formularza:", error);
+    }
+  };
+  
+  const handleEditClick = (id: GridRowId) => async () => {
+      setId(id)
+      setOpen1(true);
+
+      
+  };
+  
+  const [form1] = Form.useForm();
+  const formData1 = Form.useWatch('name1', form);
+
+  const handleEditSubmitClick = () => async () => {
+      try {
+      const newTask: TaskValuesType = {
+        id: id.toString(), 
+        name: formData1,
+      }
+
+      const success = await PutTask(newTask);
+      
+      if (success) {
+        test();
+        onClose1();
+      } else {
+        
+        console.error("Błąd podczas dodawania zadania.");
+      }
+
+    }catch (error) {
       console.error("Błąd podczas przetwarzania formularza:", error);
     }
   };
@@ -209,6 +228,43 @@ export const AdminRole = () => {
                   <Row>
                     <Form.Item
                       name="name"
+                      label="Role Name"
+                      rules={[
+                        { required: true, message: "Please enter role name" },
+                      ]}
+                      style={{
+                        flex: 1,
+                      }}
+                    >
+                      <Input  placeholder="Please enter role name" />
+                    </Form.Item>
+                  </Row>
+                </Form>
+              </Drawer>
+
+              <Drawer
+                title="Edit a Role"
+                width={720}
+                onClose={onClose1}
+                open={open1}
+                styles={{
+                  body: {
+                    paddingBottom: 80,
+                  },
+                }}
+                extra={
+                  <Space>
+                    <Button onClick={onClose1}>Cancel</Button>
+                    <Button onClick={handleEditSubmitClick()}  type="primary">
+                      Submit
+                    </Button>
+                  </Space>
+                }
+              >
+                <Form layout="vertical" hideRequiredMark form={form}>
+                  <Row>
+                    <Form.Item
+                      name="name1"
                       label="Role Name"
                       rules={[
                         { required: true, message: "Please enter role name" },

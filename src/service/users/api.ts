@@ -14,10 +14,11 @@ export async function GetTasks(): Promise<TaskValuesType > {
     }
 }
 
-export async function DeleteTasks(id:number) {
+export async function DeleteTasks(id:string) {
     await instanceAxios.delete(Paths.TASK_TYPE_ID.replace('{id}', id.toString()));
     return true;
 }
+
 export async function PostTask(params:TaskValuesType) {
     try {
         await instanceAxios.post(Paths.TASK_TYPE, params);
@@ -27,4 +28,14 @@ export async function PostTask(params:TaskValuesType) {
         console.error("Błąd podczas aktualizacji zadania:", error);
         return false;
       }
+}
+
+export async function PutTask(params:TaskValuesType) {
+    try {
+        await instanceAxios.put(Paths.TASK_TYPE_ID.replace('{id}', params.id.toString()), params);
+        return true;
+    } catch (error){
+        console.error("Błąd podczas aktualizacji zadania:", error);
+        return false;
+    }
 }

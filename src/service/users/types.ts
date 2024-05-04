@@ -1,5 +1,5 @@
 export type TaskValuesType = {
-	id: number,
+	id: string,
 	name: string,
 };
 
