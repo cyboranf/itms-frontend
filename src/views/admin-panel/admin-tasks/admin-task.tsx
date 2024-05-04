@@ -205,11 +205,6 @@ export const AdminTask = () => {
 					}
 				>
 					<Form layout="vertical" hideRequiredMark>
-						<Breadcrumb style={{ margin: '16px 0' }}>
-							<Breadcrumb.Item>Dashboard</Breadcrumb.Item>
-							<Breadcrumb.Item>Task</Breadcrumb.Item>
-							<Breadcrumb.Item>Add Task</Breadcrumb.Item>
-						</Breadcrumb>
 						<Row gutter={16}>
 							<Col span={12}>
 								<Form.Item

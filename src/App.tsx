@@ -10,7 +10,6 @@ import "./scss/index.scss";
 import ScrollToTop from "./hooks/scroll-to-top";
 import SignUp from "./views/sign-up-main/sign-up-main";
 import { AdminTask } from "./views/admin-panel/admin-tasks";
-import { AdminDoTask } from "./views/admin-panel/admin-add-task";
 import { Admindashboard } from "./views/admin-panel/admin-dashboard";
 import { Layout } from 'antd';
 import { WarehouseManDashboard } from "./views/warehouseman-panel/warehouseman-dashboard";
@@ -54,10 +53,6 @@ const router = createHashRouter([
 			{
 				path: "/items",
 				element: <AdminItems />,
-			},
-			{
-				path: "/add-task",
-				element: <AdminDoTask />,
 			},
 			{
 				path: "/tasks",
