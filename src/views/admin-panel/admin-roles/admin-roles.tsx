@@ -1,11 +1,18 @@
-
-import * as React from 'react';
-import Box from '@mui/material/Box';
-import { Button } from 'antd';
-import EditIcon from '@mui/icons-material/Edit';
-import DeleteIcon from '@mui/icons-material/DeleteOutlined';
-import SaveIcon from '@mui/icons-material/Save';
-import CancelIcon from '@mui/icons-material/Close';
+import React, { useState, useEffect } from "react";
+import Box from "@mui/material/Box";
+import {  Breadcrumb,
+  Col,
+  DatePicker,
+  Drawer,
+  Form,
+  Input,
+  Row,
+  Select,
+  Space,
+  Button,
+  Layout, } from "antd";
+import EditIcon from "@mui/icons-material/Edit";
+import DeleteIcon from "@mui/icons-material/DeleteOutlined";
 import {
   GridRowsProp,
   GridRowModesModel,
@@ -19,224 +26,261 @@ import {
   GridRowModel,
   GridRowEditStopReasons,
   GridSlots,
-} from '@mui/x-data-grid';
-import {
-  randomId,
-} from '@mui/x-data-grid-generator';
+} from "@mui/x-data-grid";
 import { Typography } from "@mui/material";
-import { Link } from 'react-router-dom';
-import { Breadcrumb } from 'antd';
-import { PlusOutlined } from '@ant-design/icons';
+import { GetTasks, DeleteTasks, PostTask, PutTask } from "../../../service/users";
+import { TaskValuesType } from "../../../service/users/types";
 
-const initialRows: GridRowsProp = [
-	{
-	  id: 1,
-	  name: "role",
-	},
-  ];
-  
-  interface EditToolbarProps {
-	setRows: (newRows: (oldRows: GridRowsProp) => GridRowsProp) => void;
-	setRowModesModel: (
-	  newModel: (oldModel: GridRowModesModel) => GridRowModesModel,
-	) => void;
-  }
-  
-  function EditToolbar(props: EditToolbarProps) {
-	const { setRows, setRowModesModel } = props;
-  
-	const handleClick = () => {
-	  const id = randomId();
-	  setRows((oldRows) => [...oldRows, { id, name: '', isNew: true }]);
-	  setRowModesModel((oldModel) => ({
-		...oldModel,
-		[id]: { mode: GridRowModes.Edit, fieldToFocus: 'name' },
-	  }));
-	};
-  
-	return (
-	  <GridToolbarContainer>
-		<Button color="primary" icon={<PlusOutlined />} onClick={handleClick} style={{
-		margin: 5,
 
-	  }}>
-        Add record
-      </Button>
-	  </GridToolbarContainer>
-	);
-  }
-  
 
 export const AdminRole = () => {
+  const [rows, setRows] = useState<TaskValuesType[]>([]); // Use local state instead of props
+  const [open, setOpen] = useState(false);
+  const [open1, setOpen1] = useState(false);
+  const [id, setId] = useState<GridRowId>(String);
+ 
 
-		
+  const onClose1 = () => {
+    setOpen1(false);
+  };
 
-	const [rows, setRows] = React.useState(initialRows);
-		const [rowModesModel, setRowModesModel] = React.useState<GridRowModesModel>({});
+  const showDrawer = () => {
+    setOpen(true);
+  };
 
-		const handleRowEditStop: GridEventListener<'rowEditStop'> = (params, event) => {
-			if (params.reason === GridRowEditStopReasons.rowFocusOut) {
-				event.defaultMuiPrevented = true;
-			}
-		};
+  const onClose = () => {
+    setOpen(false);
+  };
 
-		const handleEditClick = (id: GridRowId) => () => {
-			setRowModesModel({ ...rowModesModel, [id]: { mode: GridRowModes.Edit } });
-		};
+  const test = async () => {
+    try {
+      const res = await GetTasks();
+      console.log(res);
+      setRows(res); // Update local state with fetched data
+    } catch (error) {
+      console.error("Error fetching tasks:", error);
+    }
+  };
 
-		const handleSaveClick = (id: GridRowId) => () => {
-			setRowModesModel({ ...rowModesModel, [id]: { mode: GridRowModes.View } });
-		};
 
-		const handleDeleteClick = (id: GridRowId) => () => {
-			setRows(rows.filter((row) => row.id !== id));
-		};
 
-		const handleCancelClick = (id: GridRowId) => () => {
-		setRowModesModel({
-			...rowModesModel,
-			[id]: { mode: GridRowModes.View, ignoreModifications: true },
-		});
+  const handleDeleteClick = (id: string) => async () => {
+    const success = await DeleteTasks(id);
+    if (success) {
+      // Jeśli usunięto zadanie pomyślnie, odświeżamy listę zadań
+      test();
+      setRows(rows.filter((row) => row.id !== id));
+    }
+  };
+  const [form] = Form.useForm();
+  const formData = Form.useWatch('name', form);
+  
+  const handleSubmitClick = async () => {
+    try {
+  
+      const newTask: TaskValuesType = {
+        id: '123', 
+        name: formData,
+      };
+  
+      
+      const success = await PostTask(newTask);
+  
+      if (success) {
+        test();
+        onClose();
+      } else {
+        
+        console.error("Błąd podczas dodawania zadania.");
+      }
+    } catch (error) {
+      console.error("Błąd podczas przetwarzania formularza:", error);
+    }
+  };
+  
+  const handleEditClick = (id: GridRowId) => async () => {
+      setId(id)
+      setOpen1(true);
 
-		const editedRow = rows.find((row) => row.id === id);
-		if (editedRow!.isNew) {
-			setRows(rows.filter((row) => row.id !== id));
-		}
-		};
+      
+  };
+  
+  const [form1] = Form.useForm();
+  const formData1 = Form.useWatch('name1', form);
 
-		const processRowUpdate = (newRow: GridRowModel) => {
-		const updatedRow = { ...newRow, isNew: false };
-			setRows(rows.map((row) => (row.id === newRow.id ? updatedRow : row)));
-			return updatedRow;
-		};
+  const handleEditSubmitClick = () => async () => {
+      try {
+      const newTask: TaskValuesType = {
+        id: id.toString(), 
+        name: formData1,
+      }
 
-		const handleRowModesModelChange = (newRowModesModel: GridRowModesModel) => {
-			setRowModesModel(newRowModesModel);
-		};
+      const success = await PutTask(newTask);
+      
+      if (success) {
+        test();
+        onClose1();
+      } else {
+        
+        console.error("Błąd podczas dodawania zadania.");
+      }
 
-		const columns: GridColDef[] = [										// pobrac dane z api
-		{ field: 'name', headerName: 'Name', width: 180, align: 'left', headerAlign: 'left', flex:1, editable: true },
-		
-		{
-			field: 'actions',
-			type: 'actions',
-			headerName: 'Actions',
-			width: 100,
-			cellClassName: 'actions',
-			align: "right",
-			getActions: ({ id }) => {
-			const isInEditMode = rowModesModel[id]?.mode === GridRowModes.Edit;
+    }catch (error) {
+      console.error("Błąd podczas przetwarzania formularza:", error);
+    }
+  };
 
-			if (isInEditMode) {
-				return [
-				<GridActionsCellItem
-					icon={<SaveIcon />}
-					label="Save"
-					sx={{
-					color: 'primary.main',
-					}}
-					onClick={handleSaveClick(id)}
-				/>,
-				<GridActionsCellItem
-					icon={<CancelIcon />}
-					label="Cancel"
-					className="textPrimary"
-					onClick={handleCancelClick(id)}
-					color="inherit"
-				/>,
-				];
-			}
+  useEffect(() => {
+    test();
+  }, []);
 
-			return [
-				<GridActionsCellItem
-				icon={<EditIcon />}
-				label="Edit"
-				className="textPrimary"
-				onClick={handleEditClick(id)}
-				color="inherit"
-				/>,
-				<GridActionsCellItem
-				icon={<DeleteIcon />}
-				label="Delete"
-				onClick={handleDeleteClick(id)}
-				color="inherit"
-				/>,
-			];
-			},
-		},
-		];
+  
+  const columns: GridColDef[] = [
+    { field: 'id', headerName: 'ID', width: 70 },
+    { field: 'name', headerName: 'Name', width: 130, flex: 1 },
+    
+    {
+      field: 'actions',
+      type: 'actions',
+      headerName: 'Actions',
+      width: 100,
+      cellClassName: 'actions',
+      align: "right",
+      getActions: ({ id }) => {    
+        return [
+        <GridActionsCellItem
+          icon={<DeleteIcon />}
+          label="Save"
+          sx={{
+          color: 'primary.main',
+          }}
+          onClick={handleDeleteClick(id)}
+        />,
+        <GridActionsCellItem
+          icon={<EditIcon />}
+          label="Cancel"
+          className="textPrimary"
+          onClick={handleEditClick(id)}
+          color="inherit"
+        />,
+        ];
+      }
+  
+    
+    },
+  ];
 
-		return (
-		<Box>
-		<Box
-			sx={{
-			height: "60vh",
-			width: '100%',
-			'& .actions': {
-				color: 'text.secondary',
-			},
-			'& .textPrimary': {
-				color: 'text.primary',
-			},
-			}}
-		>
-
-			<Breadcrumb style={{ margin: '16px 0' }}>
+  return (
+    <Box>
+      <Box
+        sx={{
+          height: 500,
+          width: '100%'
+        }}
+      >
+        <Breadcrumb style={{ margin: '16px 0' }}>
             	<Breadcrumb.Item>Dashboard</Breadcrumb.Item>
-            	<Breadcrumb.Item><Link to="/users" style={{ textDecoration: 'none' }}>Users</Link></Breadcrumb.Item>
-				<Breadcrumb.Item>Roles</Breadcrumb.Item>
-          	</Breadcrumb>
+            	<Breadcrumb.Item>Task</Breadcrumb.Item>
+        </Breadcrumb>
+        <Typography
+          variant="h3"
+          component="h3"
+          sx={{
+            textAlign: "center",
+            p: 5,
+            
+          }}
+        >
+      Manage Tasks
+    </Typography>
+        <Button  type="primary" onClick={showDrawer}>Add Task</Button>
+        <DataGrid
+          rows={rows}
+          columns={columns}
+          initialState={{
+            pagination: {
+              paginationModel: { page: 0, pageSize: 5 },
+            },
+          }}
+          pageSizeOptions={[5, 10]}
+          
+      />
+      <Drawer
+                title="Create a new Role"
+                width={720}
+                onClose={onClose}
+                open={open}
+                styles={{
+                  body: {
+                    paddingBottom: 80,
+                  },
+                }}
+                extra={
+                  <Space>
+                    <Button onClick={onClose}>Cancel</Button>
+                    <Button onClick={handleSubmitClick}  type="primary">
+                      Submit
+                    </Button>
+                  </Space>
+                }
+              >
+                <Form layout="vertical" hideRequiredMark form={form}>
+                  <Row>
+                    <Form.Item
+                      name="name"
+                      label="Role Name"
+                      rules={[
+                        { required: true, message: "Please enter role name" },
+                      ]}
+                      style={{
+                        flex: 1,
+                      }}
+                    >
+                      <Input  placeholder="Please enter role name" />
+                    </Form.Item>
+                  </Row>
+                </Form>
+              </Drawer>
 
-
-			<Typography
-				variant="h3"
-				component="h3"
-				sx={{
-					textAlign: "center",
-					p: 5,
-					
-				}}
-			>
-				Manage Role
-			</Typography>
-			<DataGrid
-			rows={rows}
-			columns={columns}
-			editMode="row"
-			rowModesModel={rowModesModel}
-			onRowModesModelChange={handleRowModesModelChange}
-			onRowEditStop={handleRowEditStop}
-			processRowUpdate={processRowUpdate}
-			slots={{
-				toolbar: EditToolbar as GridSlots['toolbar'],
-			}}
-			slotProps={{
-				toolbar: { setRows, setRowModesModel },
-			}}
-			sx={{
-				boxShadow: 2,
-				border: 1,
-				'& .MuiDataGrid-cell:hover': {
-					color: 'primary.main',
-				  },
-				'& .MuiDataGrid-footerContainer ': {
-					bgcolor: '#EDF05E'
-				  },
-				'& .MuiDataGrid-toolbarContainer  ': {
-					bgcolor: '#EDF05E',
-					
-				  },
-				'& .MuiButtonBase-root  ': {
-					
-					
-				  },
-			}}
-			/>
-		</Box>
-		</Box>
-		);;
-
+              <Drawer
+                title="Edit a Role"
+                width={720}
+                onClose={onClose1}
+                open={open1}
+                styles={{
+                  body: {
+                    paddingBottom: 80,
+                  },
+                }}
+                extra={
+                  <Space>
+                    <Button onClick={onClose1}>Cancel</Button>
+                    <Button onClick={handleEditSubmitClick()}  type="primary">
+                      Submit
+                    </Button>
+                  </Space>
+                }
+              >
+                <Form layout="vertical" hideRequiredMark form={form}>
+                  <Row>
+                    <Form.Item
+                      name="name1"
+                      label="Role Name"
+                      rules={[
+                        { required: true, message: "Please enter role name" },
+                      ]}
+                      style={{
+                        flex: 1,
+                      }}
+                    >
+                      <Input  placeholder="Please enter role name" />
+                    </Form.Item>
+                  </Row>
+                </Form>
+              </Drawer>
+      </Box>
+    </Box>
+  );
 };
-
 
 export default AdminRole;

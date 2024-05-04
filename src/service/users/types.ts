@@ -1,3 +1,9 @@
+
+export type TaskValuesType = {
+	id: string,
+	name: string,
+};
+
 export type User = {
 	id: number;
 	username: string;
@@ -18,3 +24,4 @@ export type UserWithoutTasks = {
 	email: string;
 	phoneNumber: string;
 };
+
