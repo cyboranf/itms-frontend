@@ -261,7 +261,7 @@ export const AdminRole = () => {
                   </Space>
                 }
               >
-                <Form layout="vertical" hideRequiredMark form={form}>
+                <Form layout="vertical" hideRequiredMark form={form1}>
                   <Row>
                     <Form.Item
                       name="name1"
