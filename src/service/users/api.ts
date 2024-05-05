@@ -47,3 +47,17 @@ export const getAllUsers = async (): Promise<User[]> => {
 	return data.data;
 };
 
+export async function PutUsers(params:User) {
+    try {
+        await instanceAxios.put(Paths.USERS_EDIT.replace('{id}', params.id.toString()), params);
+        return true;
+    } catch (error){
+        console.error("Błąd podczas aktualizacji zadania:", error);
+        return false;
+    }
+}
+
+export async function DeleteUsers(id:string) {
+    await instanceAxios.delete(Paths.USERS_ID.replace('{id}', id.toString()));
+    return true;
+}

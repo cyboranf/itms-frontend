@@ -6,11 +6,8 @@ export type Task = {
 	description: string;
 	state: number;
 	priority: number;
-	creationDate: Date | null;
-	startDate: Date | null;
-	endDate: Date | null;
-	users: UserWithoutTasks[];
-	products: any[];
-};
+	startDate: string;
+	endDate: string;	
+}
 
 //TODO jak bedzie isntial warehouse i producst zdefiniowane to zaktualizowac

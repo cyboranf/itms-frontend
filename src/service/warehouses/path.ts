@@ -1,3 +1,4 @@
 export enum Paths {
-  Warehouse = '/warehouse',
+  WAREHOUSE = '/warehouse',
+  WAREHOUSE_ID = '/warehouse/{id}'
 }

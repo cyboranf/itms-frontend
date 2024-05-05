@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import Box from '@mui/material/Box';
 import EditIcon from '@mui/icons-material/Edit';
 import DeleteIcon from '@mui/icons-material/DeleteOutlined';
@@ -18,86 +18,35 @@ import {
   GridRowEditStopReasons,
   GridSlots,
 } from '@mui/x-data-grid';
-import {
-  randomId,
-} from '@mui/x-data-grid-generator';
 import { Typography } from "@mui/material";
 import { Breadcrumb, Button } from 'antd';
-import { PlusOutlined } from '@ant-design/icons';
 import { useNavigate  } from 'react-router-dom';
 import { Link } from 'react-router-dom';
-
-const initialRows: GridRowsProp = [
-  {
-    id: 1,
-	name: "produkt",
-    code: 123,
-	height: 23,
-	width: 23,
-	lenght: 23
-  },
-  {
-    id: 2,
-	name: "produkt",
-    code: 123,
-	height: 23,
-	width: 23,
-	lenght: 23
-  },
-  {
-    id: 3,
-	name: "produkt",
-    code: 123,
-	height: 23,
-	width: 23,
-	lenght: 23
-  },
-];
-
-interface EditToolbarProps {
-  setRows: (newRows: (oldRows: GridRowsProp) => GridRowsProp) => void;
-  setRowModesModel: (
-    newModel: (oldModel: GridRowModesModel) => GridRowModesModel,
-  ) => void;
-}
-
-function EditToolbar(props: EditToolbarProps) {
-  const { setRows, setRowModesModel } = props;
-
-  const handleClick = () => {
-    const id = randomId();
-    setRows((oldRows) => [...oldRows, { id, name: '', last_name: '', isNew: true }]);
-    setRowModesModel((oldModel) => ({
-      ...oldModel,
-      [id]: { mode: GridRowModes.Edit, fieldToFocus: 'name' },
-    }));
-  };
-
-  
-
-  return (
-    <GridToolbarContainer>
-      <Button color="primary" icon={<PlusOutlined />} onClick={handleClick} style={{
-		margin: 5,
-
-	  }}>
-        Add record
-      </Button>
-	  <Button size="small" >
-          Update a row
-        </Button>
-    </GridToolbarContainer>
-  );
-}
-
+import { getAllItems } from '../../../service/items';
+import { Items } from '../../../service/items/types';
 
 
 
 export const AdminItems = () => {
 
 		const navigate = useNavigate();
-		const [rows, setRows] = React.useState(initialRows);
+		const [rows, setRows] = useState<Items[]>([]);;
 		const [rowModesModel, setRowModesModel] = React.useState<GridRowModesModel>({});
+
+		const GetItems = async () => {
+			try {
+			  const res = await getAllItems();
+			  console.log(res);
+			  setRows(res); // Update local state with fetched data
+			} catch (error) {
+			  console.error("Error fetching items:", error);
+			}
+		  };
+
+		  useEffect(() => {
+			GetItems();
+		  }, []);
+		
 
 		const handleRowEditStop: GridEventListener<'rowEditStop'> = (params, event) => {
 			if (params.reason === GridRowEditStopReasons.rowFocusOut) {
@@ -144,31 +93,31 @@ export const AdminItems = () => {
 			field: 'name',
 			headerName: 'Name',
 			width: 180,
-			editable: true,
+			editable: false,
 		},
 		{
 			field: 'code',
 			headerName: 'Code',
 			width: 180,
-			editable: true,
+			editable: false,
 		},
 		{
 			field: 'width',
 			headerName: 'Width',
 			width: 180,
-			editable: true,
+			editable: false,
 		},
 		{
 			field: 'height',
 			headerName: 'Height',
 			width: 100,
-			editable: true,			
+			editable: false,			
 		},
 		{
-			field: 'lenght',
+			field: 'length',
 			headerName: 'Lenght',
 			width: 220,
-			editable: true,
+			editable: false,
 			flex: 1
 		},
 		{
@@ -179,27 +128,6 @@ export const AdminItems = () => {
 			cellClassName: 'actions',
 			align: "right",
 			getActions: ({ id }) => {
-			const isInEditMode = rowModesModel[id]?.mode === GridRowModes.Edit;
-
-			if (isInEditMode) {
-				return [
-				<GridActionsCellItem
-					icon={<SaveIcon />}
-					label="Save"
-					sx={{
-					color: 'primary.main',
-					}}
-					onClick={handleSaveClick(id)}
-				/>,
-				<GridActionsCellItem
-					icon={<CancelIcon />}
-					label="Cancel"
-					className="textPrimary"
-					onClick={handleCancelClick(id)}
-					color="inherit"
-				/>,
-				];
-			}
 
 			return [
 				<GridActionsCellItem
@@ -263,9 +191,6 @@ export const AdminItems = () => {
 			onRowModesModelChange={handleRowModesModelChange}
 			onRowEditStop={handleRowEditStop}
 			processRowUpdate={processRowUpdate}
-			slots={{
-				toolbar: EditToolbar as GridSlots['toolbar'],
-			}}
 			slotProps={{
 				toolbar: { setRows, setRowModesModel },
 			}}
