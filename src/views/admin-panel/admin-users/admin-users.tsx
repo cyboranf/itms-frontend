@@ -27,63 +27,12 @@ import { PlusOutlined } from "@ant-design/icons";
 import { Navbar } from "../../../components/navbar";
 import { User } from "../../../service/users/types";
 import { getAllUsers } from "../../../service/users";
-
 const roles = ["Market", "Finance", "Development"]; // pobrac role z api
 
 //const { Option } = Select;
 
 const { Header, Content, Footer, Sider } = Layout;
 
-const initialRows: GridRowsProp = [
-  {
-    id: 1,
-    name: "damian",
-    last_name: "bernat",
-    pesel: 12345,
-    email: "damdam",
-    phone_number: 2123,
-    role: "Market",
-    passowrd: 123,
-  },
-];
-
-interface EditToolbarProps {
-  setRows: (newRows: (oldRows: GridRowsProp) => GridRowsProp) => void;
-  setRowModesModel: (
-    newModel: (oldModel: GridRowModesModel) => GridRowModesModel
-  ) => void;
-}
-
-function EditToolbar(props: EditToolbarProps) {
-  const { setRows, setRowModesModel } = props;
-
-  const handleClick = () => {
-    const id = randomId();
-    setRows((oldRows) => [
-      ...oldRows,
-      { id, name: "", last_name: "", isNew: true },
-    ]);
-    setRowModesModel((oldModel) => ({
-      ...oldModel,
-      [id]: { mode: GridRowModes.Edit, fieldToFocus: "name" },
-    }));
-  };
-
-  return (
-    <GridToolbarContainer>
-      <Button
-        color="primary"
-        icon={<PlusOutlined />}
-        onClick={handleClick}
-        style={{
-          margin: 5,
-        }}
-      >
-        Add record
-      </Button>
-    </GridToolbarContainer>
-  );
-}
 
 export const AdminPanel = () => {
   const [open, setOpen] = useState(false);
@@ -95,10 +44,23 @@ export const AdminPanel = () => {
     setOpen(false);
   };
 
-  const [rows, setRows] = React.useState(initialRows);
+  const [rows, setRows] = React.useState<User[]>([]);
   const [rowModesModel, setRowModesModel] = React.useState<GridRowModesModel>(
     {}
   );
+
+  const getUsers = async () => {
+    try{
+      const res = await getAllUsers()
+      setRows(res);
+    } catch (err: unknown){
+      console.error(err);
+    }
+  }
+
+  React.useEffect(() => {
+		getUsers();
+	}, []);
 
   const handleRowEditStop: GridEventListener<"rowEditStop"> = (
     params,
@@ -146,7 +108,7 @@ export const AdminPanel = () => {
   const columns: GridColDef[] = [
     { field: "name", headerName: "Name", width: 180, editable: true },
     {
-      field: "last_name",
+      field: "lastname",
       headerName: "Last Name",
       width: 180,
       align: "left",
@@ -163,28 +125,14 @@ export const AdminPanel = () => {
       field: "email",
       headerName: "Email",
       width: 180,
+      flex: 1,
       editable: true,
     },
     {
-      field: "phone_number",
+      field: "phoneNumber",
       headerName: "Phone Number",
       width: 180,
       editable: true,
-    },
-    {
-      field: "role",
-      headerName: "Department",
-      width: 100,
-      editable: true,
-      type: "singleSelect",
-      valueOptions: ["Market", "Finance", "Development"],
-    },
-    {
-      field: "passowrd",
-      headerName: "Passowrd",
-      width: 220,
-      editable: true,
-      flex: 1,
     },
     {
       field: "actions",
@@ -308,15 +256,8 @@ export const AdminPanel = () => {
               <div style={{ margin: 10 }}>
                 <Button type="primary" style={{ marginRight: 5 }}>
                   <Link to="/roles" style={{ textDecoration: "none" }}>
-                    Show Roles
+                    Show Tasks
                   </Link>
-                </Button>
-                <Button
-                  type="primary"
-                  onClick={showDrawer}
-                  icon={<PlusOutlined />}
-                >
-                  Add role
                 </Button>
               </div>
               <DataGrid
@@ -327,9 +268,6 @@ export const AdminPanel = () => {
                 onRowModesModelChange={handleRowModesModelChange}
                 onRowEditStop={handleRowEditStop}
                 processRowUpdate={processRowUpdate}
-                slots={{
-                  toolbar: EditToolbar as GridSlots["toolbar"],
-                }}
                 slotProps={{
                   toolbar: { setRows, setRowModesModel },
                 }}

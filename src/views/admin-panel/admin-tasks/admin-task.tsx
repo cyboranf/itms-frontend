@@ -16,7 +16,7 @@ import {
 	GridRowEditStopReasons,
 } from "@mui/x-data-grid";
 import { Typography } from "@mui/material";
-import { Form, Input, Button, Select, Row, Col, Breadcrumb, Drawer, Space, Table } from 'antd'; import { PostTask, getAllTasks } from "../../../service/tasks";
+import { Form, Input, Button, Select, Row, Col, Breadcrumb, Drawer, Space, Table } from 'antd'; import { DeleteTasks, PostTask, getAllTasks } from "../../../service/tasks";
 import { Task } from "../../../service/tasks/types";
 import { PlusOutlined } from "@ant-design/icons";
 
@@ -47,11 +47,8 @@ export const AdminTask = () => {
 		setRowModesModel({ ...rowModesModel, [id]: { mode: GridRowModes.Edit } });
 	};
 
-	const handleSaveClick = (id: GridRowId) => () => {
-		setRowModesModel({ ...rowModesModel, [id]: { mode: GridRowModes.View } });
-	};
-
 	const handleDeleteClick = (id: GridRowId) => () => {
+		DeleteTasks(id.toString());
 		setTasks(tasks.filter((row) => row.id !== id));
 	};
 
@@ -132,11 +129,11 @@ export const AdminTask = () => {
 	};
 
 	const columns: GridColDef[] = [
-		{ field: "name", headerName: "Name", width: 180, editable: true },
-		{ field: "priority", headerName: "Priority", width: 180, align: "left", headerAlign: "left", editable: true },
-		{ field: "creationDate", headerName: "Creation Date", width: 180, editable: true },
-		{ field: "endDate", headerName: "End Date", width: 180, editable: true },
-		{ field: "state", headerName: "Status", width: 60, editable: true, flex: 1 },
+		{ field: "name", headerName: "Name", width: 180, editable: false },
+		{ field: "priority", headerName: "Priority", width: 180, align: "left", headerAlign: "left", editable: false },
+		{ field: "creationDate", headerName: "Creation Date", width: 180, editable: false },
+		{ field: "endDate", headerName: "End Date", width: 180, editable: false },
+		{ field: "state", headerName: "Status", width: 60, editable: false, flex: 1 },
 		{ 
 			field: 'warehouses', 
 			headerName: 'Warehouse Details', 
@@ -164,11 +161,7 @@ export const AdminTask = () => {
 		{
 			field: "actions", type: "actions", headerName: "Actions", width: 100, cellClassName: "actions", align: "right",
 			getActions: ({ id }) => {
-				const isInEditMode = rowModesModel[id]?.mode === GridRowModes.Edit;
-				return isInEditMode ? [
-					<GridActionsCellItem icon={<SaveIcon />} label='Save' onClick={handleSaveClick(id)} />,
-					<GridActionsCellItem icon={<CancelIcon />} label='Cancel' onClick={() => setRowModesModel((oldModel) => ({ ...oldModel, [id]: { mode: GridRowModes.View } }))} />
-				] : [
+				return [
 					<GridActionsCellItem icon={<EditIcon />} label='Edit' onClick={handleEditClick(id)} />,
 					<GridActionsCellItem icon={<DeleteIcon />} label='Delete' onClick={handleDeleteClick(id)} />,
 				];
@@ -361,7 +354,7 @@ export const AdminTask = () => {
 						p: 5,
 					}}
 				>
-					Manage Tasks
+					Manage Tasks Types
 				</Typography>
 				<div style={{ margin: 10 }}>
 					<Button type='primary' onClick={showDrawer} icon={<PlusOutlined />}>

@@ -17,3 +17,9 @@ export const PostTask = async (params: Task) => {
         return false;
 	}
 } 
+
+export const DeleteTasks = async (id:string) => {
+	const url = Paths.TASKS_ID.replace('{id}', id);
+    await instanceAxios.delete(url);
+    return true;
+}
