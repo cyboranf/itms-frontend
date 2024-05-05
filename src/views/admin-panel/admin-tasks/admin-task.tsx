@@ -16,7 +16,8 @@ import {
 	GridRowEditStopReasons,
 } from "@mui/x-data-grid";
 import { Typography } from "@mui/material";
-import { Form, Input, Button, Select, Row, Col, Breadcrumb, Drawer, Space, Table } from 'antd'; import { DeleteTasks, PostTask, getAllTasks } from "../../../service/tasks";
+import { Form, Input, Button, Select, Row, Col, Breadcrumb, Drawer, Space, Table, DatePicker } from 'antd'; 
+import { DeleteTasks, PostTask, getAllTasks } from "../../../service/tasks";
 import { Task } from "../../../service/tasks/types";
 import { PlusOutlined } from "@ant-design/icons";
 
@@ -209,7 +210,7 @@ export const AdminTask = () => {
 					extra={
 						<Space>
 							<Button onClick={onClose}>Cancel</Button>
-							<Button onClick={onClose} type="primary">Submit</Button>
+							<Button onClick={handleCreateTask} type="primary">Submit</Button>
 						</Space>
 					}
 				>
@@ -240,6 +241,7 @@ export const AdminTask = () => {
 								<Form.Item
 									name="description"
 									label="Description"
+									rules={[{ required: true, message: 'Please select a category' }]}
 								>
 									<Input.TextArea rows={4} placeholder="Enter description" value={description} onChange={e => setDescription(e.target.value)} />
 								</Form.Item>
@@ -291,7 +293,7 @@ export const AdminTask = () => {
 									label="start Date"
 									rules={[{ required: true, message: 'Please enter start Date' }]}
 								>
-									<Input placeholder="Please enter start Date" value={taskName} onChange={e => setTaskName(e.target.value)} />
+									<DatePicker />
 								</Form.Item>
 							</Col>
 							<Col span={12}>
@@ -300,7 +302,7 @@ export const AdminTask = () => {
 									label="end Date"
 									rules={[{ required: true, message: 'Please enter end Date' }]}
 								>
-									<Input placeholder="Please enter end Date" value={taskName} onChange={e => setTaskName(e.target.value)} />
+									<DatePicker />
 								</Form.Item>
 							</Col>
 							<Col span={12}>
@@ -339,9 +341,7 @@ export const AdminTask = () => {
 									<Input placeholder="Please enter type id" value={taskName} onChange={e => setTaskName(e.target.value)} />
 								</Form.Item>
 							</Col>
-							<Col span={24}>
-								<Button type="primary" onClick={handleCreateTask} block>Create Task</Button>
-							</Col>
+							
 						</Row>
 					</Form>
 				</Drawer>
@@ -354,7 +354,7 @@ export const AdminTask = () => {
 						p: 5,
 					}}
 				>
-					Manage Tasks Types
+					Manage Tasks
 				</Typography>
 				<div style={{ margin: 10 }}>
 					<Button type='primary' onClick={showDrawer} icon={<PlusOutlined />}>
