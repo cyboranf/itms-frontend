@@ -3,8 +3,6 @@ import React, { useState } from "react";
 import Box from "@mui/material/Box";
 import EditIcon from "@mui/icons-material/Edit";
 import DeleteIcon from "@mui/icons-material/DeleteOutlined";
-import SaveIcon from "@mui/icons-material/Save";
-import CancelIcon from "@mui/icons-material/Close";
 import {
 	GridRowsProp,
 	GridRowModesModel,
@@ -19,14 +17,12 @@ import {
 	GridRowEditStopReasons,
 	GridSlots,
 } from "@mui/x-data-grid";
-import { randomId } from "@mui/x-data-grid-generator";
 import { Typography } from "@mui/material";
 import { Link } from "react-router-dom";
 import { Breadcrumb, Drawer, Form, Input, Row, Space, Button, Layout } from "antd";
-import { PlusOutlined } from "@ant-design/icons";
 import { Navbar } from "../../../components/navbar";
 import { User } from "../../../service/users/types";
-import { getAllUsers } from "../../../service/users";
+import { DeleteUsers, PutUsers, getAllUsers } from "../../../service/users";
 const roles = ["Market", "Finance", "Development"]; // pobrac role z api
 
 //const { Option } = Select;
@@ -36,6 +32,7 @@ const { Header, Content, Footer, Sider } = Layout;
 
 export const AdminPanel = () => {
   const [open, setOpen] = useState(false);
+
   const showDrawer = () => {
     setOpen(true);
   };
@@ -48,6 +45,7 @@ export const AdminPanel = () => {
   const [rowModesModel, setRowModesModel] = React.useState<GridRowModesModel>(
     {}
   );
+  const [id, setId] = useState<GridRowId>(String);
 
   const getUsers = async () => {
     try{
@@ -72,27 +70,14 @@ export const AdminPanel = () => {
   };
 
   const handleEditClick = (id: GridRowId) => () => {
+    setId(id)
+    setOpen(true)
     setRowModesModel({ ...rowModesModel, [id]: { mode: GridRowModes.Edit } });
   };
 
-  const handleSaveClick = (id: GridRowId) => () => {
-    setRowModesModel({ ...rowModesModel, [id]: { mode: GridRowModes.View } });
-  };
-
   const handleDeleteClick = (id: GridRowId) => () => {
+    DeleteUsers(id.toString());
     setRows(rows.filter((row) => row.id !== id));
-  };
-
-  const handleCancelClick = (id: GridRowId) => () => {
-    setRowModesModel({
-      ...rowModesModel,
-      [id]: { mode: GridRowModes.View, ignoreModifications: true },
-    });
-
-    const editedRow = rows.find((row) => row.id === id);
-    if (editedRow!.isNew) {
-      setRows(rows.filter((row) => row.id !== id));
-    }
   };
 
   const processRowUpdate = (newRow: GridRowModel) => {
@@ -105,34 +90,65 @@ export const AdminPanel = () => {
     setRowModesModel(newRowModesModel);
   };
 
+  const [form] = Form.useForm();
+
+
+  const handleEditSubmitClick = () => async () => {
+      try {
+        form.validateFields().then(async (values) => {
+          const editUser = {
+            id: id.toString(),
+            email: values.email,
+            lastname: values.lastname,
+            name: values.name,
+            pesel: values.pesel,
+            phoneNumber: values.phoneNumber,
+            username: values.username,
+          };
+        
+          const success = await PutUsers(editUser);
+          if (success) {
+            getAllUsers(); 
+            onClose();           
+          } else {
+            console.error("Error while adding the warehouse.");
+          }
+          }).catch(error => {
+          console.error("Form processing error:", error);
+          });
+      }catch (error) {
+        console.error("Error during form submission:", error);
+      }
+  };
+
   const columns: GridColDef[] = [
-    { field: "name", headerName: "Name", width: 180, editable: true },
+    { field: "name", headerName: "Name", width: 180, editable: false },
     {
       field: "lastname",
       headerName: "Last Name",
       width: 180,
       align: "left",
       headerAlign: "left",
-      editable: true,
+      editable: false,
     },
     {
       field: "pesel",
       headerName: "Pesel",
       width: 180,
-      editable: true,
+      editable: false,
     },
     {
       field: "email",
       headerName: "Email",
       width: 180,
       flex: 1,
-      editable: true,
+      editable: false,
     },
     {
       field: "phoneNumber",
       headerName: "Phone Number",
       width: 180,
-      editable: true,
+      editable: false,
     },
     {
       field: "actions",
@@ -142,27 +158,6 @@ export const AdminPanel = () => {
       cellClassName: "actions",
       align: "right",
       getActions: ({ id }) => {
-        const isInEditMode = rowModesModel[id]?.mode === GridRowModes.Edit;
-
-        if (isInEditMode) {
-          return [
-            <GridActionsCellItem
-              icon={<SaveIcon />}
-              label="Save"
-              sx={{
-                color: "primary.main",
-              }}
-              onClick={handleSaveClick(id)}
-            />,
-            <GridActionsCellItem
-              icon={<CancelIcon />}
-              label="Cancel"
-              className="textPrimary"
-              onClick={handleCancelClick(id)}
-              color="inherit"
-            />,
-          ];
-        }
 
         return [
           <GridActionsCellItem
@@ -286,6 +281,112 @@ export const AdminPanel = () => {
                   "& .MuiButtonBase-root  ": {},
                 }}
               />
+               <Drawer
+                title="Edit a User"
+                width={720}
+                onClose={onClose}
+                open={open}
+                styles={{
+                  body: {
+                    paddingBottom: 80,
+                  },
+                }}
+                extra={
+                  <Space>
+                    <Button onClick={onClose}>Cancel</Button>
+                    <Button onClick={handleEditSubmitClick()}  type="primary">
+                      Submit
+                    </Button>
+                  </Space>
+                }
+              >
+                <Form layout="vertical" hideRequiredMark form={form}>
+                  <Row>
+                    <Form.Item
+                      name="email"
+                      label="email"
+                      rules={[
+                        { required: true, message: "Please enter email" },
+                      ]}
+                      style={{
+                        flex: 1,
+                      }}
+                    >
+                      <Input  placeholder="Please enter email" />
+                    </Form.Item>
+                  </Row>
+                  <Row>
+                    <Form.Item
+                      name="lastname"
+                      label="last name"
+                      rules={[
+                        { required: true, message: "Please enter last name" },
+                      ]}
+                      style={{
+                        flex: 1,
+                      }}
+                    >
+                      <Input  placeholder="Please enter last name" />
+                    </Form.Item>
+                  </Row>
+                  <Row>
+                    <Form.Item
+                      name="name"
+                      label="Name"
+                      rules={[
+                        { required: true, message: "Please enter name" },
+                      ]}
+                      style={{
+                        flex: 1,
+                      }}
+                    >
+                      <Input  placeholder="Please enter  name" />
+                    </Form.Item>
+                  </Row>
+                  <Row>
+                    <Form.Item
+                      name="pesel"
+                      label="pesel"
+                      rules={[
+                        { required: true, message: "Please enter pesel" },
+                      ]}
+                      style={{
+                        flex: 1,
+                      }}
+                    >
+                      <Input  placeholder="Please enter pesel" />
+                    </Form.Item>
+                  </Row>
+                  <Row>
+                    <Form.Item
+                      name="phoneNumber"
+                      label="phone Number"
+                      rules={[
+                        { required: true, message: "Please phone Number" },
+                      ]}
+                      style={{
+                        flex: 1,
+                      }}
+                    >
+                      <Input  placeholder="Please enter phone Number" />
+                    </Form.Item>
+                  </Row>
+                  <Row>
+                    <Form.Item
+                      name="username"
+                      label="username"
+                      rules={[
+                        { required: true, message: "Please username" },
+                      ]}
+                      style={{
+                        flex: 1,
+                      }}
+                    >
+                      <Input  placeholder="Please enter username" />
+                    </Form.Item>
+                  </Row>
+                </Form>
+              </Drawer>
             </Box>
           </Box>
         </Content>
