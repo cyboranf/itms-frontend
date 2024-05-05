@@ -313,7 +313,7 @@ export const AdminWarehouse = () => {
                   </Space>
                 }
               >
-                <Form layout="vertical" hideRequiredMark form={form1}>
+                <Form layout="vertical" hideRequiredMark form={form}>
                   <Row>
                     <Form.Item
                       name="BuildingName"
