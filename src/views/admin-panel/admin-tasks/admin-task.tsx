@@ -2,8 +2,6 @@ import React, { useState } from "react";
 import Box from "@mui/material/Box";
 import EditIcon from "@mui/icons-material/Edit";
 import DeleteIcon from "@mui/icons-material/DeleteOutlined";
-import SaveIcon from "@mui/icons-material/Save";
-import CancelIcon from "@mui/icons-material/Close";
 import {
 	GridRowModesModel,
 	GridRowModes,
@@ -16,7 +14,7 @@ import {
 	GridRowEditStopReasons,
 } from "@mui/x-data-grid";
 import { Typography } from "@mui/material";
-import { Form, Input, Button, Select, Row, Col, Breadcrumb, Drawer, Space, Table, DatePicker } from 'antd'; 
+import { Form, Input, Button, Select, Row, Col, Breadcrumb, Drawer, Space, Table, DatePicker } from "antd";
 import { DeleteTasks, PostTask, getAllTasks } from "../../../service/tasks";
 import { Task } from "../../../service/tasks/types";
 import { PlusOutlined } from "@ant-design/icons";
@@ -68,13 +66,13 @@ export const AdminTask = () => {
 	const { Option } = Select;
 
 	const [open, setOpen] = useState(false);
-	const [taskName, setTaskName] = useState('');
-	const [category, setCategory] = useState('');
-	const [description, setDescription] = useState('');
-	const [product, setProduct] = useState('');
-	const [warehouseSpace, setWarehouseSpace] = useState('');
-	const [employeeGroup, setEmployeeGroup] = useState('');
-	const [selectedOptions, setSelectedOptions] = useState([]);
+	const [taskName, setTaskName] = useState("");
+	const [category, setCategory] = useState("");
+	const [description, setDescription] = useState("");
+	const [product, setProduct] = useState("");
+	const [warehouseSpace, setWarehouseSpace] = useState("");
+	const [employeeGroup, setEmployeeGroup] = useState("");
+	const [selectedOptions, setSelectedOptions] = useState<any[]>([]);
 
 	const [form] = Form.useForm();
 
@@ -85,13 +83,13 @@ export const AdminTask = () => {
 	const handleAddOption = () => {
 		if (product && warehouseSpace) {
 			setSelectedOptions([...selectedOptions, { product, warehouseSpace, description }]);
-			setProduct('');
-			setWarehouseSpace('');
-			setDescription('');
+			setProduct("");
+			setWarehouseSpace("");
+			setDescription("");
 		}
 	};
 
-	const handleDeleteOption = (index) => {
+	const handleDeleteOption = (index: number) => {
 		const updatedOptions = [...selectedOptions];
 		updatedOptions.splice(index, 1);
 		setSelectedOptions(updatedOptions);
@@ -99,33 +97,33 @@ export const AdminTask = () => {
 
 	const handleCreateTask = () => {
 		try {
-			form.validateFields().then(async (values) => {
+			form
+				.validateFields()
+				.then(async (values) => {
+					const newTaskt = {
+						description: values.description,
+						endDate: values.endDate,
+						id: values.idd,
+						name: values.name,
+						priority: values.priority,
+						startDate: values.startDate,
+						state: values.state,
+						type_id: values.type_id,
+					};
 
-				const newTaskt = {
-					description: values.description,
-					endDate: values.endDate,
-					id: values.idd,
-					name: values.name,
-					priority: values.priority,
-					startDate: values.startDate,
-					state: values.state,
-					type_id: values.type_id
-				}
-
-				const success = await PostTask(newTaskt);
-				if (success){
-					getAllTasks();
-					onClose();
-				}else{
-					console.error("Error while adding the task.")
-				}
-
-			}).catch(error => {
-				console.error("Form processing error:", error);
-				
-			})
-		}catch (error){
-			console.error("Error during form submission:", error)
+					const success = await PostTask(newTaskt);
+					if (success) {
+						getAllTasks();
+						onClose();
+					} else {
+						console.error("Error while adding the task.");
+					}
+				})
+				.catch((error) => {
+					console.error("Form processing error:", error);
+				});
+		} catch (error) {
+			console.error("Error during form submission:", error);
 		}
 	};
 
@@ -135,32 +133,37 @@ export const AdminTask = () => {
 		{ field: "creationDate", headerName: "Creation Date", width: 180, editable: false },
 		{ field: "endDate", headerName: "End Date", width: 180, editable: false },
 		{ field: "state", headerName: "Status", width: 60, editable: false, flex: 1 },
-		{ 
-			field: 'warehouses', 
-			headerName: 'Warehouse Details', 
-			width: 300, 
+		{
+			field: "warehouses",
+			headerName: "Warehouse Details",
+			width: 300,
 			renderCell: (params) => (
-				<span>{params.value.map(warehouse => `${warehouse.building}-${warehouse.zone}`).join(', ')}</span>
-			)
-		},
-		{ 
-			field: 'users', 
-			headerName: 'Workers Details', 
-			width: 300, 
-			renderCell: (params) => (
-				<span>{params.value.map(users => `${users.name} ${users.lastname}`).join(', ')}</span>
-			)
-		},
-		{ 
-			field: 'products', 
-			headerName: 'Products Details', 
-			width: 300, 
-			renderCell: (params) => (
-				<span>{params.value.map(products => `${products.name}-${products.code}`).join(', ')}</span>
-			)
+				<span>{params.value.map((warehouse: any) => `${warehouse.building}-${warehouse.zone}`).join(", ")}</span>
+			),
 		},
 		{
-			field: "actions", type: "actions", headerName: "Actions", width: 100, cellClassName: "actions", align: "right",
+			field: "users",
+			headerName: "Workers Details",
+			width: 300,
+			renderCell: (params) => (
+				<span>{params.value.map((users: any) => `${users.name} ${users.lastname}`).join(", ")}</span>
+			),
+		},
+		{
+			field: "products",
+			headerName: "Products Details",
+			width: 300,
+			renderCell: (params) => (
+				<span>{params.value.map((products: any) => `${products.name}-${products.code}`).join(", ")}</span>
+			),
+		},
+		{
+			field: "actions",
+			type: "actions",
+			headerName: "Actions",
+			width: 100,
+			cellClassName: "actions",
+			align: "right",
 			getActions: ({ id }) => {
 				return [
 					<GridActionsCellItem icon={<EditIcon />} label='Edit' onClick={handleEditClick(id)} />,
@@ -171,16 +174,15 @@ export const AdminTask = () => {
 	];
 
 	const antColumns = [
-		{ title: 'Product', dataIndex: 'product', key: 'product' },
-		{ title: 'Warehouse-space', dataIndex: 'warehouseSpace', key: 'warehouseSpace' },
-		{ title: 'Description', dataIndex: 'description', key: 'description' },
+		{ title: "Product", dataIndex: "product", key: "product" },
+		{ title: "Warehouse-space", dataIndex: "warehouseSpace", key: "warehouseSpace" },
+		{ title: "Description", dataIndex: "description", key: "description" },
 		{
-			title: 'Action', key: 'action', render: (_, record, index) => (
-				<Button onClick={() => handleDeleteOption(index)}>Delete</Button>
-			),
+			title: "Action",
+			key: "action",
+			render: (_: unknown, index: any) => <Button onClick={() => handleDeleteOption(index)}>Delete</Button>,
 		},
 	];
-
 
 	return (
 		<Box>
@@ -202,7 +204,7 @@ export const AdminTask = () => {
 				</Breadcrumb>
 
 				<Drawer
-					title="Create a new Task"
+					title='Create a new Task'
 					width={720}
 					onClose={onClose}
 					open={open}
@@ -210,138 +212,153 @@ export const AdminTask = () => {
 					extra={
 						<Space>
 							<Button onClick={onClose}>Cancel</Button>
-							<Button onClick={handleCreateTask} type="primary">Submit</Button>
+							<Button onClick={handleCreateTask} type='primary'>
+								Submit
+							</Button>
 						</Space>
 					}
 				>
-					<Form layout="vertical" hideRequiredMark form={form}>
+					<Form layout='vertical' hideRequiredMark form={form}>
 						<Row gutter={16}>
 							<Col span={12}>
 								<Form.Item
-									name="name"
-									label="Task Name"
-									rules={[{ required: true, message: 'Please enter task name' }]}
+									name='name'
+									label='Task Name'
+									rules={[{ required: true, message: "Please enter task name" }]}
 								>
-									<Input placeholder="Please enter task name" value={taskName} onChange={e => setTaskName(e.target.value)} />
+									<Input
+										placeholder='Please enter task name'
+										value={taskName}
+										onChange={(e) => setTaskName(e.target.value)}
+									/>
 								</Form.Item>
 							</Col>
 							<Col span={12}>
 								<Form.Item
-									name="category"
-									label="Category"
-									rules={[{ required: true, message: 'Please select a category' }]}
+									name='category'
+									label='Category'
+									rules={[{ required: true, message: "Please select a category" }]}
 								>
-									<Select placeholder="Select a category" value={category} onChange={value => setCategory(value)}>
-										<Option value="category1">Category 1</Option>
-										<Option value="category2">Category 2</Option>
+									<Select placeholder='Select a category' value={category} onChange={(value) => setCategory(value)}>
+										<Option value='category1'>Category 1</Option>
+										<Option value='category2'>Category 2</Option>
 									</Select>
 								</Form.Item>
 							</Col>
 							<Col span={24}>
 								<Form.Item
-									name="description"
-									label="Description"
-									rules={[{ required: true, message: 'Please select a category' }]}
+									name='description'
+									label='Description'
+									rules={[{ required: true, message: "Please select a category" }]}
 								>
-									<Input.TextArea rows={4} placeholder="Enter description" value={description} onChange={e => setDescription(e.target.value)} />
+									<Input.TextArea
+										rows={4}
+										placeholder='Enter description'
+										value={description}
+										onChange={(e) => setDescription(e.target.value)}
+									/>
 								</Form.Item>
 							</Col>
 							<Col span={8}>
-								<Form.Item
-									name="product"
-									label="Product"
-								>
-									<Select placeholder="Select a product" value={product} onChange={value => setProduct(value)}>
-										<Option value="product1">Product 1</Option>
-										<Option value="product2">Product 2</Option>
+								<Form.Item name='product' label='Product'>
+									<Select placeholder='Select a product' value={product} onChange={(value) => setProduct(value)}>
+										<Option value='product1'>Product 1</Option>
+										<Option value='product2'>Product 2</Option>
 									</Select>
 								</Form.Item>
 							</Col>
 							<Col span={8}>
-								<Form.Item
-									name="warehouseSpace"
-									label="Warehouse-space"
-								>
-									<Select placeholder="Select warehouse space" value={warehouseSpace} onChange={value => setWarehouseSpace(value)}>
-										<Option value="space1">Warehouse-space 1</Option>
-										<Option value="space2">Warehouse-space 2</Option>
+								<Form.Item name='warehouseSpace' label='Warehouse-space'>
+									<Select
+										placeholder='Select warehouse space'
+										value={warehouseSpace}
+										onChange={(value) => setWarehouseSpace(value)}
+									>
+										<Option value='space1'>Warehouse-space 1</Option>
+										<Option value='space2'>Warehouse-space 2</Option>
 									</Select>
 								</Form.Item>
 							</Col>
 							<Col span={8}>
 								<Form.Item>
-									<Button type="primary" onClick={handleAddOption} block>Add</Button>
+									<Button type='primary' onClick={handleAddOption} block>
+										Add
+									</Button>
 								</Form.Item>
 							</Col>
 							<Col span={24}>
-								<Table dataSource={selectedOptions} columns={antColumns} rowKey="id" />
+								<Table dataSource={selectedOptions} columns={antColumns} rowKey='id' />
 							</Col>
 							<Col span={24}>
-								<Form.Item
-									name="employeeGroup"
-									label="Employee Group"
-								>
-									<Select placeholder="Select an employee group" value={employeeGroup} onChange={value => setEmployeeGroup(value)}>
-										<Option value="group1">Group 1</Option>
-										<Option value="group2">Group 2</Option>
+								<Form.Item name='employeeGroup' label='Employee Group'>
+									<Select
+										placeholder='Select an employee group'
+										value={employeeGroup}
+										onChange={(value) => setEmployeeGroup(value)}
+									>
+										<Option value='group1'>Group 1</Option>
+										<Option value='group2'>Group 2</Option>
 									</Select>
 								</Form.Item>
 							</Col>
 							<Col span={12}>
 								<Form.Item
-									name="startDate"
-									label="start Date"
-									rules={[{ required: true, message: 'Please enter start Date' }]}
+									name='startDate'
+									label='start Date'
+									rules={[{ required: true, message: "Please enter start Date" }]}
 								>
 									<DatePicker />
 								</Form.Item>
 							</Col>
 							<Col span={12}>
 								<Form.Item
-									name="endDate"
-									label="end Date"
-									rules={[{ required: true, message: 'Please enter end Date' }]}
+									name='endDate'
+									label='end Date'
+									rules={[{ required: true, message: "Please enter end Date" }]}
 								>
 									<DatePicker />
 								</Form.Item>
 							</Col>
 							<Col span={12}>
-								<Form.Item
-									name="idd"
-									label="Task id"
-									rules={[{ required: true, message: 'Please enter Task id' }]}
-								>
-									<Input placeholder="Please enter Task id" value={taskName} onChange={e => setTaskName(e.target.value)} />
+								<Form.Item name='idd' label='Task id' rules={[{ required: true, message: "Please enter Task id" }]}>
+									<Input
+										placeholder='Please enter Task id'
+										value={taskName}
+										onChange={(e) => setTaskName(e.target.value)}
+									/>
 								</Form.Item>
 							</Col>
 							<Col span={12}>
 								<Form.Item
-									name="priority"
-									label="Priority"
-									rules={[{ required: true, message: 'Please enter Priority' }]}
+									name='priority'
+									label='Priority'
+									rules={[{ required: true, message: "Please enter Priority" }]}
 								>
-									<Input placeholder="Please enter Priority" value={taskName} onChange={e => setTaskName(e.target.value)} />
+									<Input
+										placeholder='Please enter Priority'
+										value={taskName}
+										onChange={(e) => setTaskName(e.target.value)}
+									/>
 								</Form.Item>
 							</Col>
 							<Col span={12}>
-								<Form.Item
-									name="state"
-									label="state"
-									rules={[{ required: true, message: 'Please enter state' }]}
-								>
-									<Input placeholder="Please enter state" value={taskName} onChange={e => setTaskName(e.target.value)} />
+								<Form.Item name='state' label='state' rules={[{ required: true, message: "Please enter state" }]}>
+									<Input
+										placeholder='Please enter state'
+										value={taskName}
+										onChange={(e) => setTaskName(e.target.value)}
+									/>
 								</Form.Item>
 							</Col>
 							<Col span={12}>
-								<Form.Item
-									name="type_id"
-									label="type id"
-									rules={[{ required: true, message: 'Please enter type id' }]}
-								>
-									<Input placeholder="Please enter type id" value={taskName} onChange={e => setTaskName(e.target.value)} />
+								<Form.Item name='type_id' label='type id' rules={[{ required: true, message: "Please enter type id" }]}>
+									<Input
+										placeholder='Please enter type id'
+										value={taskName}
+										onChange={(e) => setTaskName(e.target.value)}
+									/>
 								</Form.Item>
 							</Col>
-							
 						</Row>
 					</Form>
 				</Drawer>

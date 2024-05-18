@@ -1,6 +1,5 @@
 import { UnderlineOutlined } from '@ant-design/icons'
 import { Card, List, Skeleton } from 'antd'
-import React from 'react'
 import { Text } from '../text'
 
 const Dashboarduser = () => {
@@ -28,7 +27,7 @@ const Dashboarduser = () => {
             <List 
                 itemLayout='horizontal'
                 dataSource={Array.from({length: 4}).map((_, i) => ({id: i}))}
-                renderItem={(_, index) => (
+                renderItem={(_) => (
                     <Skeleton active/>
                 )}  
             />

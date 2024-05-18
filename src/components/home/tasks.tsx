@@ -1,10 +1,11 @@
 import { CalendarOutlined } from "@ant-design/icons";
 import { Badge, Card, List, Skeleton } from "antd";
-import React, { useState } from "react";
+import { useState } from "react";
 import { Text } from "../text";
 
 function Tasks() {
-	const [isLoading, setIsLoading] = useState(false);
+	//TODO loading without setting state ?
+	const [isLoading,] = useState(false);
 	return (
 		<Card
 			style={{ height: "100%" }}

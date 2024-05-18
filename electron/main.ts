@@ -1,6 +1,6 @@
 import { app, BrowserWindow } from "electron";
 import path from "node:path";
-import { spawn } from "child_process";
+// import { spawn } from "child_process";
 
 // The built directory structure
 //

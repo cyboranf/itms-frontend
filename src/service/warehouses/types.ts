@@ -10,3 +10,5 @@ export type Warehouse = {
   productName: string;
   productCode: string;
 }
+
+//TODO czmemu warehouse ma id, name, code produktu?

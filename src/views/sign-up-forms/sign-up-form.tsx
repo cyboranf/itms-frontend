@@ -1,6 +1,6 @@
 import "./sign-up-form.scss";
 import Select from "react-select";
-import { useEffect, useState } from "react";
+import { useState } from "react";
 import Input from "../../components/input/input";
 import { FieldErrors, UseFormRegister, UseFormSetValue, UseFormTrigger } from "react-hook-form";
 import { RegexpValidators } from "../../utils/reg-exp";

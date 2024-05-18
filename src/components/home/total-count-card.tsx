@@ -1,5 +1,4 @@
 import { Card, Skeleton } from "antd";
-import React from "react";
 import { totalCountVariants, TotalCountType } from "./card-style";
 import { Text } from "../text";
 import { Area, AreaConfig } from "@ant-design/plots";

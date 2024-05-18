@@ -4,7 +4,7 @@ import "./example-component.scss";
 export const ExampleComponent = () => {
 	const loginTest = async () => {
 		try {
-			await loginUser({ email: "dupa", password: "cyce" });
+			await loginUser({ username: "dupa", password: "cyce" });
 		} catch (err: unknown) {
 			console.log(err);
 		}

@@ -1,6 +1,5 @@
 import { DollarOutlined } from '@ant-design/icons'
 import { Card } from 'antd'
-import React from 'react'
 import { Text } from '../text'
 import {Area, AreaConfig} from '@ant-design/plots'
 function products() {
