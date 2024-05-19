@@ -234,6 +234,13 @@ export const AdminPanel = () => {
 									</Link>
 								</Button>
 							</div>
+							<div style={{ margin: 10 }}>
+								<Button type='primary' style={{ marginRight: 5 }}>
+									<Link to='http://127.0.0.1:8080/generate-user-report' style={{ textDecoration: "none" }}>
+										Raprot
+									</Link>
+								</Button>
+							</div>
 							<DataGrid
 								rows={rows}
 								columns={columns}

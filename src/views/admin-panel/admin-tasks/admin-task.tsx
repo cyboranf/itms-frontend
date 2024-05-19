@@ -13,6 +13,7 @@ import {
 	GridRowModel,
 	GridRowEditStopReasons,
 } from "@mui/x-data-grid";
+import { Link } from "react-router-dom";
 import { Typography } from "@mui/material";
 import { Form, Input, Button, Select, Row, Col, Breadcrumb, Drawer, Space, Table, DatePicker } from "antd";
 import { DeleteTasks, PostTask, getAllTasks } from "../../../service/tasks";
@@ -378,7 +379,13 @@ export const AdminTask = () => {
 						Add Task
 					</Button>
 				</div>
-
+				<div style={{ margin: 10 }}>
+								<Button type='primary' style={{ marginRight: 5 }}>
+									<Link to='http://127.0.0.1:8080/generate-task-report' style={{ textDecoration: "none" }}>
+										Raprot
+									</Link>
+								</Button>
+				</div>
 				<DataGrid
 					rows={tasks}
 					columns={columns}

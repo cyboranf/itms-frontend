@@ -13,7 +13,7 @@ import {
 	GridRowModes,
 } from "@mui/x-data-grid";
 import { Typography } from "@mui/material";
-import { Breadcrumb } from "antd";
+import { Breadcrumb, Button } from "antd";
 import { Link } from "react-router-dom";
 import { getAllItems } from "../../../service/items";
 import { Items } from "../../../service/items/types";
@@ -132,7 +132,13 @@ export const AdminItems = () => {
 					</Breadcrumb.Item>
 					<Breadcrumb.Item>Items</Breadcrumb.Item>
 				</Breadcrumb>
-
+				<div style={{ margin: 10 }}>
+								<Button type='primary' style={{ marginRight: 5 }}>
+									<Link to='http://127.0.0.1:8080/generate-items-report' style={{ textDecoration: "none" }}>
+										Raprot
+									</Link>
+								</Button>
+				</div>
 				<Typography
 					variant='h3'
 					component='h3'
