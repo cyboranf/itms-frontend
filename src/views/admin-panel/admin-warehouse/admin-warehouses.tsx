@@ -2,6 +2,7 @@ import React, { useEffect, useState } from "react";
 import Box from "@mui/material/Box";
 import EditIcon from "@mui/icons-material/Edit";
 import DeleteIcon from "@mui/icons-material/DeleteOutlined";
+import { Link } from "react-router-dom";
 import {
 	GridRowModesModel,
 	GridRowModes,
@@ -252,6 +253,13 @@ export const AdminWarehouse = () => {
 				<Button type='primary' onClick={showDrawer}>
 					Add Warehouse
 				</Button>
+				<div style={{ margin: 10 }}>
+								<Button type='primary' style={{ marginRight: 5 }}>
+									<Link to='http://127.0.0.1:8080/generate-warehouse-report' style={{ textDecoration: "none" }}>
+										Raprot
+									</Link>
+								</Button>
+				</div>
 				<DataGrid
 					rows={warehouse}
 					columns={columns}
