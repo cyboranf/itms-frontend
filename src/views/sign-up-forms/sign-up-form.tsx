@@ -14,10 +14,10 @@ type SignUpFormProps = {
 	setValue: UseFormSetValue<RegisterValuesTypes>;
 	errors: FieldErrors<RegisterValuesTypes>;
 	roleOptions: { value: string; label: string }[];
-	setCurrentStep: React.Dispatch<SetStateAction<number>>;
 	passwordValue: string;
-	trigger: UseFormTrigger<FieldErrors>;
-	control: Control<T>;
+	trigger: UseFormTrigger<RegisterValuesTypes>;
+	setCurrentStep: React.Dispatch<SetStateAction<number>>;
+	control: Control<RegisterValuesTypes>;
 	watch: any;
 	isSubmitted: boolean;
 };
@@ -25,20 +25,16 @@ type SignUpFormProps = {
 export const SignUpForm: React.FC<SignUpFormProps> = ({
 	register,
 	errors,
-	setValue,
 	roleOptions,
 	passwordValue,
 	setCurrentStep,
 	trigger,
 	control,
-	watch,
-	isSubmitted,
 }) => {
 	const navigate = useNavigate();
 	const [wasSubmitted, setWasSubmitted] = useState(false);
 
-	const validateAndGoNext = async (e) => {
-		e.preventDefault();
+	const validateAndGoNext = async () => {
 		const isFirstStepValid = await trigger(["username", "email", "password", "confirm_password", "role"]);
 
 		console.log(errors);
@@ -52,7 +48,12 @@ export const SignUpForm: React.FC<SignUpFormProps> = ({
 		<div className='signin-form-container'>
 			<div className='signin-form'>
 				<h1>Create account</h1>
-				<form onSumbit={validateAndGoNext}>
+				<form
+					onSubmit={(e) => {
+						e.preventDefault();
+						validateAndGoNext;
+					}}
+				>
 					<Input
 						placeholder='Username'
 						register={register("username", {
@@ -64,7 +65,7 @@ export const SignUpForm: React.FC<SignUpFormProps> = ({
 							},
 							required: "Required",
 						})}
-						error={wasSubmitted && errors}
+						error={errors}
 					/>
 					<Input
 						placeholder='Email'
@@ -75,7 +76,7 @@ export const SignUpForm: React.FC<SignUpFormProps> = ({
 							},
 							required: "Required",
 						})}
-						error={wasSubmitted && errors}
+						error={errors}
 					/>
 					<Input
 						type='password'
@@ -83,11 +84,12 @@ export const SignUpForm: React.FC<SignUpFormProps> = ({
 						register={register("password", {
 							validate: {
 								digits: (value) => RegexpValidators.PASSWORD_NUMBER.test(value) || "Must contain at least one digit",
-								specialChar: (value) => RegexpValidators.SPECIAL_CHARACTERS.test(value) || "Must contain at least one special character",
+								specialChar: (value) =>
+									RegexpValidators.SPECIAL_CHARACTERS.test(value) || "Must contain at least one special character",
 							},
 							required: "Required",
 						})}
-						error={wasSubmitted && errors}
+						error={errors}
 					/>
 
 					<Input
@@ -101,7 +103,7 @@ export const SignUpForm: React.FC<SignUpFormProps> = ({
 							},
 							required: "Required",
 						})}
-						error={wasSubmitted && errors}
+						error={errors}
 					/>
 
 					<div className='singin-form__select'>
@@ -109,17 +111,17 @@ export const SignUpForm: React.FC<SignUpFormProps> = ({
 							control={control}
 							name='role'
 							rules={{
-								required: "Role is required.", // Simply checking if role is present
+								required: "Role is required.",
 							}}
-							render={({ onChange, value, name, ref, field }) => (
+							render={({ field }) => (
 								<Select
-									ref={ref}
+									ref={field.ref}
 									className='category-list__select category-list__select--wider'
 									inputId='companies'
 									options={roleOptions}
 									placeholder='Role'
-									value={roleOptions.find((c) => c.value === value)}
-									onChange={(val) => field.onChange(val.value)}
+									value={roleOptions.find((c) => c.value === field.value)}
+									onChange={(val) => val && field.onChange(val.value ?? "")}
 								/>
 							)}
 						></Controller>
@@ -133,8 +135,9 @@ export const SignUpForm: React.FC<SignUpFormProps> = ({
 					<div className='form-field form-field-break'></div>
 					<button
 						onClick={(e) => {
+							e.preventDefault();
 							setWasSubmitted(true);
-							validateAndGoNext(e);
+							validateAndGoNext();
 						}}
 					>
 						Next

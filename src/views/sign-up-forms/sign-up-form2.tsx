@@ -1,6 +1,4 @@
 import "./sign-up-form.scss";
-import { useNavigate } from "react-router-dom";
-import "./sign-up-form.scss";
 import { FieldErrors, UseFormHandleSubmit, UseFormRegister } from "react-hook-form";
 import { RegisterValuesTypes } from "../../service/auth/types";
 import { SetStateAction } from "react";
@@ -21,7 +19,6 @@ export const SignUpForm2: React.FC<SignUpForm2Props> = ({
 	handleSubmit,
 	onSubmit,
 }) => {
-	const navigate = useNavigate();
 	return (
 		<div className='signin-form-container'>
 			<div className='signin-form'>
