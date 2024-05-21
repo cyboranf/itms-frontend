@@ -1,13 +1,14 @@
+import { CurrentUser } from "../../context/data-context";
 import instanceAxios from "../../helpers/axios/axios";
 import { Paths } from "./path";
 import { LoginValuesType, RegisterValuesTypes } from "./types";
 
 export const loginUser = async ({ username, password }: LoginValuesType) => {
-	const { data } = await instanceAxios.post<{ data: any }>(Paths.LOGIN, {
+	const { data } = await instanceAxios.post<CurrentUser>(Paths.LOGIN, {
 		username,
 		password,
 	});
-	const userData = data.data;
+	const userData = data;
 	return userData;
 };
 
@@ -26,11 +27,11 @@ export const registerUser = async ({
 		email,
 		password,
 		confirmPassword: confirm_password,
-		roleId: 1, 
-		firstName: first_name, 
+		roleId: 1,
+		firstName: first_name,
 		lastName: last_name,
 		pesel,
-		phoneNumber: phone_number, 
+		phoneNumber: phone_number,
 	});
 
 	const userData = data.data;

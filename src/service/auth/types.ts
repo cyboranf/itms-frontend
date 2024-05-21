@@ -3,6 +3,12 @@ export type LoginValuesType = {
 	password: string;
 };
 
+export type UserData = {
+	name: string;
+	accessToken: string;
+	role: string;
+};
+
 export type RegisterValuesTypes = {
 	username: string;
 	email: string;

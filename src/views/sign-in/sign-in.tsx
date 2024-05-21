@@ -6,6 +6,8 @@ import Input from "../../components/input/input";
 import { loginUser } from "../../service/auth";
 import { RegexpValidators } from "../../utils/reg-exp";
 import { useNavigate } from "react-router-dom";
+import { useContext } from "react";
+import { DataContext } from "../../context/data-context";
 
 export type LoginValuesType = {
 	username: string;
@@ -14,6 +16,7 @@ export type LoginValuesType = {
 
 export const SignIn = () => {
 	const navigate = useNavigate();
+	const { setCurrentUser } = useContext(DataContext);
 
 	const {
 		register,
@@ -22,10 +25,9 @@ export const SignIn = () => {
 	} = useForm<LoginValuesType>();
 
 	const onSubmit = async ({ username, password }: LoginValuesType) => {
-		console.log(username, password);
 		try {
 			const res = await loginUser({ username, password });
-			console.log(res);
+			setCurrentUser(res);
 			navigate("/");
 		} catch (err: unknown) {
 			console.log(err);
