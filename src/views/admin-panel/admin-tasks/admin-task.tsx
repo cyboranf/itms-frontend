@@ -15,14 +15,27 @@ import {
 } from "@mui/x-data-grid";
 import { Link } from "react-router-dom";
 import { Typography } from "@mui/material";
-import { Form, Input, Button, Select, Row, Col, Breadcrumb, Drawer, Space, Table, DatePicker } from "antd";
-import { DeleteTasks, PostTask, getAllTasks } from "../../../service/tasks";
+import { Form, Input, Button, Select, Row, Col, Breadcrumb, Drawer, Space, Table, DatePicker, Switch } from "antd";
+import { DeleteTasks, PostTask, getAllTasks, requestTaskReport } from "../../../service/tasks";
 import { Task } from "../../../service/tasks/types";
 import { PlusOutlined } from "@ant-design/icons";
+import TaskForm from '../../../components/forms/admin/admin-taks-form';
+import TaskReportForm from "../../../components/forms/admin/admin-taks-form-raport";
+
 
 export const AdminTask = () => {
 	const [tasks, setTasks] = React.useState<Task[]>([]);
 	const [rowModesModel, setRowModesModel] = React.useState<GridRowModesModel>({});
+	const [includeUsers, setIncludeUsers] = useState(false);
+    const [includeProducts, setIncludeProducts] = useState(false);
+    const [includeWarehouses, setIncludeWarehouses] = useState(false);
+    const [includePieChart, setIncludePieChart] = useState(false);
+    const [selectedTasks, setSelectedTasks] = useState<string[]>([]);
+	
+
+	const getReports = async () => {
+		requestTaskReport(includeUsers, includeProducts, includeWarehouses, includePieChart, selectedTasks);
+	}
 
 	const getTasks = async () => {
 		try {
@@ -63,17 +76,13 @@ export const AdminTask = () => {
 	const showDrawer = () => {
 		setOpen(true);
 	};
-
-	const { Option } = Select;
+	const showDrawer1 = () => {
+		setOpen1(true);
+	}
 
 	const [open, setOpen] = useState(false);
-	const [taskName, setTaskName] = useState("");
-	const [category, setCategory] = useState("");
-	const [description, setDescription] = useState("");
-	const [product, setProduct] = useState("");
-	const [warehouseSpace, setWarehouseSpace] = useState("");
-	const [employeeGroup, setEmployeeGroup] = useState("");
-	const [selectedOptions, setSelectedOptions] = useState<any[]>([]);
+	const [open1, setOpen1] = useState(false);
+
 
 	const [form] = Form.useForm();
 
@@ -81,20 +90,9 @@ export const AdminTask = () => {
 		setOpen(false);
 	};
 
-	const handleAddOption = () => {
-		if (product && warehouseSpace) {
-			setSelectedOptions([...selectedOptions, { product, warehouseSpace, description }]);
-			setProduct("");
-			setWarehouseSpace("");
-			setDescription("");
-		}
-	};
-
-	const handleDeleteOption = (index: number) => {
-		const updatedOptions = [...selectedOptions];
-		updatedOptions.splice(index, 1);
-		setSelectedOptions(updatedOptions);
-	};
+	const onClose1 = () => {
+		setOpen1(false);
+	}
 
 	const handleCreateTask = () => {
 		try {
@@ -174,32 +172,23 @@ export const AdminTask = () => {
 		},
 	];
 
-	const antColumns = [
-		{ title: "Product", dataIndex: "product", key: "product" },
-		{ title: "Warehouse-space", dataIndex: "warehouseSpace", key: "warehouseSpace" },
-		{ title: "Description", dataIndex: "description", key: "description" },
-		{
-			title: "Action",
-			key: "action",
-			render: (_: unknown, index: any) => <Button onClick={() => handleDeleteOption(index)}>Delete</Button>,
-		},
-	];
+
 
 	return (
 		<Box>
 			<Box
 				sx={{
 					height: 500,
-					width: "100%",
-					"& .actions": {
-						color: "text.secondary",
+					width: '100%',
+					'& .actions': {
+						color: 'text.secondary',
 					},
-					"& .textPrimary": {
-						color: "text.primary",
+					'& .textPrimary': {
+						color: 'text.primary',
 					},
 				}}
 			>
-				<Breadcrumb style={{ margin: "16px 0" }}>
+				<Breadcrumb style={{ margin: '16px 0' }}>
 					<Breadcrumb.Item>Dashboard</Breadcrumb.Item>
 					<Breadcrumb.Item>Task</Breadcrumb.Item>
 				</Breadcrumb>
@@ -219,148 +208,55 @@ export const AdminTask = () => {
 						</Space>
 					}
 				>
-					<Form layout='vertical' hideRequiredMark form={form}>
-						<Row gutter={16}>
-							<Col span={12}>
-								<Form.Item
-									name='name'
-									label='Task Name'
-									rules={[{ required: true, message: "Please enter task name" }]}
-								>
-									<Input
-										placeholder='Please enter task name'
-										value={taskName}
-										onChange={(e) => setTaskName(e.target.value)}
-									/>
-								</Form.Item>
-							</Col>
-							<Col span={12}>
-								<Form.Item
-									name='category'
-									label='Category'
-									rules={[{ required: true, message: "Please select a category" }]}
-								>
-									<Select placeholder='Select a category' value={category} onChange={(value) => setCategory(value)}>
-										<Option value='category1'>Category 1</Option>
-										<Option value='category2'>Category 2</Option>
-									</Select>
-								</Form.Item>
-							</Col>
-							<Col span={24}>
-								<Form.Item
-									name='description'
-									label='Description'
-									rules={[{ required: true, message: "Please select a category" }]}
-								>
-									<Input.TextArea
-										rows={4}
-										placeholder='Enter description'
-										value={description}
-										onChange={(e) => setDescription(e.target.value)}
-									/>
-								</Form.Item>
-							</Col>
-							<Col span={8}>
-								<Form.Item name='product' label='Product'>
-									<Select placeholder='Select a product' value={product} onChange={(value) => setProduct(value)}>
-										<Option value='product1'>Product 1</Option>
-										<Option value='product2'>Product 2</Option>
-									</Select>
-								</Form.Item>
-							</Col>
-							<Col span={8}>
-								<Form.Item name='warehouseSpace' label='Warehouse-space'>
-									<Select
-										placeholder='Select warehouse space'
-										value={warehouseSpace}
-										onChange={(value) => setWarehouseSpace(value)}
-									>
-										<Option value='space1'>Warehouse-space 1</Option>
-										<Option value='space2'>Warehouse-space 2</Option>
-									</Select>
-								</Form.Item>
-							</Col>
-							<Col span={8}>
-								<Form.Item>
-									<Button type='primary' onClick={handleAddOption} block>
-										Add
-									</Button>
-								</Form.Item>
-							</Col>
-							<Col span={24}>
-								<Table dataSource={selectedOptions} columns={antColumns} rowKey='id' />
-							</Col>
-							<Col span={24}>
-								<Form.Item name='employeeGroup' label='Employee Group'>
-									<Select
-										placeholder='Select an employee group'
-										value={employeeGroup}
-										onChange={(value) => setEmployeeGroup(value)}
-									>
-										<Option value='group1'>Group 1</Option>
-										<Option value='group2'>Group 2</Option>
-									</Select>
-								</Form.Item>
-							</Col>
-							<Col span={12}>
-								<Form.Item
-									name='startDate'
-									label='start Date'
-									rules={[{ required: true, message: "Please enter start Date" }]}
-								>
-									<DatePicker />
-								</Form.Item>
-							</Col>
-							<Col span={12}>
-								<Form.Item
-									name='endDate'
-									label='end Date'
-									rules={[{ required: true, message: "Please enter end Date" }]}
-								>
-									<DatePicker />
-								</Form.Item>
-							</Col>
-							<Col span={12}>
-								<Form.Item name='idd' label='Task id' rules={[{ required: true, message: "Please enter Task id" }]}>
-									<Input
-										placeholder='Please enter Task id'
-										value={taskName}
-										onChange={(e) => setTaskName(e.target.value)}
-									/>
-								</Form.Item>
-							</Col>
-							<Col span={12}>
-								<Form.Item
-									name='priority'
-									label='Priority'
-									rules={[{ required: true, message: "Please enter Priority" }]}
-								>
-									<Input
-										placeholder='Please enter Priority'
-										value={taskName}
-										onChange={(e) => setTaskName(e.target.value)}
-									/>
-								</Form.Item>
-							</Col>
-							<Col span={12}>
-								<Form.Item name='state' label='state' rules={[{ required: true, message: "Please enter state" }]}>
-									<Input
-										placeholder='Please enter state'
-										value={taskName}
-										onChange={(e) => setTaskName(e.target.value)}
-									/>
-								</Form.Item>
-							</Col>
-							<Col span={12}>
-								<Form.Item name='type_id' label='type id' rules={[{ required: true, message: "Please enter type id" }]}>
-									<Input
-										placeholder='Please enter type id'
-										value={taskName}
-										onChange={(e) => setTaskName(e.target.value)}
-									/>
-								</Form.Item>
-							</Col>
-						</Row>
+					<TaskForm form={form} onClose={onClose} handleCreateTask={handleCreateTask} />
+				</Drawer>
+
+				<Drawer
+					title="Create a Report"
+					width={720}
+					onClose={onClose1}
+					open={open1}
+					bodyStyle={{ paddingBottom: 80 }}
+					extra={
+						<Space>
+							<Button onClick={onClose1}>Cancel</Button>
+							<Button onClick={getReports} type="primary">
+								Submit
+							</Button>
+						</Space>
+					}
+				>
+					<Form layout="vertical">
+						<Form.Item label="Include Users" name="includeUsers" valuePropName="checked">
+							<Switch checked={includeUsers} onChange={setIncludeUsers} />
+						</Form.Item>
+						<Form.Item label="Include Products" name="includeProducts" valuePropName="checked">
+							<Switch checked={includeProducts} onChange={setIncludeProducts} />
+						</Form.Item>
+						<Form.Item label="Include Warehouses" name="includeWarehouses" valuePropName="checked">
+							<Switch checked={includeWarehouses} onChange={setIncludeWarehouses} />
+						</Form.Item>
+						<Form.Item label="Include Pie Chart" name="includePieChart" valuePropName="checked">
+							<Switch checked={includePieChart} onChange={setIncludePieChart} />
+						</Form.Item>
+						<Form.Item label="Tasks" name="tasks" rules={[{ required: false, message: "Please select task" }]}>
+							<Select  value={selectedTasks} onChange={setSelectedTasks}>
+								{tasks.map(task => (
+									<Select.Option key={task.id} value={task.id}>
+										{task.name}
+									</Select.Option>
+								))}
+							</Select>
+						</Form.Item>
+						<Form.Item label="Users" name="users" rules={[{ required: false, message: "Please select users" }]}>
+							
+						</Form.Item>
+						<Form.Item label="State" name="state" rules={[{ required: false, message: "Please select state" }]}>
+							
+						</Form.Item>
+						<Form.Item label="Priority" name="priority" rules={[{ required: false, message: "Please select priority" }]}>
+							
+						</Form.Item>
 					</Form>
 				</Drawer>
 
@@ -368,7 +264,7 @@ export const AdminTask = () => {
 					variant='h3'
 					component='h3'
 					sx={{
-						textAlign: "center",
+						textAlign: 'center',
 						p: 5,
 					}}
 				>
@@ -380,11 +276,9 @@ export const AdminTask = () => {
 					</Button>
 				</div>
 				<div style={{ margin: 10 }}>
-								<Button type='primary' style={{ marginRight: 5 }}>
-									<Link to='http://127.0.0.1:8080/generate-task-report' style={{ textDecoration: "none" }}>
-										Raprot
-									</Link>
-								</Button>
+					<Button type='primary' onClick={showDrawer1} icon={<PlusOutlined />}>
+						Creat Raport
+					</Button>
 				</div>
 				<DataGrid
 					rows={tasks}
@@ -400,16 +294,16 @@ export const AdminTask = () => {
 					sx={{
 						boxShadow: 2,
 						border: 1,
-						"& .MuiDataGrid-cell:hover": {
-							color: "primary.main",
+						'& .MuiDataGrid-cell:hover': {
+							color: 'primary.main',
 						},
-						"& .MuiDataGrid-footerContainer ": {
-							bgcolor: "#F1BCD9",
+						'& .MuiDataGrid-footerContainer ': {
+							bgcolor: '#F1BCD9',
 						},
-						"& .MuiDataGrid-toolbarContainer  ": {
-							bgcolor: "#F1BCD9",
+						'& .MuiDataGrid-toolbarContainer  ': {
+							bgcolor: '#F1BCD9',
 						},
-						"& .MuiButtonBase-root  ": {},
+						'& .MuiButtonBase-root  ': {},
 					}}
 				/>
 			</Box>
