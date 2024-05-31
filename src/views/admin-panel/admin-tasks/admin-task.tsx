@@ -13,7 +13,6 @@ import {
 	GridRowModel,
 	GridRowEditStopReasons,
 } from "@mui/x-data-grid";
-import { Link } from "react-router-dom";
 import { Typography } from "@mui/material";
 import { Form, Input, Button, Select, Row, Col, Breadcrumb, Drawer, Space, Table, DatePicker, Switch } from "antd";
 import { DeleteTasks, PostTask, getAllTasks, requestTaskReport } from "../../../service/tasks";
@@ -31,10 +30,14 @@ export const AdminTask = () => {
     const [includeWarehouses, setIncludeWarehouses] = useState(false);
     const [includePieChart, setIncludePieChart] = useState(false);
     const [selectedTasks, setSelectedTasks] = useState<string[]>([]);
+	const [selectedUser, setSelectedUser] = useState<string[]>([]);
+	const [selectState, setSelectState] = useState<string[]>([]);
+	const [selectPriority, setSelectPriority] = useState<string[]>([]);
 	
 
 	const getReports = async () => {
-		requestTaskReport(includeUsers, includeProducts, includeWarehouses, includePieChart, selectedTasks);
+		console.log(selectPriority);
+		requestTaskReport(includeUsers, includeProducts, includeWarehouses, includePieChart, selectedTasks, selectedUser, selectPriority, selectState);
 	}
 
 	const getTasks = async () => {
@@ -100,6 +103,7 @@ export const AdminTask = () => {
 				.validateFields()
 				.then(async (values) => {
 					const newTaskt = {
+						users: null,
 						description: values.description,
 						endDate: values.endDate,
 						id: values.idd,
@@ -249,13 +253,33 @@ export const AdminTask = () => {
 							</Select>
 						</Form.Item>
 						<Form.Item label="Users" name="users" rules={[{ required: false, message: "Please select users" }]}>
-							
+						<Select  value={selectedUser} onChange={setSelectedUser}>
+							{tasks.map(task => (
+								task.users.map((user: any) => (
+									<Select.Option key={user.id} value={user.id}>
+										{user.name} {user.lastname}
+									</Select.Option>
+								))
+							))}
+						</Select>
 						</Form.Item>
 						<Form.Item label="State" name="state" rules={[{ required: false, message: "Please select state" }]}>
-							
+						<Select  value={selectState} onChange={setSelectState}>
+								{tasks.map(task => (
+									<Select.Option key={task.state} value={task.state}>
+										{task.state}
+									</Select.Option>
+								))}
+						</Select>
 						</Form.Item>
 						<Form.Item label="Priority" name="priority" rules={[{ required: false, message: "Please select priority" }]}>
-							
+						<Select  value={selectPriority} onChange={setSelectPriority}>
+								{tasks.map(task => (
+									<Select.Option key={task.priority} value={task.priority}>
+										{task.priority}
+									</Select.Option>
+								))}
+						</Select>
 						</Form.Item>
 					</Form>
 				</Drawer>

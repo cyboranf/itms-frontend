@@ -24,7 +24,7 @@ export const DeleteTasks = async (id:string) => {
     return true;
 }
 
-export const requestTaskReport = async (includeUsers: boolean, includeProducts: boolean, includeWarehouses: boolean, includePieChart: boolean, taskId: string[]) => {
+export const requestTaskReport = async (includeUsers: boolean, includeProducts: boolean, includeWarehouses: boolean, includePieChart: boolean, taskId: string[], userId: string[], priority: string[], state: string[]) => {
     try {
 		
         const response = await instanceAxios.get(Paths.RAPORT, {
@@ -34,7 +34,11 @@ export const requestTaskReport = async (includeUsers: boolean, includeProducts: 
                 includeProducts,
                 includeWarehouses,
                 includePieChart,
-                taskId
+                taskId,
+				userId,
+				priority,
+				state
+
             }
         });
         
