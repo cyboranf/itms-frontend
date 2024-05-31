@@ -23,3 +23,33 @@ export const DeleteTasks = async (id:string) => {
     await instanceAxios.delete(url);
     return true;
 }
+
+export const requestTaskReport = async (includeUsers: boolean, includeProducts: boolean, includeWarehouses: boolean, includePieChart: boolean, taskId: string[]) => {
+    try {
+		
+        const response = await instanceAxios.get(Paths.RAPORT, {
+            responseType: 'blob', // Ustawienie responseType na blob, aby uzyskać zawartość jako Blob
+            params: {
+                includeUsers,
+                includeProducts,
+                includeWarehouses,
+                includePieChart,
+                taskId
+            }
+        });
+        
+        if (response.status === 200) {
+            const url = window.URL.createObjectURL(new Blob([response.data]));
+            const link = document.createElement('a');
+            link.href = url;
+            link.setAttribute('download', 'task-report.pdf');
+            document.body.appendChild(link);
+            link.click();
+            window.URL.revokeObjectURL(url);
+        } else {
+            console.error('Błąd podczas pobierania raportu:', response);
+        }
+    } catch (error) {
+        console.error('Błąd sieci:', error);
+    }
+};

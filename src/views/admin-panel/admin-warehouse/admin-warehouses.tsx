@@ -20,6 +20,8 @@ import { useNavigate } from "react-router-dom";
 import { deleteWarehous, getAllWarehouses, PostWarehouse, PutWarehouse } from "../../../service/warehouses";
 import { Breadcrumb, Drawer, Form, Input, Row, Space, Button } from "antd";
 import { Warehouse } from "../../../service/warehouses/types";
+import CreateWarehouseForm from '../../../components/forms/admin/admin-warhouse-creat-form';
+import EditWarehouseForm from "../../../components/forms/admin/admin-warhouse-update-form";
 
 export const AdminWarehouse = () => {
 	const navigate = useNavigate();
@@ -305,92 +307,7 @@ export const AdminWarehouse = () => {
 						</Space>
 					}
 				>
-					<Form layout='vertical' hideRequiredMark form={form}>
-						<Row>
-							<Form.Item
-								name='BuildingName'
-								label='Building Name'
-								rules={[{ required: true, message: "Please enter building name" }]}
-								style={{
-									flex: 1,
-								}}
-							>
-								<Input placeholder='Please enter building name' />
-							</Form.Item>
-						</Row>
-						<Row>
-							<Form.Item
-								name='ZoneName'
-								label='Zone Name'
-								rules={[{ required: true, message: "Please enter zone name" }]}
-								style={{
-									flex: 1,
-								}}
-							>
-								<Input placeholder='Please enter zone name' />
-							</Form.Item>
-						</Row>
-						<Row>
-							<Form.Item
-								name='SpaceId'
-								label='Space Id'
-								rules={[{ required: true, message: "Please enter spaceId" }]}
-								style={{
-									flex: 1,
-								}}
-							>
-								<Input placeholder='Please enter spaceId' />
-							</Form.Item>
-						</Row>
-						<Row>
-							<Form.Item
-								name='SpaceHeight'
-								label='space Height'
-								rules={[{ required: true, message: "Please enter Space Height" }]}
-								style={{
-									flex: 1,
-								}}
-							>
-								<Input placeholder='Please enter Space Height' />
-							</Form.Item>
-						</Row>
-						<Row>
-							<Form.Item
-								name='spaceWidth'
-								label='space Width'
-								rules={[{ required: true, message: "Please enter Space Width" }]}
-								style={{
-									flex: 1,
-								}}
-							>
-								<Input placeholder='Please enter Space Width' />
-							</Form.Item>
-						</Row>
-						<Row>
-							<Form.Item
-								name='spaceLength'
-								label='space Length'
-								rules={[{ required: true, message: "Please enter space Length" }]}
-								style={{
-									flex: 1,
-								}}
-							>
-								<Input placeholder='Please enter space Length' />
-							</Form.Item>
-						</Row>
-						<Row>
-							<Form.Item
-								name='productId'
-								label='product Id'
-								rules={[{ required: true, message: "Please enter space Length" }]}
-								style={{
-									flex: 1,
-								}}
-							>
-								<Input placeholder='Please enter product Id' />
-							</Form.Item>
-						</Row>
-					</Form>
+					<CreateWarehouseForm form={form}/>
 				</Drawer>
 
 				<Drawer
@@ -412,92 +329,7 @@ export const AdminWarehouse = () => {
 						</Space>
 					}
 				>
-					<Form layout='vertical' hideRequiredMark form={form1}>
-						<Row>
-							<Form.Item
-								name='BuildingName'
-								label='Building Name'
-								rules={[{ required: false, message: "Please enter building name" }]}
-								style={{
-									flex: 1,
-								}}
-							>
-								<Input placeholder='Please enter building name' />
-							</Form.Item>
-						</Row>
-						<Row>
-							<Form.Item
-								name='ZoneName'
-								label='Zone Name'
-								rules={[{ required: false, message: "Please enter zone name" }]}
-								style={{
-									flex: 1,
-								}}
-							>
-								<Input placeholder='Please enter zone name' />
-							</Form.Item>
-						</Row>
-						<Row>
-							<Form.Item
-								name='SpaceId'
-								label='Space Id'
-								rules={[{ required: false, message: "Please enter spaceId" }]}
-								style={{
-									flex: 1,
-								}}
-							>
-								<Input placeholder='Please enter spaceId' />
-							</Form.Item>
-						</Row>
-						<Row>
-							<Form.Item
-								name='SpaceHeight'
-								label='space Height'
-								rules={[{ required: false, message: "Please enter Space Height" }]}
-								style={{
-									flex: 1,
-								}}
-							>
-								<Input placeholder='Please enter Space Height' />
-							</Form.Item>
-						</Row>
-						<Row>
-							<Form.Item
-								name='spaceWidth'
-								label='space Width'
-								rules={[{ required: false, message: "Please enter Space Width" }]}
-								style={{
-									flex: 1,
-								}}
-							>
-								<Input placeholder='Please enter Space Width' />
-							</Form.Item>
-						</Row>
-						<Row>
-							<Form.Item
-								name='spaceLength'
-								label='space Length'
-								rules={[{ required: false, message: "Please enter space Length" }]}
-								style={{
-									flex: 1,
-								}}
-							>
-								<Input placeholder='Please enter space Length' />
-							</Form.Item>
-						</Row>
-						<Row>
-							<Form.Item
-								name='productId'
-								label='product Id'
-								rules={[{ required: false, message: "Please enter space Length" }]}
-								style={{
-									flex: 1,
-								}}
-							>
-								<Input placeholder='Please enter product Id' />
-							</Form.Item>
-						</Row>
-					</Form>
+					<EditWarehouseForm form={form}/>
 				</Drawer>
 			</Box>
 		</Box>
