@@ -230,58 +230,25 @@ export const AdminTask = () => {
 						</Space>
 					}
 				>
-					<Form layout="vertical">
-						<Form.Item label="Include Users" name="includeUsers" valuePropName="checked">
-							<Switch checked={includeUsers} onChange={setIncludeUsers} />
-						</Form.Item>
-						<Form.Item label="Include Products" name="includeProducts" valuePropName="checked">
-							<Switch checked={includeProducts} onChange={setIncludeProducts} />
-						</Form.Item>
-						<Form.Item label="Include Warehouses" name="includeWarehouses" valuePropName="checked">
-							<Switch checked={includeWarehouses} onChange={setIncludeWarehouses} />
-						</Form.Item>
-						<Form.Item label="Include Pie Chart" name="includePieChart" valuePropName="checked">
-							<Switch checked={includePieChart} onChange={setIncludePieChart} />
-						</Form.Item>
-						<Form.Item label="Tasks" name="tasks" rules={[{ required: false, message: "Please select task" }]}>
-							<Select  value={selectedTasks} onChange={setSelectedTasks}>
-								{tasks.map(task => (
-									<Select.Option key={task.id} value={task.id}>
-										{task.name}
-									</Select.Option>
-								))}
-							</Select>
-						</Form.Item>
-						<Form.Item label="Users" name="users" rules={[{ required: false, message: "Please select users" }]}>
-						<Select  value={selectedUser} onChange={setSelectedUser}>
-							{tasks.map(task => (
-								task.users.map((user: any) => (
-									<Select.Option key={user.id} value={user.id}>
-										{user.name} {user.lastname}
-									</Select.Option>
-								))
-							))}
-						</Select>
-						</Form.Item>
-						<Form.Item label="State" name="state" rules={[{ required: false, message: "Please select state" }]}>
-						<Select  value={selectState} onChange={setSelectState}>
-								{tasks.map(task => (
-									<Select.Option key={task.state} value={task.state}>
-										{task.state}
-									</Select.Option>
-								))}
-						</Select>
-						</Form.Item>
-						<Form.Item label="Priority" name="priority" rules={[{ required: false, message: "Please select priority" }]}>
-						<Select  value={selectPriority} onChange={setSelectPriority}>
-								{tasks.map(task => (
-									<Select.Option key={task.priority} value={task.priority}>
-										{task.priority}
-									</Select.Option>
-								))}
-						</Select>
-						</Form.Item>
-					</Form>
+					<TaskReportForm
+                        tasks={tasks}
+                        includeUsers={includeUsers}
+                        setIncludeUsers={setIncludeUsers}
+                        includeProducts={includeProducts}
+                        setIncludeProducts={setIncludeProducts}
+                        includeWarehouses={includeWarehouses}
+                        setIncludeWarehouses={setIncludeWarehouses}
+                        includePieChart={includePieChart}
+                        setIncludePieChart={setIncludePieChart}
+                        selectedTasks={selectedTasks}
+                        setSelectedTasks={setSelectedTasks}
+                        selectedUser={selectedUser}
+                        setSelectedUser={setSelectedUser}
+                        selectState={selectState}
+                        setSelectState={setSelectState}
+                        selectPriority={selectPriority}
+                        setSelectPriority={setSelectPriority}
+                    />
 				</Drawer>
 
 				<Typography

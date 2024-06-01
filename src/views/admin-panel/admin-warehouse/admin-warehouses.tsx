@@ -17,8 +17,8 @@ import {
 import { Typography } from "@mui/material";
 import SearchIcon from "@mui/icons-material/Search";
 import { useNavigate } from "react-router-dom";
-import { deleteWarehous, getAllWarehouses, PostWarehouse, PutWarehouse } from "../../../service/warehouses";
-import { Breadcrumb, Drawer, Form, Input, Row, Space, Button } from "antd";
+import { deleteWarehous, getAllWarehouses, PostWarehouse, PutWarehouse, requestWarehouseReport } from "../../../service/warehouses";
+import { Breadcrumb, Drawer, Form, Input, Row, Space, Button,Switch, Select } from "antd";
 import { Warehouse } from "../../../service/warehouses/types";
 import CreateWarehouseForm from '../../../components/forms/admin/admin-warhouse-creat-form';
 import EditWarehouseForm from "../../../components/forms/admin/admin-warhouse-update-form";
@@ -29,10 +29,18 @@ export const AdminWarehouse = () => {
 	const [warehouse, setWarehouses] = useState<any[]>([]);
 	const [open, setOpen] = useState(false);
 	const [open1, setOpen1] = useState(false);
+	const [open2, setOpen2] = useState(false);
 	const [id, setId] = useState<GridRowId>(0);
+	const [selectBultind, setSelectedBulidn] = useState<string[]>([]);
+	const [selectZone, setSelectedZone] = useState<string[]>([]);
+	const [selectspaceId, setSelectedspaceId] = useState<string[]>([]);
 
 	const showDrawer = () => {
 		setOpen(true);
+	};
+
+	const showDrawer1 = () => {
+		setOpen2(true);
 	};
 
 	const onClose = () => {
@@ -41,6 +49,10 @@ export const AdminWarehouse = () => {
 
 	const onClose1 = () => {
 		setOpen1(false);
+	};
+
+	const onClose2 = () => {
+		setOpen2(false);
 	};
 
 	const getWarehousesData = async () => {
@@ -223,6 +235,10 @@ export const AdminWarehouse = () => {
 		},
 	];
 
+	const getReports = async () => {
+		requestWarehouseReport(selectBultind, selectZone, selectspaceId);
+	}
+
 	return (
 		<Box>
 			<Box
@@ -256,11 +272,9 @@ export const AdminWarehouse = () => {
 					Add Warehouse
 				</Button>
 				<div style={{ margin: 10 }}>
-								<Button type='primary' style={{ marginRight: 5 }}>
-									<Link to='http://127.0.0.1:8080/generate-warehouse-report' style={{ textDecoration: "none" }}>
-										Raprot
-									</Link>
-								</Button>
+					<Button type='primary' onClick={showDrawer1}>
+						Create Raport
+					</Button>	
 				</div>
 				<DataGrid
 					rows={warehouse}
@@ -331,6 +345,60 @@ export const AdminWarehouse = () => {
 				>
 					<EditWarehouseForm form={form}/>
 				</Drawer>
+
+				<Drawer
+					title='Create Raport'
+					width={720}
+					onClose={onClose2}
+					open={open2}
+					styles={{
+						body: {
+							paddingBottom: 80,
+						},
+					}}
+					extra={
+						<Space>
+							<Button onClick={onClose2}>Cancel</Button>
+							<Button onClick={getReports} type='primary'>
+								Submit
+							</Button>
+						</Space>
+					}
+				>
+					<Form layout="vertical">
+				
+						<Form.Item label="Building" name="building" rules={[{ required: false, message: "Please select building" }]}>
+							<Select value={selectBultind} onChange={setSelectedBulidn}>
+							{warehouse.map((row) => (
+								<Select.Option key={row.building} value={row.building}>
+								{row.building}
+								</Select.Option>
+							))}
+							</Select>
+						</Form.Item>
+
+						<Form.Item label="Zone" name="zone" rules={[{ required: false, message: "Please select zone" }]}>
+							<Select value={selectZone} onChange={setSelectedZone}>
+							{warehouse.map((row) => (
+								<Select.Option key={row.zone} value={row.zone}>
+								{row.zone}
+								</Select.Option>
+							))}
+							</Select>
+						</Form.Item>
+
+						<Form.Item label="SpaceId" name="spaceId" rules={[{ required: false, message: "Please select spaceId" }]}>
+							<Select value={selectspaceId} onChange={setSelectedspaceId}>
+							{warehouse.map((row) => (
+								<Select.Option key={row.spaceId} value={row.spaceId}>
+								{row.spaceId}
+								</Select.Option>
+							))}
+							</Select>
+						</Form.Item>
+					</Form>
+				</Drawer>
+
 			</Box>
 		</Box>
 	);

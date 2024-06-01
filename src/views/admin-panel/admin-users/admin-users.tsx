@@ -15,24 +15,41 @@ import {
 } from "@mui/x-data-grid";
 import { Typography } from "@mui/material";
 import { Link } from "react-router-dom";
-import { Breadcrumb, Drawer, Form, Space, Button, Layout } from "antd";
+import { Breadcrumb, Drawer, Form, Space, Button, Layout,  Select, Switch, Row, Col } from "antd";
 import { Navbar } from "../../../components/navbar";
 import { User } from "../../../service/users/types";
-import { DeleteUsers, PutUsers, getAllUsers } from "../../../service/users";
+import { DeleteUsers, PutUsers, getAllUsers, requestUsersReport } from "../../../service/users";
 import UserForm from "../../../components/forms/admin/admin-users-form";
+import UserReportForm from "../../../components/forms/admin/admin-user-form-raport";
 
 const { Content } = Layout;
 
 export const AdminPanel = () => {
   const [open, setOpen] = useState(false);
+  const [open1, setOpen1] = useState(false);
+  const [rows, setRows] = useState<User[]>([]);
+  const [rowModesModel, setRowModesModel] = useState<GridRowModesModel>({});
+  const [id, setId] = useState<GridRowId>("");
+  const [includeUsers, setIncludeUsers] = useState(false);
+  const [selectUserName, setSelectUserName] = useState<string[]>([]);
+  const [selectEmail, setSelectEmail] = useState<string[]>([]);
+  const [selectPhoneNumber, setSelectPhoneNumber] = useState<string[]>([]);
+
+  const getReports = async () => {
+    requestUsersReport(includeUsers, selectUserName, selectEmail, selectPhoneNumber);
+  };
+
+  const showDrawer1 = () => {
+		setOpen1(true);
+	}
+
+  const onClose1 = () => {
+    setOpen1(false);
+  };
 
   const onClose = () => {
     setOpen(false);
   };
-
-  const [rows, setRows] = useState<User[]>([]);
-  const [rowModesModel, setRowModesModel] = useState<GridRowModesModel>({});
-  const [id, setId] = useState<GridRowId>("");
 
   const getUsers = async () => {
     try {
@@ -192,12 +209,37 @@ export const AdminPanel = () => {
                 </Button>
               </div>
               <div style={{ margin: 10 }}>
-                <Button type="primary" style={{ marginRight: 5 }}>
-                  <Link to="http://127.0.0.1:8080/generate-user-report" style={{ textDecoration: "none" }}>
-                    Report
-                  </Link>
+              <Button type='primary' onClick={showDrawer1}>
+                  Creat Raport
                 </Button>
               </div>
+              <Drawer
+                title='Create a new Raport'
+                width={720}
+                onClose={onClose1}
+                open={open1}
+                bodyStyle={{ paddingBottom: 80 }}
+                extra={
+                  <Space>
+                    <Button onClick={onClose1}>Cancel</Button>
+                    <Button onClick={getReports} type='primary'>
+                      Submit
+                    </Button>
+                  </Space>
+                }
+              >
+                <UserReportForm
+                  includeUsers={includeUsers}
+                  setIncludeUsers={setIncludeUsers}
+                  selectUserName={selectUserName}
+                  setSelectUserName={setSelectUserName}
+                  selectEmail={selectEmail}
+                  setSelectEmail={setSelectEmail}
+                  selectPhoneNumber={selectPhoneNumber}
+                  setSelectPhoneNumber={setSelectPhoneNumber}
+                  rows={rows}
+                />
+              </Drawer>
               <DataGrid
                 rows={rows}
                 columns={columns}

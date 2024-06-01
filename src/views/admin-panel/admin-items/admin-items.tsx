@@ -13,14 +13,17 @@ import {
 	GridRowModes,
 } from "@mui/x-data-grid";
 import { Typography } from "@mui/material";
-import { Breadcrumb, Button } from "antd";
+import { Breadcrumb, Button,Drawer, Space, Form, Select, Row } from "antd";
 import { Link } from "react-router-dom";
-import { getAllItems } from "../../../service/items";
+import { getAllItems, requestItemsReport } from "../../../service/items";
 import { Items } from "../../../service/items/types";
 
 export const AdminItems = () => {
 	const [rows, setRows] = useState<Items[]>([]);
 	const [rowModesModel, setRowModesModel] = React.useState<GridRowModesModel>({});
+	const [open1, setOpen1] = useState(false);
+	const [selectName, setSelectName] = useState<string[]>([]);
+	const [selectCode, setSelectCode] = useState<string[]>([]);
 
 	const GetItems = async () => {
 		try {
@@ -35,6 +38,10 @@ export const AdminItems = () => {
 	useEffect(() => {
 		GetItems();
 	}, []);
+
+	const getReports = async () => {
+		requestItemsReport(selectName, selectCode)
+	  };
 
 	const handleRowEditStop: GridEventListener<"rowEditStop"> = (params, event) => {
 		if (params.reason === GridRowEditStopReasons.rowFocusOut) {
@@ -53,6 +60,14 @@ export const AdminItems = () => {
 	const handleRowModesModelChange = (newRowModesModel: GridRowModesModel) => {
 		setRowModesModel(newRowModesModel);
 	};
+
+	const showDrawer1 = () => {
+		setOpen1(true);
+	}
+
+	const onClose1 = () => {
+		setOpen1(false);
+	  };
 
 	const columns: GridColDef[] = [
 		// pobrac dane z api
@@ -132,13 +147,6 @@ export const AdminItems = () => {
 					</Breadcrumb.Item>
 					<Breadcrumb.Item>Items</Breadcrumb.Item>
 				</Breadcrumb>
-				<div style={{ margin: 10 }}>
-								<Button type='primary' style={{ marginRight: 5 }}>
-									<Link to='http://127.0.0.1:8080/generate-items-report' style={{ textDecoration: "none" }}>
-										Raprot
-									</Link>
-								</Button>
-				</div>
 				<Typography
 					variant='h3'
 					component='h3'
@@ -149,6 +157,51 @@ export const AdminItems = () => {
 				>
 					Manage Items
 				</Typography>
+				
+				<div style={{ margin: 10 }}>
+              <Button type='primary' onClick={showDrawer1}>
+                  Creat Raport
+                </Button>
+              </div>
+
+				<Drawer
+                title='Create a new Raport'
+                width={720}
+                onClose={onClose1}
+                open={open1}
+                bodyStyle={{ paddingBottom: 80 }}
+                extra={
+                  <Space>
+                    <Button onClick={onClose1}>Cancel</Button>
+                    <Button onClick={getReports} type='primary'>
+                      Submit
+                    </Button>
+                  </Space>
+                }
+              >
+                   <Form layout="vertical">
+				
+						<Form.Item label="Name" name="name" rules={[{ required: false, message: "Please select name" }]}>
+							<Select value={selectName} onChange={setSelectName}>
+							{rows.map((row) => (
+								<Select.Option key={row.name} value={row.name}>
+								{row.name}
+								</Select.Option>
+							))}
+							</Select>
+						</Form.Item>
+
+						<Form.Item label="Code" name="code" rules={[{ required: false, message: "Please select code" }]}>
+							<Select value={selectCode} onChange={setSelectCode}>
+							{rows.map((row) => (
+								<Select.Option key={row.code} value={row.code}>
+								{row.code}
+								</Select.Option>
+							))}
+							</Select>
+						</Form.Item>
+						</Form>
+              </Drawer>
 
 				<DataGrid
 					rows={rows}
