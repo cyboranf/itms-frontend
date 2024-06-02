@@ -13,7 +13,6 @@ import {
 	GridRowModel,
 	GridRowEditStopReasons,
 } from "@mui/x-data-grid";
-import { Link } from "react-router-dom";
 import { Typography } from "@mui/material";
 import { Form, Input, Button, Select, Row, Col, Breadcrumb, Drawer, Space, Table, DatePicker, Switch } from "antd";
 import { DeleteTasks, PostTask, getAllTasks, requestTaskReport } from "../../../service/tasks";
@@ -31,10 +30,14 @@ export const AdminTask = () => {
     const [includeWarehouses, setIncludeWarehouses] = useState(false);
     const [includePieChart, setIncludePieChart] = useState(false);
     const [selectedTasks, setSelectedTasks] = useState<string[]>([]);
+	const [selectedUser, setSelectedUser] = useState<string[]>([]);
+	const [selectState, setSelectState] = useState<string[]>([]);
+	const [selectPriority, setSelectPriority] = useState<string[]>([]);
 	
 
 	const getReports = async () => {
-		requestTaskReport(includeUsers, includeProducts, includeWarehouses, includePieChart, selectedTasks);
+		console.log(selectPriority);
+		requestTaskReport(includeUsers, includeProducts, includeWarehouses, includePieChart, selectedTasks, selectedUser, selectPriority, selectState);
 	}
 
 	const getTasks = async () => {
@@ -100,6 +103,7 @@ export const AdminTask = () => {
 				.validateFields()
 				.then(async (values) => {
 					const newTaskt = {
+						users: null,
 						description: values.description,
 						endDate: values.endDate,
 						id: values.idd,
@@ -226,38 +230,25 @@ export const AdminTask = () => {
 						</Space>
 					}
 				>
-					<Form layout="vertical">
-						<Form.Item label="Include Users" name="includeUsers" valuePropName="checked">
-							<Switch checked={includeUsers} onChange={setIncludeUsers} />
-						</Form.Item>
-						<Form.Item label="Include Products" name="includeProducts" valuePropName="checked">
-							<Switch checked={includeProducts} onChange={setIncludeProducts} />
-						</Form.Item>
-						<Form.Item label="Include Warehouses" name="includeWarehouses" valuePropName="checked">
-							<Switch checked={includeWarehouses} onChange={setIncludeWarehouses} />
-						</Form.Item>
-						<Form.Item label="Include Pie Chart" name="includePieChart" valuePropName="checked">
-							<Switch checked={includePieChart} onChange={setIncludePieChart} />
-						</Form.Item>
-						<Form.Item label="Tasks" name="tasks" rules={[{ required: false, message: "Please select task" }]}>
-							<Select  value={selectedTasks} onChange={setSelectedTasks}>
-								{tasks.map(task => (
-									<Select.Option key={task.id} value={task.id}>
-										{task.name}
-									</Select.Option>
-								))}
-							</Select>
-						</Form.Item>
-						<Form.Item label="Users" name="users" rules={[{ required: false, message: "Please select users" }]}>
-							
-						</Form.Item>
-						<Form.Item label="State" name="state" rules={[{ required: false, message: "Please select state" }]}>
-							
-						</Form.Item>
-						<Form.Item label="Priority" name="priority" rules={[{ required: false, message: "Please select priority" }]}>
-							
-						</Form.Item>
-					</Form>
+					<TaskReportForm
+                        tasks={tasks}
+                        includeUsers={includeUsers}
+                        setIncludeUsers={setIncludeUsers}
+                        includeProducts={includeProducts}
+                        setIncludeProducts={setIncludeProducts}
+                        includeWarehouses={includeWarehouses}
+                        setIncludeWarehouses={setIncludeWarehouses}
+                        includePieChart={includePieChart}
+                        setIncludePieChart={setIncludePieChart}
+                        selectedTasks={selectedTasks}
+                        setSelectedTasks={setSelectedTasks}
+                        selectedUser={selectedUser}
+                        setSelectedUser={setSelectedUser}
+                        selectState={selectState}
+                        setSelectState={setSelectState}
+                        selectPriority={selectPriority}
+                        setSelectPriority={setSelectPriority}
+                    />
 				</Drawer>
 
 				<Typography

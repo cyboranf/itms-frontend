@@ -1,6 +1,7 @@
 // import { UserWithoutTasks } from "../users/types";
 
 export type Task = {
+	users: any;
 	id: number;
 	name: string;
 	description: string;
