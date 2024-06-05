@@ -2,30 +2,32 @@ import { createHashRouter, Outlet, RouterProvider } from "react-router-dom";
 import { Navbar } from "./components/navbar";
 import { Home } from "./views/home";
 import { SignIn } from "./views/sign-in";
-import {AdminPanel} from "./views/admin-panel/admin-users"
-import {AdminRole} from "./views/admin-panel/admin-roles"
-import {AdminWarehouse} from "./views/admin-panel/admin-warehouse"
-import {AdminItems} from "./views/admin-panel/admin-items"
+import { AdminPanel } from "./views/admin-panel/admin-users";
+import { AdminRole } from "./views/admin-panel/admin-roles";
+import { AdminWarehouse } from "./views/admin-panel/admin-warehouse";
 import "./scss/index.scss";
 import ScrollToTop from "./hooks/scroll-to-top";
 import SignUp from "./views/sign-up-main/sign-up-main";
 import { AdminTask } from "./views/admin-panel/admin-tasks";
 import { Admindashboard } from "./views/admin-panel/admin-dashboard";
-import { Layout } from 'antd';
+import { Layout } from "antd";
 import { WarehouseManDashboard } from "./views/warehouseman-panel/warehouseman-dashboard";
 import { PrinterDashboard } from "./views/printer-panel/printer-dashboard";
+import AdminProducts from "./views/admin-panel/admin-products/admin-products";
+import { ToastContainer } from "react-toastify";
+import "react-toastify/dist/ReactToastify.css";
 
 const { Content } = Layout;
 
 export const Layout1 = () => {
 	return (
 		<ScrollToTop>
-			<Layout style={{minHeight: "100vh"}}>
+			<Layout style={{ minHeight: "100vh" }}>
 				<Navbar />
 				<Layout>
-				<Content style={{ margin: '0 16px' }}>
-					<Outlet />
-				</Content>
+					<Content style={{ margin: "0 16px" }}>
+						<Outlet />
+					</Content>
 				</Layout>
 				{/* <Footer /> */}
 			</Layout>
@@ -51,8 +53,8 @@ const router = createHashRouter([
 				element: <AdminWarehouse />,
 			},
 			{
-				path: "/items",
-				element: <AdminItems />,
+				path: "/products",
+				element: <AdminProducts />,
 			},
 			{
 				path: "/tasks",
@@ -60,7 +62,7 @@ const router = createHashRouter([
 			},
 			{
 				path: "/home",
-				element: <Admindashboard />
+				element: <Admindashboard />,
 			},
 		],
 	},
@@ -78,11 +80,11 @@ const router = createHashRouter([
 	},
 	{
 		path: "/warehouseman/home",
-		element: <WarehouseManDashboard />
+		element: <WarehouseManDashboard />,
 	},
 	{
 		path: "/printer/home",
-		element: <PrinterDashboard />
+		element: <PrinterDashboard />,
 	},
 ]);
 
@@ -90,6 +92,7 @@ function App() {
 	return (
 		<div className='App'>
 			<RouterProvider router={router} />
+			<ToastContainer autoClose={3000} position='top-center' />
 		</div>
 	);
 }

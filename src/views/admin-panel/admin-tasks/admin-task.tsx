@@ -14,31 +14,38 @@ import {
 	GridRowEditStopReasons,
 } from "@mui/x-data-grid";
 import { Typography } from "@mui/material";
-import { Form, Input, Button, Select, Row, Col, Breadcrumb, Drawer, Space, Table, DatePicker, Switch } from "antd";
+import { Form, Button, Breadcrumb, Drawer, Space } from "antd";
 import { DeleteTasks, PostTask, getAllTasks, requestTaskReport } from "../../../service/tasks";
 import { Task } from "../../../service/tasks/types";
 import { PlusOutlined } from "@ant-design/icons";
-import TaskForm from '../../../components/forms/admin/admin-taks-form';
+import TaskForm from "../../../components/forms/admin/admin-taks-form";
 import TaskReportForm from "../../../components/forms/admin/admin-taks-form-raport";
-
 
 export const AdminTask = () => {
 	const [tasks, setTasks] = React.useState<Task[]>([]);
 	const [rowModesModel, setRowModesModel] = React.useState<GridRowModesModel>({});
 	const [includeUsers, setIncludeUsers] = useState(false);
-    const [includeProducts, setIncludeProducts] = useState(false);
-    const [includeWarehouses, setIncludeWarehouses] = useState(false);
-    const [includePieChart, setIncludePieChart] = useState(false);
-    const [selectedTasks, setSelectedTasks] = useState<string[]>([]);
+	const [includeProducts, setIncludeProducts] = useState(false);
+	const [includeWarehouses, setIncludeWarehouses] = useState(false);
+	const [includePieChart, setIncludePieChart] = useState(false);
+	const [selectedTasks, setSelectedTasks] = useState<string[]>([]);
 	const [selectedUser, setSelectedUser] = useState<string[]>([]);
 	const [selectState, setSelectState] = useState<string[]>([]);
 	const [selectPriority, setSelectPriority] = useState<string[]>([]);
-	
 
 	const getReports = async () => {
 		console.log(selectPriority);
-		requestTaskReport(includeUsers, includeProducts, includeWarehouses, includePieChart, selectedTasks, selectedUser, selectPriority, selectState);
-	}
+		requestTaskReport(
+			includeUsers,
+			includeProducts,
+			includeWarehouses,
+			includePieChart,
+			selectedTasks,
+			selectedUser,
+			selectPriority,
+			selectState
+		);
+	};
 
 	const getTasks = async () => {
 		try {
@@ -81,11 +88,10 @@ export const AdminTask = () => {
 	};
 	const showDrawer1 = () => {
 		setOpen1(true);
-	}
+	};
 
 	const [open, setOpen] = useState(false);
 	const [open1, setOpen1] = useState(false);
-
 
 	const [form] = Form.useForm();
 
@@ -95,7 +101,7 @@ export const AdminTask = () => {
 
 	const onClose1 = () => {
 		setOpen1(false);
-	}
+	};
 
 	const handleCreateTask = () => {
 		try {
@@ -176,23 +182,21 @@ export const AdminTask = () => {
 		},
 	];
 
-
-
 	return (
 		<Box>
 			<Box
 				sx={{
 					height: 500,
-					width: '100%',
-					'& .actions': {
-						color: 'text.secondary',
+					width: "100%",
+					"& .actions": {
+						color: "text.secondary",
 					},
-					'& .textPrimary': {
-						color: 'text.primary',
+					"& .textPrimary": {
+						color: "text.primary",
 					},
 				}}
 			>
-				<Breadcrumb style={{ margin: '16px 0' }}>
+				<Breadcrumb style={{ margin: "16px 0" }}>
 					<Breadcrumb.Item>Dashboard</Breadcrumb.Item>
 					<Breadcrumb.Item>Task</Breadcrumb.Item>
 				</Breadcrumb>
@@ -216,7 +220,7 @@ export const AdminTask = () => {
 				</Drawer>
 
 				<Drawer
-					title="Create a Report"
+					title='Create a Report'
 					width={720}
 					onClose={onClose1}
 					open={open1}
@@ -224,38 +228,38 @@ export const AdminTask = () => {
 					extra={
 						<Space>
 							<Button onClick={onClose1}>Cancel</Button>
-							<Button onClick={getReports} type="primary">
+							<Button onClick={getReports} type='primary'>
 								Submit
 							</Button>
 						</Space>
 					}
 				>
 					<TaskReportForm
-                        tasks={tasks}
-                        includeUsers={includeUsers}
-                        setIncludeUsers={setIncludeUsers}
-                        includeProducts={includeProducts}
-                        setIncludeProducts={setIncludeProducts}
-                        includeWarehouses={includeWarehouses}
-                        setIncludeWarehouses={setIncludeWarehouses}
-                        includePieChart={includePieChart}
-                        setIncludePieChart={setIncludePieChart}
-                        selectedTasks={selectedTasks}
-                        setSelectedTasks={setSelectedTasks}
-                        selectedUser={selectedUser}
-                        setSelectedUser={setSelectedUser}
-                        selectState={selectState}
-                        setSelectState={setSelectState}
-                        selectPriority={selectPriority}
-                        setSelectPriority={setSelectPriority}
-                    />
+						tasks={tasks}
+						includeUsers={includeUsers}
+						setIncludeUsers={setIncludeUsers}
+						includeProducts={includeProducts}
+						setIncludeProducts={setIncludeProducts}
+						includeWarehouses={includeWarehouses}
+						setIncludeWarehouses={setIncludeWarehouses}
+						includePieChart={includePieChart}
+						setIncludePieChart={setIncludePieChart}
+						selectedTasks={selectedTasks}
+						setSelectedTasks={setSelectedTasks}
+						selectedUser={selectedUser}
+						setSelectedUser={setSelectedUser}
+						selectState={selectState}
+						setSelectState={setSelectState}
+						selectPriority={selectPriority}
+						setSelectPriority={setSelectPriority}
+					/>
 				</Drawer>
 
 				<Typography
 					variant='h3'
 					component='h3'
 					sx={{
-						textAlign: 'center',
+						textAlign: "center",
 						p: 5,
 					}}
 				>
@@ -285,16 +289,16 @@ export const AdminTask = () => {
 					sx={{
 						boxShadow: 2,
 						border: 1,
-						'& .MuiDataGrid-cell:hover': {
-							color: 'primary.main',
+						"& .MuiDataGrid-cell:hover": {
+							color: "primary.main",
 						},
-						'& .MuiDataGrid-footerContainer ': {
-							bgcolor: '#F1BCD9',
+						"& .MuiDataGrid-footerContainer ": {
+							bgcolor: "#F1BCD9",
 						},
-						'& .MuiDataGrid-toolbarContainer  ': {
-							bgcolor: '#F1BCD9',
+						"& .MuiDataGrid-toolbarContainer  ": {
+							bgcolor: "#F1BCD9",
 						},
-						'& .MuiButtonBase-root  ': {},
+						"& .MuiButtonBase-root  ": {},
 					}}
 				/>
 			</Box>
