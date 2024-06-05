@@ -3,10 +3,14 @@ export type LoginValuesType = {
 	password: string;
 };
 
+type Rank = {
+	authority: string;
+};
+
 export type UserData = {
-	name: string;
+	userName: string;
 	accessToken: string;
-	role: string;
+	rank: Rank[];
 };
 
 export type RegisterValuesTypes = {

@@ -8,7 +8,8 @@ export const ExampleComponent = () => {
 
 	const loginTest = async () => {
 		try {
-			await loginUser({ username: "dupa", password: "cyce" });
+			const res = await loginUser({ username: "TestTest", password: "TestTest1!" });
+			console.log(res.rank);
 		} catch (err: unknown) {
 			console.log(err);
 		}

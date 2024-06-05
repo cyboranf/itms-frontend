@@ -7,7 +7,7 @@ import { loginUser } from "../../service/auth";
 import { RegexpValidators } from "../../utils/reg-exp";
 import { useNavigate } from "react-router-dom";
 import { useContext } from "react";
-import { DataContext } from "../../context/data-context";
+import { CurrentUser, DataContext, ROLES } from "../../context/data-context";
 
 export type LoginValuesType = {
 	username: string;
@@ -27,7 +27,29 @@ export const SignIn = () => {
 	const onSubmit = async ({ username, password }: LoginValuesType) => {
 		try {
 			const res = await loginUser({ username, password });
-			setCurrentUser(res);
+			console.log(res);
+			console.log(res.rank);
+
+			const rolesArray = Object.values(ROLES) as string[];
+
+			const userRoles = res.rank.map((rank) => rank.authority).filter((authority) => rolesArray.includes(authority));
+
+			let userRole = ROLES.PRINTER as ROLES; // default to lowest role
+
+			for (const role of rolesArray) {
+				if (userRoles.includes(role)) {
+					userRole = role as ROLES;
+					break;
+				}
+			}
+
+			const user: CurrentUser = {
+				userName: res.userName,
+				accessToken: res.accessToken,
+				role: userRole,
+			};
+
+			setCurrentUser(user);
 			navigate("/");
 		} catch (err: unknown) {
 			console.log(err);

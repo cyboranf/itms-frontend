@@ -13,10 +13,11 @@ import {
 	GridRowModes,
 } from "@mui/x-data-grid";
 import { Typography } from "@mui/material";
-import { Breadcrumb, Button,Drawer, Space, Form, Select, Row } from "antd";
+import { Breadcrumb, Button, Drawer, Space, Form, Select } from "antd";
 import { Link } from "react-router-dom";
 import { getAllItems, requestItemsReport } from "../../../service/items";
 import { Items } from "../../../service/items/types";
+import { useAxios } from "../../../helpers/axios/useAxios";
 
 export const AdminItems = () => {
 	const [rows, setRows] = useState<Items[]>([]);
@@ -24,10 +25,11 @@ export const AdminItems = () => {
 	const [open1, setOpen1] = useState(false);
 	const [selectName, setSelectName] = useState<string[]>([]);
 	const [selectCode, setSelectCode] = useState<string[]>([]);
+	const axios = useAxios();
 
 	const GetItems = async () => {
 		try {
-			const res = await getAllItems();
+			const res = await getAllItems(axios);
 			console.log(res);
 			setRows(res); // Update local state with fetched data
 		} catch (error) {
@@ -40,8 +42,8 @@ export const AdminItems = () => {
 	}, []);
 
 	const getReports = async () => {
-		requestItemsReport(selectName, selectCode)
-	  };
+		requestItemsReport(selectName, selectCode, axios);
+	};
 
 	const handleRowEditStop: GridEventListener<"rowEditStop"> = (params, event) => {
 		if (params.reason === GridRowEditStopReasons.rowFocusOut) {
@@ -63,11 +65,11 @@ export const AdminItems = () => {
 
 	const showDrawer1 = () => {
 		setOpen1(true);
-	}
+	};
 
 	const onClose1 = () => {
 		setOpen1(false);
-	  };
+	};
 
 	const columns: GridColDef[] = [
 		// pobrac dane z api
@@ -157,51 +159,50 @@ export const AdminItems = () => {
 				>
 					Manage Items
 				</Typography>
-				
+
 				<div style={{ margin: 10 }}>
-              <Button type='primary' onClick={showDrawer1}>
-                  Creat Raport
-                </Button>
-              </div>
+					<Button type='primary' onClick={showDrawer1}>
+						Creat Raport
+					</Button>
+				</div>
 
 				<Drawer
-                title='Create a new Raport'
-                width={720}
-                onClose={onClose1}
-                open={open1}
-                bodyStyle={{ paddingBottom: 80 }}
-                extra={
-                  <Space>
-                    <Button onClick={onClose1}>Cancel</Button>
-                    <Button onClick={getReports} type='primary'>
-                      Submit
-                    </Button>
-                  </Space>
-                }
-              >
-                   <Form layout="vertical">
-				
-						<Form.Item label="Name" name="name" rules={[{ required: false, message: "Please select name" }]}>
+					title='Create a new Raport'
+					width={720}
+					onClose={onClose1}
+					open={open1}
+					bodyStyle={{ paddingBottom: 80 }}
+					extra={
+						<Space>
+							<Button onClick={onClose1}>Cancel</Button>
+							<Button onClick={getReports} type='primary'>
+								Submit
+							</Button>
+						</Space>
+					}
+				>
+					<Form layout='vertical'>
+						<Form.Item label='Name' name='name' rules={[{ required: false, message: "Please select name" }]}>
 							<Select value={selectName} onChange={setSelectName}>
-							{rows.map((row) => (
-								<Select.Option key={row.name} value={row.name}>
-								{row.name}
-								</Select.Option>
-							))}
+								{rows.map((row) => (
+									<Select.Option key={row.name} value={row.name}>
+										{row.name}
+									</Select.Option>
+								))}
 							</Select>
 						</Form.Item>
 
-						<Form.Item label="Code" name="code" rules={[{ required: false, message: "Please select code" }]}>
+						<Form.Item label='Code' name='code' rules={[{ required: false, message: "Please select code" }]}>
 							<Select value={selectCode} onChange={setSelectCode}>
-							{rows.map((row) => (
-								<Select.Option key={row.code} value={row.code}>
-								{row.code}
-								</Select.Option>
-							))}
+								{rows.map((row) => (
+									<Select.Option key={row.code} value={row.code}>
+										{row.code}
+									</Select.Option>
+								))}
 							</Select>
 						</Form.Item>
-						</Form>
-              </Drawer>
+					</Form>
+				</Drawer>
 
 				<DataGrid
 					rows={rows}

@@ -1,10 +1,9 @@
-import { CurrentUser } from "../../context/data-context";
 import instanceAxios from "../../helpers/axios/axios";
 import { Paths } from "./path";
-import { LoginValuesType, RegisterValuesTypes } from "./types";
+import { LoginValuesType, RegisterValuesTypes, UserData } from "./types";
 
 export const loginUser = async ({ username, password }: LoginValuesType) => {
-	const { data } = await instanceAxios.post<CurrentUser>(Paths.LOGIN, {
+	const { data } = await instanceAxios.post<UserData>(Paths.LOGIN, {
 		username,
 		password,
 	});
