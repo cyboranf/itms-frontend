@@ -7,6 +7,7 @@ import {
 	SettingOutlined,
 	LogoutOutlined,
 	ShopOutlined,
+	XFilled,
 } from "@ant-design/icons";
 import { Layout, Menu } from "antd";
 import { Link } from "react-router-dom";
@@ -54,6 +55,12 @@ export const Navbar = () => {
 				<Menu.Item key='Logout' icon={<LogoutOutlined />}>
 					<Link to='/logout'>
 						<span className='nav-text'>Logout</span>
+					</Link>
+				</Menu.Item>
+
+				<Menu.Item key='Logout2' icon={<XFilled />}>
+					<Link to='/'>
+						<span className='nav-text'>NIGGA</span>
 					</Link>
 				</Menu.Item>
 			</Menu>

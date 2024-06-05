@@ -1,20 +1,21 @@
-import instanceAxios from "../../helpers/axios/axios";
+import { AxiosInstance } from "axios";
 import { Paths } from "./path";
-import { TaskValuesType } from "./types";
+import { TaskValuesType, User } from "./types";
+import { toast } from "react-toastify";
 
-export async function GetTasks(): Promise<TaskValuesType[]> {
-	const response = await instanceAxios.get(Paths.TASK_TYPE);
-	return response.data
+export async function GetTasks(axios: AxiosInstance): Promise<TaskValuesType[]> {
+	const response = await axios.get(Paths.TASK_TYPE);
+	return response.data;
 }
 
-export async function DeleteTasks(id: string) {
-	await instanceAxios.delete(Paths.TASK_TYPE_ID.replace("{id}", id.toString()));
+export async function DeleteTasks(id: string, axios: AxiosInstance) {
+	await axios.delete(Paths.TASK_TYPE_ID.replace("{id}", id.toString()));
 	return true;
 }
 
-export async function PostTask(params: TaskValuesType) {
+export async function PostTask(params: TaskValuesType, axios: AxiosInstance) {
 	try {
-		await instanceAxios.post(Paths.TASK_TYPE, params);
+		await axios.post(Paths.TASK_TYPE, params);
 		return true;
 	} catch (error) {
 		console.error("Błąd podczas aktualizacji zadania:", error);
@@ -22,9 +23,9 @@ export async function PostTask(params: TaskValuesType) {
 	}
 }
 
-export async function PutTask(params: TaskValuesType) {
+export async function PutTask(params: TaskValuesType, axios: AxiosInstance) {
 	try {
-		await instanceAxios.put(Paths.TASK_TYPE_ID.replace("{id}", params.id.toString()), params);
+		await axios.put(Paths.TASK_TYPE_ID.replace("{id}", params.id.toString()), params);
 		return true;
 	} catch (error) {
 		console.error("Błąd podczas aktualizacji zadania:", error);
@@ -32,54 +33,74 @@ export async function PutTask(params: TaskValuesType) {
 	}
 }
 
-import { User } from "./types";
-
-export const getAllUsers = async (): Promise<User[]> => {
-	const data = await instanceAxios.get<User[]>(Paths.ALL_USERS);
-	return data.data;
+export const getAllUsers = async (axios: AxiosInstance): Promise<User[]> => {
+	try {
+		const data = await axios.get<User[]>(Paths.ALL_USERS);
+		return data.data;
+	} catch (error) {
+		console.error("Błąd podczas pobierania użytkowników:", error);
+		toast.error("Błąd podczas pobierania użytkowników");
+		return [];
+	}
 };
 
-export async function PutUsers(params: User) {
+export async function PutUsers(params: User, axios: AxiosInstance) {
 	try {
-		await instanceAxios.put(Paths.USERS_EDIT.replace("{id}", params.id.toString()), params);
+		console.log("sdadas");
+		await axios.put(Paths.USERS_EDIT.replace("{id}", params.id.toString()), params);
+		toast.success("Zaktualizowano użytkownika");
 		return true;
 	} catch (error) {
-		console.error("Błąd podczas aktualizacji zadania:", error);
+		console.error("Błąd podczas aktualizacji użytkownika:", error);
+		toast.error("Błąd podczas aktualizacji użytkownika");
 		return false;
 	}
 }
 
-export async function DeleteUsers(id: string) {
-	await instanceAxios.delete(Paths.USERS_ID.replace("{id}", id.toString()));
-	return true;
-}
-
-export const requestUsersReport = async(includeTasks: boolean, username: string[], email: string[], phoneNumber: string[]) => {
+export async function DeleteUsers(id: number, axios: AxiosInstance) {
 	try {
-		
-        const response = await instanceAxios.get(Paths.RAPORT, {
-            responseType: 'blob', // Ustawienie responseType na blob, aby uzyskać zawartość jako Blob
-            params: {
-                includeTasks,
-                username,
-                email,
-                phoneNumber,
-            }
-        });
-        
-        if (response.status === 200) {
-            const url = window.URL.createObjectURL(new Blob([response.data]));
-            const link = document.createElement('a');
-            link.href = url;
-            link.setAttribute('download', 'task-report.pdf');
-            document.body.appendChild(link);
-            link.click();
-            window.URL.revokeObjectURL(url);
-        } else {
-            console.error('Błąd podczas pobierania raportu:', response);
-        }
-    } catch (error) {
-        console.error('Błąd sieci:', error);
-    }
-
+		await axios.delete(Paths.USERS_ID.replace("{id}", id.toString()));
+		toast.success("Usunięto użytkownika");
+		return true;
+	} catch (error) {
+		console.error("Błąd podczas usuwania użytkownika:", error);
+		toast.error("Błąd podczas usuwania użytkownika");
+		return false;
+	}
 }
+
+export const requestUsersReport = async (
+	includeTasks: boolean,
+	username: string[],
+	email: string[],
+	phoneNumber: string[],
+	axios: AxiosInstance
+) => {
+	try {
+		const response = await axios.get(Paths.RAPORT, {
+			responseType: "blob",
+			params: {
+				includeTasks,
+				username,
+				email,
+				phoneNumber,
+			},
+		});
+
+		if (response.status === 200) {
+			const url = window.URL.createObjectURL(new Blob([response.data]));
+			const link = document.createElement("a");
+			link.href = url;
+			link.setAttribute("download", "user-report.pdf");
+			document.body.appendChild(link);
+			link.click();
+			window.URL.revokeObjectURL(url);
+		} else {
+			console.error("Błąd podczas pobierania raportu:", response);
+			toast.error("Błąd podczas pobierania raportu");
+		}
+	} catch (error) {
+		console.error("Błąd sieci:", error);
+		toast.error("Błąd sieci");
+	}
+};
