@@ -2,64 +2,48 @@ import React, { useEffect, useState } from "react";
 import Box from "@mui/material/Box";
 import EditIcon from "@mui/icons-material/Edit";
 import DeleteIcon from "@mui/icons-material/DeleteOutlined";
-import { Link } from "react-router-dom";
+import SearchIcon from "@mui/icons-material/Search";
+import { Link, useNavigate } from "react-router-dom";
 import {
 	GridRowModesModel,
-	GridRowModes,
 	DataGrid,
 	GridColDef,
-	GridActionsCellItem,
 	GridEventListener,
 	GridRowId,
-	GridRowModel,
 	GridRowEditStopReasons,
+	GridActionsCellItem,
 } from "@mui/x-data-grid";
-import { Typography } from "@mui/material";
-import SearchIcon from "@mui/icons-material/Search";
-import { useNavigate } from "react-router-dom";
-import { deleteWarehous, getAllWarehouses, PostWarehouse, PutWarehouse, requestWarehouseReport } from "../../../service/warehouses";
-import { Breadcrumb, Drawer, Form, Input, Row, Space, Button,Switch, Select } from "antd";
-import { Warehouse } from "../../../service/warehouses/types";
-import CreateWarehouseForm from '../../../components/forms/admin/admin-warhouse-creat-form';
-import EditWarehouseForm from "../../../components/forms/admin/admin-warhouse-update-form";
+import { Typography, Modal, DialogTitle, DialogContent, DialogContentText, DialogActions } from "@mui/material";
+import { Breadcrumb, Button, Drawer, Space, Form, Select } from "antd";
+import {
+	deleteWarehouse,
+	getAllWarehouses,
+	requestWarehouseReport,
+	PostWarehouse,
+	updateWarehouse,
+} from "../../../service/warehouses";
+import { Warehouse, RequestWarehouse } from "../../../service/warehouses/types";
+import CreateWarehouseForm from "../../../components/forms/admin/admin-warhouse-creat-form";
+import { useAxios } from "../../../helpers/axios/useAxios";
 
 export const AdminWarehouse = () => {
 	const navigate = useNavigate();
-	const [rowModesModel, setRowModesModel] = React.useState<GridRowModesModel>({});
-	const [warehouse, setWarehouses] = useState<any[]>([]);
-	const [open, setOpen] = useState(false);
-	const [open1, setOpen1] = useState(false);
-	const [open2, setOpen2] = useState(false);
-	const [id, setId] = useState<GridRowId>(0);
-	const [selectBultind, setSelectedBulidn] = useState<string[]>([]);
-	const [selectZone, setSelectedZone] = useState<string[]>([]);
-	const [selectspaceId, setSelectedspaceId] = useState<string[]>([]);
+	const [rows, setRows] = useState<Warehouse[]>([]);
+	const [rowModesModel, setRowModesModel] = useState<GridRowModesModel>({});
+	const [openDrawer, setOpenDrawer] = useState(false);
+	const [selectedWarehouse, setSelectedWarehouse] = useState<Warehouse | null>(null);
+	const [selectBuilding, setSelectBuilding] = useState<string[]>([]);
+	const [selectZone, setSelectZone] = useState<string[]>([]);
+	const [selectSpaceId, setSelectSpaceId] = useState<string[]>([]);
+	const [isDeleteModalVisible, setIsDeleteModalVisible] = useState(false);
+	const [warehouseToDelete, setWarehouseToDelete] = useState<Warehouse | null>(null);
 
-	const showDrawer = () => {
-		setOpen(true);
-	};
-
-	const showDrawer1 = () => {
-		setOpen2(true);
-	};
-
-	const onClose = () => {
-		setOpen(false);
-	};
-
-	const onClose1 = () => {
-		setOpen1(false);
-	};
-
-	const onClose2 = () => {
-		setOpen2(false);
-	};
+	const axios = useAxios();
 
 	const getWarehousesData = async () => {
 		try {
-			const res = await getAllWarehouses();
-			console.log(res);
-			setWarehouses(res);
+			const res = await getAllWarehouses(axios);
+			setRows(res);
 		} catch (err: unknown) {
 			console.error(err);
 		}
@@ -69,6 +53,22 @@ export const AdminWarehouse = () => {
 		getWarehousesData();
 	}, []);
 
+	const handleAddNewWarehouse = async (warehouse: RequestWarehouse) => {
+		await PostWarehouse(warehouse, axios);
+		await getWarehousesData();
+	};
+
+	const handleEditWarehouse = async (warehouse: RequestWarehouse) => {
+		if (selectedWarehouse) {
+			await updateWarehouse(selectedWarehouse.id, warehouse, axios);
+			await getWarehousesData();
+		}
+	};
+
+	const getReports = async () => {
+		requestWarehouseReport(selectBuilding, selectZone, selectSpaceId, axios);
+	};
+
 	const handleRowEditStop: GridEventListener<"rowEditStop"> = (params, event) => {
 		if (params.reason === GridRowEditStopReasons.rowFocusOut) {
 			event.defaultMuiPrevented = true;
@@ -76,100 +76,51 @@ export const AdminWarehouse = () => {
 	};
 
 	const handleEditClick = (id: GridRowId) => () => {
-		setId(id);
-		setOpen1(true);
-		setRowModesModel({ ...rowModesModel, [id]: { mode: GridRowModes.Edit } });
-	};
-
-	const handleDeleteClick = (id: GridRowId) => () => {
-		deleteWarehous(id.toString());
-		setWarehouses(warehouse.filter((row) => row.id !== id));
-	};
-
-	const [form] = Form.useForm();
-	const handleSubmitClick = async () => {
-		try {
-			form
-				.validateFields()
-				.then(async (values) => {
-					const newWarehouse: Warehouse = {
-						id: 0,
-						building: values.BuildingName,
-						zone: values.ZoneName,
-						spaceId: values.SpaceId,
-						spaceHeight: values.SpaceHeight,
-						spaceWidth: values.spaceWidth,
-						spaceLength: values.spaceLength,
-						productId: values.productId,
-						productName: "",
-						productCode: "",
-					};
-
-					const success = await PostWarehouse(newWarehouse);
-					if (success) {
-						getWarehousesData();
-						onClose();
-					} else {
-						console.error("Error while adding the warehouse.");
-					}
-				})
-				.catch((error) => {
-					console.error("Form processing error:", error);
-				});
-		} catch (error) {
-			console.error("Error during form submission:", error);
+		const warehouse = rows.find((row) => row.id === id);
+		if (warehouse) {
+			setSelectedWarehouse(warehouse);
+			setOpenDrawer(true);
 		}
 	};
 
-	const [form1] = Form.useForm();
-
-	const handleEditSubmitClick = async () => {
-		console.log("Current Form Values:", form1.getFieldsValue());
-
-		try {
-			form1
-				.validateFields()
-				.then(async (values) => {
-					const updatedWarehouse: Warehouse = {
-						id: Number(id),
-						building: values.BuildingName,
-						zone: values.ZoneName,
-						spaceId: values.SpaceId,
-						spaceHeight: values.SpaceHeight,
-						spaceWidth: values.spaceWidth,
-						spaceLength: values.spaceLength,
-						productId: values.productId,
-						productCode: "",
-						productName: "",
-					};
-
-					const success = await PutWarehouse(updatedWarehouse);
-					if (success) {
-						getWarehousesData(); // Refresh the data grid with updated data
-						onClose1(); // Close the form drawer
-					} else {
-						console.error("Error while updating the warehouse.");
-					}
-				})
-				.catch((error) => {
-					console.error("Form processing error:", error);
-				});
-		} catch (error) {
-			console.error("Error during form submission:", error);
+	const handleDeleteClick = (id: number) => () => {
+		const warehouse = rows.find((row) => row.id === id);
+		if (warehouse) {
+			setWarehouseToDelete(warehouse);
+			setIsDeleteModalVisible(true);
 		}
 	};
 
-	const processRowUpdate = (newRow: GridRowModel) => {
-		// const updatedRow = { ...newRow, isNew: false };
-		// setWarehouses(warehouse.map((row) => (row.id === newRow.id ? updatedRow : row)));
-		return newRow;
+	const confirmDelete = async () => {
+		if (warehouseToDelete) {
+			await deleteWarehouse(warehouseToDelete.id, axios);
+			getWarehousesData();
+			setIsDeleteModalVisible(false);
+		}
 	};
 
 	const handleRowModesModelChange = (newRowModesModel: GridRowModesModel) => {
 		setRowModesModel(newRowModesModel);
 	};
 
+	const showDrawer = () => {
+		setSelectedWarehouse(null);
+		setOpenDrawer(true);
+	};
+
+	const onCloseDrawer = () => {
+		setOpenDrawer(false);
+	};
+
+	const [form] = Form.useForm();
+
 	const columns: GridColDef[] = [
+		{
+			field: "id",
+			headerName: "ID",
+			width: 100,
+			editable: false,
+		},
 		{
 			field: "building",
 			headerName: "Building",
@@ -184,7 +135,7 @@ export const AdminWarehouse = () => {
 		},
 		{
 			field: "spaceId",
-			headerName: "Space id",
+			headerName: "Space Id",
 			width: 180,
 			editable: false,
 		},
@@ -202,7 +153,7 @@ export const AdminWarehouse = () => {
 		},
 		{
 			field: "spaceLength",
-			headerName: "Space Width",
+			headerName: "Space Length",
 			width: 220,
 			editable: false,
 			flex: 1,
@@ -214,193 +165,135 @@ export const AdminWarehouse = () => {
 			width: 100,
 			cellClassName: "actions",
 			align: "right",
-			getActions: ({ id }) => {
-				return [
-					<GridActionsCellItem
-						icon={<SearchIcon />}
-						label='Show Products'
-						onClick={() => navigate("/items")}
-						color='inherit'
-					/>,
-					<GridActionsCellItem
-						icon={<EditIcon />}
-						label='Edit'
-						className='textPrimary'
-						onClick={handleEditClick(id)}
-						color='inherit'
-					/>,
-					<GridActionsCellItem icon={<DeleteIcon />} label='Delete' onClick={handleDeleteClick(id)} color='inherit' />,
-				];
-			},
+			getActions: ({ id }) => [
+				<GridActionsCellItem
+					icon={<SearchIcon />}
+					label='Show Products'
+					onClick={() => navigate("/items")}
+					color='inherit'
+				/>,
+				<GridActionsCellItem
+					icon={<EditIcon />}
+					label='Edit'
+					className='textPrimary'
+					onClick={handleEditClick(id)}
+					color='inherit'
+				/>,
+				<GridActionsCellItem
+					icon={<DeleteIcon />}
+					label='Delete'
+					onClick={handleDeleteClick(Number(id))}
+					color='inherit'
+				/>,
+			],
 		},
 	];
 
-	const getReports = async () => {
-		requestWarehouseReport(selectBultind, selectZone, selectspaceId);
-	}
-
 	return (
-		<Box>
-			<Box
-				sx={{
-					height: "60vh",
-					width: "100%",
-					"& .actions": {
-						color: "text.secondary",
-					},
-					"& .textPrimary": {
-						color: "text.primary",
-					},
-				}}
-			>
-				<Breadcrumb style={{ margin: "16px 0" }}>
-					<Breadcrumb.Item>Dashboard</Breadcrumb.Item>
-					<Breadcrumb.Item>Warehouses</Breadcrumb.Item>
-				</Breadcrumb>
-
-				<Typography
-					variant='h3'
-					component='h3'
+		<>
+			<Box>
+				<Box
 					sx={{
-						textAlign: "center",
-						p: 5,
+						height: "60vh",
+						width: "100%",
+						"& .actions": {
+							color: "text.secondary",
+						},
+						"& .textPrimary": {
+							color: "text.primary",
+						},
 					}}
 				>
-					Manage Warehouses
-				</Typography>
-				<Button type='primary' onClick={showDrawer}>
-					Add Warehouse
-				</Button>
-				<div style={{ margin: 10 }}>
-					<Button type='primary' onClick={showDrawer1}>
-						Create Raport
-					</Button>	
-				</div>
-				<DataGrid
-					rows={warehouse}
-					columns={columns}
-					editMode='row'
-					rowModesModel={rowModesModel}
-					onRowModesModelChange={handleRowModesModelChange}
-					onRowEditStop={handleRowEditStop}
-					processRowUpdate={processRowUpdate}
-					slotProps={{
-						toolbar: { setWarehouses, setRowModesModel },
-					}}
-					sx={{
-						boxShadow: 2,
-						border: 1,
-						"& .MuiDataGrid-cell:hover": {
-							color: "primary.main",
-						},
-						"& .MuiDataGrid-footerContainer ": {
-							bgcolor: "#F1BCD9",
-						},
-						"& .MuiDataGrid-toolbarContainer  ": {
-							bgcolor: "#F1BCD9",
-						},
-						"& .MuiButtonBase-root  ": {},
-					}}
-				/>
-				<Drawer
-					title='Create a new Warhouse'
-					width={720}
-					onClose={onClose}
-					open={open}
-					styles={{
-						body: {
-							paddingBottom: 80,
-						},
-					}}
-					extra={
-						<Space>
-							<Button onClick={onClose}>Cancel</Button>
-							<Button onClick={handleSubmitClick} type='primary'>
-								Submit
-							</Button>
-						</Space>
-					}
-				>
-					<CreateWarehouseForm form={form}/>
-				</Drawer>
+					<Breadcrumb style={{ margin: "16px 0" }}>
+						<Breadcrumb.Item>Dashboard</Breadcrumb.Item>
+						<Breadcrumb.Item>Warehouses</Breadcrumb.Item>
+					</Breadcrumb>
 
-				<Drawer
-					title='Edit a new Warhouse'
-					width={720}
-					onClose={onClose1}
-					open={open1}
-					styles={{
-						body: {
-							paddingBottom: 80,
-						},
-					}}
-					extra={
-						<Space>
-							<Button onClick={onClose1}>Cancel</Button>
-							<Button onClick={handleEditSubmitClick} type='primary'>
-								Submit
-							</Button>
-						</Space>
-					}
-				>
-					<EditWarehouseForm form={form}/>
-				</Drawer>
+					<Typography
+						variant='h3'
+						component='h3'
+						sx={{
+							textAlign: "center",
+							p: 5,
+						}}
+					>
+						Manage Warehouses
+					</Typography>
+					<div style={{ margin: 10 }}>
+						<Button type='primary' onClick={showDrawer}>
+							Add Warehouse
+						</Button>
+					</div>
+					<Drawer
+						title={selectedWarehouse ? "Edit Warehouse" : "Create a new Warehouse"}
+						width={720}
+						onClose={onCloseDrawer}
+						open={openDrawer}
+						bodyStyle={{ paddingBottom: 80 }}
+						extra={
+							<Space>
+								<Button onClick={onCloseDrawer}>Cancel</Button>
+								<Button onClick={form.submit} type='primary'>
+									Submit
+								</Button>
+							</Space>
+						}
+					>
+						<CreateWarehouseForm form={form} onClose={onCloseDrawer} handleCreateWarehouse={handleAddNewWarehouse} />
+					</Drawer>
 
-				<Drawer
-					title='Create Raport'
-					width={720}
-					onClose={onClose2}
-					open={open2}
-					styles={{
-						body: {
-							paddingBottom: 80,
-						},
-					}}
-					extra={
-						<Space>
-							<Button onClick={onClose2}>Cancel</Button>
-							<Button onClick={getReports} type='primary'>
-								Submit
-							</Button>
-						</Space>
-					}
-				>
-					<Form layout="vertical">
-				
-						<Form.Item label="Building" name="building" rules={[{ required: false, message: "Please select building" }]}>
-							<Select value={selectBultind} onChange={setSelectedBulidn}>
-							{warehouse.map((row) => (
-								<Select.Option key={row.building} value={row.building}>
-								{row.building}
-								</Select.Option>
-							))}
-							</Select>
-						</Form.Item>
-
-						<Form.Item label="Zone" name="zone" rules={[{ required: false, message: "Please select zone" }]}>
-							<Select value={selectZone} onChange={setSelectedZone}>
-							{warehouse.map((row) => (
-								<Select.Option key={row.zone} value={row.zone}>
-								{row.zone}
-								</Select.Option>
-							))}
-							</Select>
-						</Form.Item>
-
-						<Form.Item label="SpaceId" name="spaceId" rules={[{ required: false, message: "Please select spaceId" }]}>
-							<Select value={selectspaceId} onChange={setSelectedspaceId}>
-							{warehouse.map((row) => (
-								<Select.Option key={row.spaceId} value={row.spaceId}>
-								{row.spaceId}
-								</Select.Option>
-							))}
-							</Select>
-						</Form.Item>
-					</Form>
-				</Drawer>
-
+					<DataGrid
+						rows={rows}
+						columns={columns}
+						editMode='row'
+						rowModesModel={rowModesModel}
+						onRowModesModelChange={handleRowModesModelChange}
+						onRowEditStop={handleRowEditStop}
+						sx={{
+							boxShadow: 2,
+							border: 1,
+							"& .MuiDataGrid-cell:hover": {
+								color: "primary.main",
+							},
+							"& .MuiDataGrid-footerContainer ": {
+								bgcolor: "#F1BCD9",
+							},
+							"& .MuiDataGrid-toolbarContainer  ": {
+								bgcolor: "#F1BCD9",
+							},
+							"& .MuiButtonBase-root  ": {},
+						}}
+					/>
+				</Box>
 			</Box>
-		</Box>
+			<Modal open={isDeleteModalVisible} onClose={() => setIsDeleteModalVisible(false)}>
+				<Box
+					sx={{
+						position: "absolute",
+						top: "50%",
+						left: "50%",
+						transform: "translate(-50%, -50%)",
+						width: 400,
+						bgcolor: "background.paper",
+						boxShadow: 24,
+						p: 4,
+					}}
+				>
+					<DialogTitle>
+						<Typography variant='h4' component='div' sx={{ color: "red", fontWeight: "bold" }}>
+							Delete Warehouse
+						</Typography>
+					</DialogTitle>
+					<DialogContent>
+						<DialogContentText>Are you sure you want to delete this warehouse?</DialogContentText>
+					</DialogContent>
+					<DialogActions>
+						<Button onClick={() => setIsDeleteModalVisible(false)}>Cancel</Button>
+						<Button onClick={confirmDelete}>Delete</Button>
+					</DialogActions>
+				</Box>
+			</Modal>
+		</>
 	);
 };
 

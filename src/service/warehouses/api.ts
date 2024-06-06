@@ -1,65 +1,88 @@
-import instanceAxios from "../../helpers/axios/axios";
+import { AxiosInstance } from "axios";
+import { toast } from "react-toastify";
 import { Paths } from "./path";
-import { Warehouse } from "./types";
+import { Warehouse, RequestWarehouse } from "./types";
 
-export const getAllWarehouses = async (): Promise<Warehouse[]> => {
-	const data = await instanceAxios.get<Warehouse[]>(Paths.WAREHOUSE);
-	return data.data;
+// Function to get all warehouses
+export const getAllWarehouses = async (axios: AxiosInstance): Promise<Warehouse[]> => {
+	try {
+		const data = await axios.get<Warehouse[]>(Paths.WAREHOUSE);
+		return data.data;
+	} catch (error) {
+		console.error("Error fetching warehouses:", error);
+		toast.error("Failed to fetch warehouses");
+		return [];
+	}
 };
 
-
-export const deleteWarehous = async (id: string) => {
-	instanceAxios.delete(Paths.WAREHOUSE_ID.replace('{id}', id.toString()))
-	return true;
+// Function to post a new warehouse
+export const PostWarehouse = async (params: RequestWarehouse, axios: AxiosInstance) => {
+	try {
+		await axios.post(Paths.WAREHOUSE, params);
+		toast.success("New warehouse added");
+		return true;
+	} catch (error) {
+		console.error("Error adding new warehouse:", error);
+		toast.error("Failed to add new warehouse");
+		return false;
+	}
 };
 
-export const PostWarehouse = async(data: Warehouse ) => {
-	try{
-		await instanceAxios.post(Paths.WAREHOUSE, data);
+// Function to update an existing warehouse
+export const updateWarehouse = async (id: number, params: RequestWarehouse, axios: AxiosInstance) => {
+	try {
+		await axios.put(`${Paths.WAREHOUSE}/${id}`, params);
+		toast.success("Warehouse updated");
 		return true;
-	}
-	catch (error){
-		console.error("Błąd podczas dodawania zadania:", error);
+	} catch (error) {
+		console.error("Error updating warehouse:", error);
+		toast.error("Failed to update warehouse");
 		return false;
 	}
-}
+};
 
-export const PutWarehouse = async(data:Warehouse) => {
-	try{
-		await instanceAxios.put(Paths.WAREHOUSE_ID.replace('{id}', data.id.toString()), data);
+export const deleteWarehouse = async (id: number, axios: AxiosInstance) => {
+	try {
+		await axios.delete(`${Paths.WAREHOUSE}/${id}`);
+		toast.success("Warehouse deleted");
 		return true;
-	}
-	catch (error){
-		console.error("Błąd podczas aktualizacji zadania:", error);
+	} catch (error) {
+		console.error("Error deleting warehouse:", error);
+		toast.error("Failed to delete warehouse");
 		return false;
 	}
-}
+};
 
-export const requestWarehouseReport = async (building: string[], zone: string[], spaceId: string[]) => {
-    try {
-		
-        const response = await instanceAxios.get(Paths.RAPORT, {
-            responseType: 'blob', // Ustawienie responseType na blob, aby uzyskać zawartość jako Blob
-            params: {
+// Function to request a warehouse report
+export const requestWarehouseReport = async (
+	building: string[],
+	zone: string[],
+	spaceId: string[],
+	axios: AxiosInstance
+) => {
+	try {
+		const response = await axios.get(Paths.RAPORT, {
+			responseType: "blob",
+			params: {
 				building,
 				zone,
-				spaceId
+				spaceId,
+			},
+		});
 
-            }
-        });
-        
-        if (response.status === 200) {
-            const url = window.URL.createObjectURL(new Blob([response.data]));
-            const link = document.createElement('a');
-            link.href = url;
-            link.setAttribute('download', 'task-report.pdf');
-            document.body.appendChild(link);
-            link.click();
-            window.URL.revokeObjectURL(url);
-        } else {
-            console.error('Błąd podczas pobierania raportu:', response);
-        }
-    } catch (error) {
-        console.error('Błąd sieci:', error);
-    }
+		if (response.status === 200) {
+			const url = window.URL.createObjectURL(new Blob([response.data]));
+			const link = document.createElement("a");
+			link.href = url;
+			link.setAttribute("download", "warehouse-report.pdf");
+			document.body.appendChild(link);
+			link.click();
+			window.URL.revokeObjectURL(url);
+		} else {
+			console.error("Error downloading report:", response);
+		}
+	} catch (error) {
+		console.error("Network error:", error);
+		toast.error("Failed to download warehouse report");
+	}
 };
