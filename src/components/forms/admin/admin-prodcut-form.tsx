@@ -6,7 +6,7 @@ import { Items, RequestItem } from "../../../service/items/types";
 interface ProductFormProps {
 	form: FormInstance;
 	onClose: () => void;
-	handleCreateProduct: (productData: RequestItem) => void;
+	handleCreateProduct: (productData: RequestItem) => Promise<void>;
 	initialValues?: Items | null;
 }
 
@@ -19,6 +19,8 @@ const ProductForm: React.FC<ProductFormProps> = ({ form, onClose, handleCreatePr
 		length: 0,
 		weight: 0,
 	});
+	const [submitting, setSubmitting] = useState(false);
+	const [error, setError] = useState<string | null>(null);
 
 	useEffect(() => {
 		if (initialValues) {
@@ -32,18 +34,21 @@ const ProductForm: React.FC<ProductFormProps> = ({ form, onClose, handleCreatePr
 		setProduct({ ...product, [name]: value });
 	};
 
-	const handleSubmit = () => {
-		form
-			.validateFields()
-			.then(() => {
-				handleCreateProduct(product);
-				form.resetFields();
-				setProduct({ name: "", code: "", width: 0, height: 0, length: 0, weight: 0 });
-				onClose();
-			})
-			.catch((errorInfo) => {
-				console.log("Validate Failed:", errorInfo);
-			});
+	const handleSubmit = async () => {
+		try {
+			setSubmitting(true);
+			setError(null);
+			await form.validateFields();
+			await handleCreateProduct(product);
+			form.resetFields();
+			setProduct({ name: "", code: "", width: 0, height: 0, length: 0, weight: 0 });
+			onClose();
+		} catch (error) {
+			console.error("Error in handleCreateProduct:", error);
+			setError("Failed to submit the form. Please try again.");
+		} finally {
+			setSubmitting(false);
+		}
 	};
 
 	return (
@@ -121,9 +126,14 @@ const ProductForm: React.FC<ProductFormProps> = ({ form, onClose, handleCreatePr
 						/>
 					</Form.Item>
 				</Col>
+				{error && (
+					<Col span={24}>
+						<div style={{ color: "red", marginBottom: 16 }}>{error}</div>
+					</Col>
+				)}
 				<Col span={24}>
 					<Form.Item>
-						<Button type='primary' onClick={handleSubmit} block>
+						<Button type='primary' onClick={handleSubmit} loading={submitting} block>
 							Submit
 						</Button>
 					</Form.Item>

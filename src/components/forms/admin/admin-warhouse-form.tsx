@@ -1,7 +1,12 @@
 import React, { useState, useEffect } from "react";
-import { Form, Input, Button, Row, Col } from "antd";
+import { Form, Input, Button, Row, Col, Select } from "antd";
 import { FormInstance } from "antd/es/form";
 import { Warehouse, RequestWarehouse } from "../../../service/warehouses/types";
+import { getAllItems } from "../../../service/items";
+import { Items } from "../../../service/items/types";
+import { useAxios } from "../../../helpers/axios/useAxios";
+
+const { Option } = Select;
 
 interface CreateWarehouseFormProps {
 	form: FormInstance;
@@ -10,12 +15,7 @@ interface CreateWarehouseFormProps {
 	initialValues?: Warehouse | null;
 }
 
-const CreateWarehouseForm: React.FC<CreateWarehouseFormProps> = ({
-	form,
-	onClose,
-	handleCreateWarehouse,
-	initialValues,
-}) => {
+const WarehouseForm: React.FC<CreateWarehouseFormProps> = ({ form, onClose, handleCreateWarehouse, initialValues }) => {
 	const [warehouse, setWarehouse] = useState<RequestWarehouse>({
 		building: "",
 		zone: "",
@@ -27,11 +27,30 @@ const CreateWarehouseForm: React.FC<CreateWarehouseFormProps> = ({
 		productCode: "",
 		productName: "",
 	});
+	const [products, setProducts] = useState<Items[]>([]);
+
+	const axios = useAxios();
+
+	const GetItems = async () => {
+		try {
+			const res = await getAllItems(axios);
+			setProducts(res); // Update local state with fetched data
+		} catch (error) {
+			console.error("Error fetching items:", error);
+		}
+	};
+
+	useEffect(() => {
+		GetItems();
+	}, []);
 
 	useEffect(() => {
 		if (initialValues) {
 			setWarehouse(initialValues);
-			form.setFieldsValue(initialValues);
+			form.setFieldsValue({
+				...initialValues,
+				productId: initialValues.productId,
+			});
 		}
 	}, [initialValues, form]);
 
@@ -40,11 +59,24 @@ const CreateWarehouseForm: React.FC<CreateWarehouseFormProps> = ({
 		setWarehouse({ ...warehouse, [name]: value });
 	};
 
-	const handleSubmit = () => {
+	const handleProductChange = (value: number) => {
+		const selectedProduct = products.find((product) => product.id === value);
+		if (selectedProduct) {
+			setWarehouse({
+				...warehouse,
+				productId: selectedProduct.id,
+				productCode: selectedProduct.code,
+				productName: selectedProduct.name,
+			});
+			form.setFieldsValue({ productId: value });
+		}
+	};
+
+	const handleSubmit = async () => {
 		form
 			.validateFields()
-			.then(() => {
-				handleCreateWarehouse(warehouse);
+			.then(async () => {
+				await handleCreateWarehouse(warehouse);
 				form.resetFields();
 				setWarehouse({
 					building: "",
@@ -147,17 +179,14 @@ const CreateWarehouseForm: React.FC<CreateWarehouseFormProps> = ({
 					</Form.Item>
 				</Col>
 				<Col span={12}>
-					<Form.Item
-						name='productId'
-						label='Product Id'
-						rules={[{ required: true, message: "Please enter product Id" }]}
-					>
-						<Input
-							name='productId'
-							placeholder='Please enter product Id'
-							value={warehouse.productId}
-							onChange={handleInputChange}
-						/>
+					<Form.Item name='productId' label='Product' rules={[{ required: true, message: "Please select a product" }]}>
+						<Select placeholder='Please select a product' value={warehouse.productId} onChange={handleProductChange}>
+							{products.map((product) => (
+								<Option key={product.id} value={product.id}>
+									{product.name}
+								</Option>
+							))}
+						</Select>
 					</Form.Item>
 				</Col>
 				<Col span={24}>
@@ -172,4 +201,4 @@ const CreateWarehouseForm: React.FC<CreateWarehouseFormProps> = ({
 	);
 };
 
-export default CreateWarehouseForm;
+export default WarehouseForm;

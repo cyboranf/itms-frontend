@@ -23,8 +23,8 @@ import {
 	updateWarehouse,
 } from "../../../service/warehouses";
 import { Warehouse, RequestWarehouse } from "../../../service/warehouses/types";
-import CreateWarehouseForm from "../../../components/forms/admin/admin-warhouse-creat-form";
 import { useAxios } from "../../../helpers/axios/useAxios";
+import WarehouseForm from "../../../components/forms/admin/admin-warhouse-form";
 
 export const AdminWarehouse = () => {
 	const navigate = useNavigate();
@@ -159,6 +159,13 @@ export const AdminWarehouse = () => {
 			flex: 1,
 		},
 		{
+			field: "productName",
+			headerName: "Product",
+			width: 220,
+			editable: false,
+			flex: 1,
+		},
+		{
 			field: "actions",
 			type: "actions",
 			headerName: "Actions",
@@ -239,7 +246,7 @@ export const AdminWarehouse = () => {
 							</Space>
 						}
 					>
-						<CreateWarehouseForm form={form} onClose={onCloseDrawer} handleCreateWarehouse={handleAddNewWarehouse} />
+						<WarehouseForm form={form} onClose={onCloseDrawer} handleCreateWarehouse={handleAddNewWarehouse} />
 					</Drawer>
 
 					<DataGrid

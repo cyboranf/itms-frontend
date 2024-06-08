@@ -44,8 +44,12 @@ export const AdminProducts = () => {
 	}, []);
 
 	const handleAddNewProduct = async (product: RequestItem) => {
-		await PostItems(product, axios);
-		await GetItems();
+		try {
+			await PostItems(product, axios);
+			await GetItems();
+		} catch (err: any) {
+			throw new Error(err);
+		}
 	};
 
 	const handleEditProduct = async (product: RequestItem) => {

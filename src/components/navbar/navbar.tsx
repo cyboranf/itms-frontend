@@ -8,6 +8,7 @@ import {
 	LogoutOutlined,
 	ShopOutlined,
 	XFilled,
+	ProductFilled,
 } from "@ant-design/icons";
 import { Layout, Menu } from "antd";
 import { Link } from "react-router-dom";
@@ -37,6 +38,12 @@ export const Navbar = () => {
 				<Menu.Item key='Tasks' icon={<TableOutlined />}>
 					<Link to='/tasks'>
 						<span className='nav-text'>Tasks</span>
+					</Link>
+				</Menu.Item>
+
+				<Menu.Item key='Products' icon={<ProductFilled />}>
+					<Link to='/products'>
+						<span className='nav-text'>Products</span>
 					</Link>
 				</Menu.Item>
 
