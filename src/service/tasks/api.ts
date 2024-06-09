@@ -1,16 +1,21 @@
 import instanceAxios from "../../helpers/axios/axios";
 import { Paths } from "./path";
-import { Task } from "./types";
+import { Task, TaskType, TaskProduct } from "./types";
 
 export const getAllTasks = async (): Promise<Task[]> => {
 	const data = await instanceAxios.get<Task[]>(Paths.TASKS);
 	return data.data;
 };
 
+export const getAllTasksTypes = async (): Promise<TaskType[]> => {
+	const data = await instanceAxios.get<TaskType[]>(Paths.TASK_TYPE);
+	return data.data;
+};
+
 export const PostTask = async (params: Task) => {
 	try {
-		await instanceAxios.post(Paths.TASKS, params);
-		return true;
+		const task = await instanceAxios.post(Paths.TASKS, params);
+		return task.data;
 	}
 	catch (error){
 		console.error("Błąd podczas aktualizacji zadania:", error);
@@ -57,3 +62,25 @@ export const requestTaskReport = async (includeUsers: boolean, includeProducts: 
         console.error('Błąd sieci:', error);
     }
 };
+
+export const PostTaskProduct = async (taskId: number, productId: number) => {
+	try {
+		const url = `http://127.0.0.1:8080/api/tasks/${taskId}/join/products/${productId}`;
+		await instanceAxios.post(url);
+		return true;
+	} catch (error) {
+		console.error("Błąd podczas PostTaskProduct:", error);
+		return false;
+	}
+};
+
+export const PostTaskUsers = async (userId: number, taskId: number) => {
+		try {
+		const url = `http://127.0.0.1:8080/api/users/${userId}/join/tasks/${taskId}`;
+		await instanceAxios.post(url);
+		return true;
+	} catch (error) {
+		console.error("Błąd podczas PostTaskProduct:", error);
+		return false;
+	}
+} 
