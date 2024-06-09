@@ -1,9 +1,9 @@
-import React, { useEffect, useState } from "react";
+import { useEffect, useState } from "react";
 import Box from "@mui/material/Box";
 import EditIcon from "@mui/icons-material/Edit";
 import DeleteIcon from "@mui/icons-material/DeleteOutlined";
 import SearchIcon from "@mui/icons-material/Search";
-import { Link, useNavigate } from "react-router-dom";
+import { useNavigate } from "react-router-dom";
 import {
 	GridRowModesModel,
 	DataGrid,
@@ -14,17 +14,12 @@ import {
 	GridActionsCellItem,
 } from "@mui/x-data-grid";
 import { Typography, Modal, DialogTitle, DialogContent, DialogContentText, DialogActions } from "@mui/material";
-import { Breadcrumb, Button, Drawer, Space, Form, Select } from "antd";
-import {
-	deleteWarehouse,
-	getAllWarehouses,
-	requestWarehouseReport,
-	PostWarehouse,
-	updateWarehouse,
-} from "../../../service/warehouses";
-import { Warehouse, RequestWarehouse } from "../../../service/warehouses/types";
+import { Breadcrumb, Button, Drawer, Space, Form } from "antd";
+import { deleteWarehouse, getAllWarehouses, requestWarehouseReport } from "../../../service/warehouses";
+import { Warehouse } from "../../../service/warehouses/types";
 import { useAxios } from "../../../helpers/axios/useAxios";
 import WarehouseForm from "../../../components/forms/admin/admin-warhouse-form";
+import { get } from "react-hook-form";
 
 export const AdminWarehouse = () => {
 	const navigate = useNavigate();
@@ -52,18 +47,6 @@ export const AdminWarehouse = () => {
 	useEffect(() => {
 		getWarehousesData();
 	}, []);
-
-	const handleAddNewWarehouse = async (warehouse: RequestWarehouse) => {
-		await PostWarehouse(warehouse, axios);
-		await getWarehousesData();
-	};
-
-	const handleEditWarehouse = async (warehouse: RequestWarehouse) => {
-		if (selectedWarehouse) {
-			await updateWarehouse(selectedWarehouse.id, warehouse, axios);
-			await getWarehousesData();
-		}
-	};
 
 	const getReports = async () => {
 		requestWarehouseReport(selectBuilding, selectZone, selectSpaceId, axios);
@@ -110,6 +93,7 @@ export const AdminWarehouse = () => {
 
 	const onCloseDrawer = () => {
 		setOpenDrawer(false);
+		setSelectedWarehouse(null);
 	};
 
 	const [form] = Form.useForm();
@@ -246,7 +230,17 @@ export const AdminWarehouse = () => {
 							</Space>
 						}
 					>
-						<WarehouseForm form={form} onClose={onCloseDrawer} handleCreateWarehouse={handleAddNewWarehouse} />
+						<WarehouseForm
+							form={form}
+							onClose={onCloseDrawer}
+							refreshWarehouses={() => {
+								getWarehousesData();
+							}}
+							refreshWarehouse={() => {
+								setSelectedWarehouse(null);
+							}}
+							initialValues={selectedWarehouse}
+						/>
 					</Drawer>
 
 					<DataGrid

@@ -2,15 +2,17 @@ import React, { useState, useEffect } from "react";
 import { Form, Input, Button, Row, Col } from "antd";
 import { FormInstance } from "antd/es/form";
 import { Items, RequestItem } from "../../../service/items/types";
+import { PostItems, updateItem } from "../../../service/items";
+import { useAxios } from "../../../helpers/axios/useAxios";
 
 interface ProductFormProps {
 	form: FormInstance;
 	onClose: () => void;
-	handleCreateProduct: (productData: RequestItem) => Promise<void>;
 	initialValues?: Items | null;
+	refreshProducts: () => void;
 }
 
-const ProductForm: React.FC<ProductFormProps> = ({ form, onClose, handleCreateProduct, initialValues }) => {
+const ProductForm: React.FC<ProductFormProps> = ({ form, onClose, initialValues, refreshProducts }) => {
 	const [product, setProduct] = useState<RequestItem>({
 		name: "",
 		code: "",
@@ -19,13 +21,15 @@ const ProductForm: React.FC<ProductFormProps> = ({ form, onClose, handleCreatePr
 		length: 0,
 		weight: 0,
 	});
-	const [submitting, setSubmitting] = useState(false);
-	const [error, setError] = useState<string | null>(null);
+
+	const axios = useAxios();
 
 	useEffect(() => {
 		if (initialValues) {
 			setProduct(initialValues);
 			form.setFieldsValue(initialValues);
+		} else {
+			form.resetFields();
 		}
 	}, [initialValues, form]);
 
@@ -36,18 +40,18 @@ const ProductForm: React.FC<ProductFormProps> = ({ form, onClose, handleCreatePr
 
 	const handleSubmit = async () => {
 		try {
-			setSubmitting(true);
-			setError(null);
 			await form.validateFields();
-			await handleCreateProduct(product);
-			form.resetFields();
-			setProduct({ name: "", code: "", width: 0, height: 0, length: 0, weight: 0 });
+			if (initialValues) {
+				const succ = await updateItem(initialValues.id, product, axios);
+				if (!succ) return;
+			} else {
+				const succ = await PostItems(product, axios);
+				if (!succ) return;
+			}
+			refreshProducts();
 			onClose();
-		} catch (error) {
-			console.error("Error in handleCreateProduct:", error);
-			setError("Failed to submit the form. Please try again.");
-		} finally {
-			setSubmitting(false);
+		} catch (err) {
+			console.error("Error during form submission:", err);
 		}
 	};
 
@@ -126,14 +130,10 @@ const ProductForm: React.FC<ProductFormProps> = ({ form, onClose, handleCreatePr
 						/>
 					</Form.Item>
 				</Col>
-				{error && (
-					<Col span={24}>
-						<div style={{ color: "red", marginBottom: 16 }}>{error}</div>
-					</Col>
-				)}
+
 				<Col span={24}>
 					<Form.Item>
-						<Button type='primary' onClick={handleSubmit} loading={submitting} block>
+						<Button type='primary' onClick={handleSubmit} block>
 							Submit
 						</Button>
 					</Form.Item>
