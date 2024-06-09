@@ -95,11 +95,6 @@ export const AdminPanel = () => {
 
 	const [form] = Form.useForm();
 
-	const handleEditUser = async (user: User) => {
-		await PutUsers(user, axios);
-		await getUsers();
-	};
-
 	const handleDeleteUser = async () => {
 		if (selectedUser) {
 			await DeleteUsers(selectedUser.id, axios);
@@ -170,7 +165,7 @@ export const AdminPanel = () => {
 										</Space>
 									}
 								>
-									<UserForm form={form} initialValues={selectedUser} handleCreateUser={handleEditUser} />
+									<UserForm form={form} initialValues={selectedUser} refreshUsers={() => getUsers()} />
 								</Drawer>
 
 								<Typography

@@ -14,8 +14,8 @@ import {
 import { Typography, Modal, DialogTitle, DialogContent, DialogContentText, DialogActions } from "@mui/material";
 import { Breadcrumb, Button, Drawer, Space, Form } from "antd";
 import { Link } from "react-router-dom";
-import { PostItems, getAllItems, requestItemsReport, deleteItem, updateItem } from "../../../service/items";
-import { Items, RequestItem } from "../../../service/items/types";
+import { getAllItems, requestItemsReport, deleteItem } from "../../../service/items";
+import { Items } from "../../../service/items/types";
 import { useAxios } from "../../../helpers/axios/useAxios";
 import ProductForm from "../../../components/forms/admin/admin-prodcut-form";
 
@@ -42,22 +42,6 @@ export const AdminProducts = () => {
 	useEffect(() => {
 		GetItems();
 	}, []);
-
-	const handleAddNewProduct = async (product: RequestItem) => {
-		try {
-			await PostItems(product, axios);
-			await GetItems();
-		} catch (err: any) {
-			throw new Error(err);
-		}
-	};
-
-	const handleEditProduct = async (product: RequestItem) => {
-		if (selectedProduct) {
-			await updateItem(selectedProduct.id, product, axios);
-			await GetItems();
-		}
-	};
 
 	const getReports = async () => {
 		requestItemsReport(selectName, selectCode, axios);
@@ -228,9 +212,11 @@ export const AdminProducts = () => {
 						}
 					>
 						<ProductForm
+							refreshProducts={() => {
+								GetItems();
+							}}
 							form={form}
 							onClose={onCloseDrawer}
-							handleCreateProduct={selectedProduct ? handleEditProduct : handleAddNewProduct}
 							initialValues={selectedProduct}
 						/>
 					</Drawer>

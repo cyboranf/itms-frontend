@@ -5,17 +5,25 @@ import { Warehouse, RequestWarehouse } from "../../../service/warehouses/types";
 import { getAllItems } from "../../../service/items";
 import { Items } from "../../../service/items/types";
 import { useAxios } from "../../../helpers/axios/useAxios";
+import { PostWarehouse, updateWarehouse } from "../../../service/warehouses";
 
 const { Option } = Select;
 
 interface CreateWarehouseFormProps {
 	form: FormInstance;
 	onClose: () => void;
-	handleCreateWarehouse: (warehouseData: RequestWarehouse) => void;
 	initialValues?: Warehouse | null;
+	refreshWarehouses: () => void;
+	refreshWarehouse: () => void;
 }
 
-const WarehouseForm: React.FC<CreateWarehouseFormProps> = ({ form, onClose, handleCreateWarehouse, initialValues }) => {
+const WarehouseForm: React.FC<CreateWarehouseFormProps> = ({
+	form,
+	onClose,
+	initialValues,
+	refreshWarehouses,
+	refreshWarehouse,
+}) => {
 	const [warehouse, setWarehouse] = useState<RequestWarehouse>({
 		building: "",
 		zone: "",
@@ -34,7 +42,7 @@ const WarehouseForm: React.FC<CreateWarehouseFormProps> = ({ form, onClose, hand
 	const GetItems = async () => {
 		try {
 			const res = await getAllItems(axios);
-			setProducts(res); // Update local state with fetched data
+			setProducts(res);
 		} catch (error) {
 			console.error("Error fetching items:", error);
 		}
@@ -42,17 +50,30 @@ const WarehouseForm: React.FC<CreateWarehouseFormProps> = ({ form, onClose, hand
 
 	useEffect(() => {
 		GetItems();
+
+		return () => {
+			refreshWarehouse();
+		};
 	}, []);
 
 	useEffect(() => {
 		if (initialValues) {
-			setWarehouse(initialValues);
+			const selectedProduct = products.find((product) => product.id === initialValues.productId);
+			if (selectedProduct) {
+				setWarehouse({
+					...initialValues,
+					productCode: selectedProduct.code,
+					productName: selectedProduct.name,
+				});
+			}
 			form.setFieldsValue({
 				...initialValues,
 				productId: initialValues.productId,
 			});
+		} else {
+			form.resetFields();
 		}
-	}, [initialValues, form]);
+	}, [initialValues, form, products]);
 
 	const handleInputChange = (e: React.ChangeEvent<HTMLInputElement>) => {
 		const { name, value } = e.target;
@@ -73,27 +94,20 @@ const WarehouseForm: React.FC<CreateWarehouseFormProps> = ({ form, onClose, hand
 	};
 
 	const handleSubmit = async () => {
-		form
-			.validateFields()
-			.then(async () => {
-				await handleCreateWarehouse(warehouse);
-				form.resetFields();
-				setWarehouse({
-					building: "",
-					zone: "",
-					spaceId: 0,
-					spaceHeight: 0,
-					spaceWidth: 0,
-					spaceLength: 0,
-					productId: 0,
-					productCode: "",
-					productName: "",
-				});
-				onClose();
-			})
-			.catch((errorInfo) => {
-				console.log("Validate Failed:", errorInfo);
-			});
+		try {
+			await form.validateFields();
+			if (initialValues) {
+				const succ = await updateWarehouse(initialValues.id, warehouse, axios);
+				if (!succ) return;
+			} else {
+				const succ = await PostWarehouse(warehouse, axios);
+				if (!succ) return;
+			}
+			refreshWarehouses();
+			onClose();
+		} catch (err) {
+			console.error("Error during form submission:", err);
+		}
 	};
 
 	return (

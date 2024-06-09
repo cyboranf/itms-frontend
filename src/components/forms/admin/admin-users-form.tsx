@@ -2,14 +2,16 @@ import React, { useState, useEffect } from "react";
 import { Form, Input, Button, Row, Col } from "antd";
 import { FormInstance } from "antd/es/form";
 import { User } from "../../../service/users/types";
+import { PutUsers } from "../../../service/users";
+import { useAxios } from "../../../helpers/axios/useAxios";
 
 interface UserFormProps {
 	form: FormInstance;
-	handleCreateUser: (userData: User) => void;
 	initialValues?: User | null;
+	refreshUsers: () => void;
 }
 
-const UserForm: React.FC<UserFormProps> = ({ form, handleCreateUser, initialValues }) => {
+const UserForm: React.FC<UserFormProps> = ({ form, initialValues, refreshUsers }) => {
 	const [user, setUser] = useState<User>({
 		id: 0,
 		username: "",
@@ -20,6 +22,8 @@ const UserForm: React.FC<UserFormProps> = ({ form, handleCreateUser, initialValu
 		phoneNumber: "",
 		tasks: [],
 	});
+
+	const axios = useAxios();
 
 	useEffect(() => {
 		if (initialValues) {
@@ -33,15 +37,15 @@ const UserForm: React.FC<UserFormProps> = ({ form, handleCreateUser, initialValu
 		setUser({ ...user, [name]: value });
 	};
 
-	const handleSubmit = () => {
-		form
-			.validateFields()
-			.then(() => {
-        handleCreateUser(user);
-			})
-			.catch((errorInfo) => {
-				console.log("Validate Failed:", errorInfo);
-			});
+	const handleSubmit = async () => {
+		try {
+			await form.validateFields();
+			const succ = await PutUsers(user, axios);
+			if (!succ) return;
+			refreshUsers();
+		} catch (err) {
+			console.error("Error during form submission:", err);
+		}
 	};
 
 	return (
