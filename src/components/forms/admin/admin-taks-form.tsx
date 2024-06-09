@@ -1,8 +1,16 @@
-import React, { useState } from 'react';
+import React, { useEffect, useState } from 'react';
 import { Form, Input, Button, Select, Row, Col, Table, DatePicker } from 'antd';
 import { FormInstance } from 'antd/es/form';
+import {getAllUsers } from '../../../service/users';
+import {getAllWarehouses } from '../../../service/warehouses';
+import {getAllItems} from '../../../service/items';
+import {getAllTasksTypes, PostTaskUsers, PostTask, PostTaskProduct } from '../../../service/tasks';
+import { useAxios } from "../../../helpers/axios/useAxios";
+import products from '../../home/products';
+import { toast } from "react-toastify";
 
 const { Option } = Select;
+
 
 interface TaskFormProps {
 	form: FormInstance;
@@ -10,125 +18,212 @@ interface TaskFormProps {
 	handleCreateTask: () => void;
 }
 
-const TaskForm: React.FC<TaskFormProps> = ({ form, onClose, handleCreateTask }) => {
-	const [product, setProduct] = useState<string>("");
-	const [warehouseSpace, setWarehouseSpace] = useState<string>("");
-	const [description, setDescription] = useState<string>("");
-	const [selectedOptions, setSelectedOptions] = useState<{ product: string, warehouseSpace: string, description: string }[]>([]);
-	const [employeeGroup, setEmployeeGroup] = useState<string>("");
 
-	const handleAddOption = () => {
-		if (product && warehouseSpace) {
-			setSelectedOptions([...selectedOptions, { product, warehouseSpace, description }]);
-			setProduct("");
-			setWarehouseSpace("");
-			setDescription("");
+
+const TaskForm: React.FC<TaskFormProps> = ({ form, onClose, handleCreateTask }) => {
+
+	const axios = useAxios();
+
+	const [users, setUsers] = useState<{ id: number; name: string }[]>([]);
+	const [warehouses, setWarhouse] = useState<{id: number; building: string}[]>([]);
+	const [products, setProduct] = useState<{id: number, name: string}[]>([]);
+	const [tasksTypes, setTasksTypes] = useState<{id: number, name: string}[]>([]);
+
+    useEffect(() => {
+        const fetchUsers = async () => {
+            try {
+                const response = await getAllUsers(axios);
+
+                setUsers(response.map(user => ({
+                    id: user.id,
+                    name: `${user.name} ${user.lastname}`,
+                })));
+
+            } catch (error) {
+                console.error('Błąd podczas pobierania użytkowników:', error);
+            }
+        };
+
+		const fetchedWarhouse = async () => {
+			try {
+				const response = await getAllWarehouses(axios);
+
+				setWarhouse(response.map(warehouse => ({
+					id: warehouse.id,
+					building: warehouse.building
+				})));
+
+			} catch (error){
+				console.error('Błąd podczas pobierania użytkowników:', error);
+			}
+		};
+
+		const fetchedProduct = async () => {
+			try {
+				const response = await getAllItems(axios);
+
+				setProduct(response.map(products => ({
+					id: products.id,
+					name: products.name
+				})));
+
+			} catch (error){
+				console.error('Błąd podczas pobierania użytkowników:', error);
+			}
+		};
+
+		const fetchedTaskTypes = async () => {
+			try {
+				const response = await getAllTasksTypes();
+
+				setTasksTypes(response.map(products => ({
+					id: products.id,
+					name: products.name
+				})));
+
+			} catch (error){
+				console.error('Błąd podczas pobierania użytkowników:', error);
+			}
+		};
+		fetchedTaskTypes();
+		fetchedProduct();
+		fetchUsers();
+        fetchedWarhouse();
+    }, []);
+
+	const onFinish = async (values: any) => {
+		const taskParams = {
+			users: values.assignee, // assuming `users` field takes an array of user IDs
+			id: 0, // Assuming ID is auto-generated
+			name: values.name,
+			description: values.description,
+			state: values.state,
+			priority: values.priority,
+			startDate: values.startDate,
+			endDate: values.endDate,
+			type_id: values.taskType,
+		};
+		
+
+		try {
+			
+			const taskCreated = await PostTask(taskParams);
+			
+			if (taskCreated) {
+				console.log(taskCreated.id + " " + " " + values.assignee); 
+				await PostTaskProduct(taskCreated.id, values.assignee);
+				await PostTaskUsers(values.assignee, taskCreated.id)
+				toast.success("Stworzona tasks");
+				
+			} else {
+				toast.error("Bład przy tworzeniu taska")
+			}
+		} catch (error) {
+			console.error('Error while creating task');
 		}
 	};
 
-	const handleDeleteOption = (index: number) => {
-		const updatedOptions = [...selectedOptions];
-		updatedOptions.splice(index, 1);
-		setSelectedOptions(updatedOptions);
-	};
-
-	const antColumns = [
-		{ title: "Product", dataIndex: "product", key: "product" },
-		{ title: "Warehouse-space", dataIndex: "warehouseSpace", key: "warehouseSpace" },
-		{ title: "Description", dataIndex: "description", key: "description" },
-		{
-			title: "Action",
-			key: "action",
-			render: (_: unknown, __: unknown, index: number) => <Button onClick={() => handleDeleteOption(index)}>Delete</Button>,
-		},
-	];
 
 	return (
-		<Form layout='vertical' hideRequiredMark form={form}>
-			<Row gutter={16}>
-				<Col span={12}>
-					<Form.Item name='name' label='Task Name' rules={[{ required: true, message: 'Please enter task name' }]}>
-						<Input placeholder='Please enter task name' />
-					</Form.Item>
-				</Col>
-				<Col span={12}>
-					<Form.Item name='category' label='Category' rules={[{ required: true, message: 'Please select a category' }]}>
-						<Select placeholder='Select a category'>
-							<Option value='category1'>Category 1</Option>
-							<Option value='category2'>Category 2</Option>
-						</Select>
-					</Form.Item>
-				</Col>
-				<Col span={24}>
-					<Form.Item name='description' label='Description' rules={[{ required: true, message: 'Please enter a description' }]}>
-						<Input.TextArea rows={4} placeholder='Enter description' />
-					</Form.Item>
-				</Col>
-				<Col span={8}>
-					<Form.Item name='product' label='Product'>
-						<Select placeholder='Select a product' value={product} onChange={(value) => setProduct(value)}>
-							<Option value='product1'>Product 1</Option>
-							<Option value='product2'>Product 2</Option>
-						</Select>
-					</Form.Item>
-				</Col>
-				<Col span={8}>
-					<Form.Item name='warehouseSpace' label='Warehouse-space'>
-						<Select placeholder='Select warehouse space' value={warehouseSpace} onChange={(value) => setWarehouseSpace(value)}>
-							<Option value='space1'>Warehouse-space 1</Option>
-							<Option value='space2'>Warehouse-space 2</Option>
-						</Select>
-					</Form.Item>
-				</Col>
-				<Col span={8}>
-					<Form.Item>
-						<Button type='primary' onClick={handleAddOption} block>
-							Add
-						</Button>
-					</Form.Item>
-				</Col>
-				<Col span={24}>
-					<Table dataSource={selectedOptions} columns={antColumns} rowKey={(record) => `${record.product}-${record.warehouseSpace}`} />
-				</Col>
-				<Col span={24}>
-					<Form.Item name='employeeGroup' label='Employee Group'>
-						<Select placeholder='Select an employee group' value={employeeGroup} onChange={(value) => setEmployeeGroup(value)}>
-							<Option value='group1'>Group 1</Option>
-							<Option value='group2'>Group 2</Option>
-						</Select>
-					</Form.Item>
-				</Col>
-				<Col span={12}>
-					<Form.Item name='startDate' label='Start Date' rules={[{ required: true, message: 'Please enter start date' }]}>
-						<DatePicker />
-					</Form.Item>
-				</Col>
-				<Col span={12}>
-					<Form.Item name='endDate' label='End Date' rules={[{ required: true, message: 'Please enter end date' }]}>
-						<DatePicker />
-					</Form.Item>
-				</Col>
-				<Col span={12}>
-					<Form.Item name='idd' label='Task id' rules={[{ required: true, message: 'Please enter Task id' }]}>
-						<Input placeholder='Please enter Task id' />
-					</Form.Item>
-				</Col>
-				<Col span={12}>
-					<Form.Item name='priority' label='Priority' rules={[{ required: true, message: 'Please enter Priority' }]}>
-						<Input placeholder='Please enter Priority' />
-					</Form.Item>
-				</Col>
-				<Col span={12}>
-					<Form.Item name='state' label='State' rules={[{ required: true, message: 'Please enter state' }]}>
-						<Input placeholder='Please enter state' />
-					</Form.Item>
-				</Col>
-				<Col span={12}>
-					<Form.Item name='type_id' label='Type ID' rules={[{ required: true, message: 'Please enter type id' }]}>
-						<Input placeholder='Please enter type id' />
-					</Form.Item>
-				</Col>
-			</Row>
+		<Form layout='vertical' hideRequiredMark form={form} onFinish={onFinish}>
+			<Form.Item label="Task Name" name="name" rules={[{ required: true, message: 'Please enter the task name' }]}>
+				<Input placeholder="Enter task name" />
+			</Form.Item>
+			<Form.Item label="Priority" name="priority" rules={[{ required: true, message: 'Please select the priority' }]}>
+				<Select placeholder="Select priority">
+					<Option value={1}>Low</Option>
+					<Option value={2}>Medium</Option>
+					<Option value={3}>High</Option>
+				</Select>
+			</Form.Item>
+			<Form.Item label="Description" name="description" rules={[{ required: true, message: 'Please enter the task description' }]}>
+				<Input placeholder="Enter task description" />
+			</Form.Item>
+			<Form.Item label="Creation Date" name="startDate" rules={[{ required: true, message: 'Please select the creation date' }]}>
+				<DatePicker style={{ width: '100%' }} />
+			</Form.Item>
+			<Form.Item label="End Date" name="endDate" rules={[{ required: true, message: 'Please select the end date' }]}>
+				<DatePicker style={{ width: '100%' }} />
+			</Form.Item>
+			<Form.Item label="Status" name="state" rules={[{ required: true, message: 'Please select the status' }]}>
+				<Select placeholder="Select status">
+					<Option value={1}>Not Started</Option>
+					<Option value={2}>In Progress</Option>
+					<Option value={3}>Completed</Option>
+				</Select>
+			</Form.Item>
+			<Form.Item label="Assignee" name="assignee" rules={[{ required: true, message: 'Please select a person' }]}>
+				<Select
+					showSearch
+					placeholder="Select a person"
+					optionFilterProp="children"
+					filterOption={(input, option) =>
+						(option?.children as unknown as string).toLowerCase().includes(input.toLowerCase())
+					}
+				>
+					{users.map(user => (
+						<Option key={user.id} value={user.id}>
+							{user.name}
+						</Option>
+					))}
+				</Select>
+			</Form.Item>
+			<Form.Item label="Warehouse" name="warehouse" rules={[{ required: true, message: 'Please select a warehouse' }]}>
+				<Select
+					showSearch
+					placeholder="Select a warehouse"
+					optionFilterProp="children"
+					filterOption={(input, option) =>
+						(option?.children as unknown as string).toLowerCase().includes(input.toLowerCase())
+					}
+				>
+					{warehouses.map(warehouse => (
+						<Option key={warehouse.id} value={warehouse.id}>
+							{warehouse.building}
+						</Option>
+					))}
+				</Select>
+			</Form.Item>
+			<Form.Item label="Product" name="product" rules={[{ required: true, message: 'Please select a product' }]}>
+				<Select
+					showSearch
+					placeholder="Select a product"
+					optionFilterProp="children"
+					filterOption={(input, option) =>
+						(option?.children as unknown as string).toLowerCase().includes(input.toLowerCase())
+					}
+				>
+					{products.map(product => (
+						<Option key={product.id} value={product.id}>
+							{product.name}
+						</Option>
+					))}
+				</Select>
+			</Form.Item>
+			<Form.Item label="Task Type" name="taskType" rules={[{ required: true, message: 'Please select a task type' }]}>
+				<Select
+					showSearch
+					placeholder="Select a task type"
+					optionFilterProp="children"
+					filterOption={(input, option) =>
+						(option?.children as unknown as string).toLowerCase().includes(input.toLowerCase())
+					}
+				>
+					{tasksTypes.map(taskType => (
+						<Option key={taskType.id} value={taskType.id}>
+							{taskType.name}
+						</Option>
+					))}
+				</Select>
+			</Form.Item>
+			<Form.Item>
+				<Button type="primary" htmlType="submit">
+					Create Task
+				</Button>
+				<Button onClick={onClose} style={{ marginLeft: '8px' }}>
+					Cancel
+				</Button>
+			</Form.Item>
 		</Form>
 	);
 };

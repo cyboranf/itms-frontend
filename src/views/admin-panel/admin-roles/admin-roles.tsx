@@ -7,8 +7,14 @@ import { DataGrid, GridColDef, GridActionsCellItem, GridRowId } from "@mui/x-dat
 import { Typography } from "@mui/material";
 import { GetTasks, DeleteTasks, PostTask, PutTask } from "../../../service/users";
 import { TaskValuesType } from "../../../service/users/types";
+import { useAxios } from "../../../helpers/axios/useAxios";
+
+
 
 export const AdminRole = () => {
+
+	const axios = useAxios();
+
 	const [rows, setRows] = useState<TaskValuesType[]>([]); // Use local state instead of props
 	const [open, setOpen] = useState(false);
 	const [open1, setOpen1] = useState(false);
@@ -28,7 +34,7 @@ export const AdminRole = () => {
 
 	const getAllTasks = async () => {
 		try {
-			const res = await GetTasks();
+			const res = await GetTasks(axios);
 			console.log(res);
 			setRows(res);
 		} catch (error) {
@@ -37,7 +43,7 @@ export const AdminRole = () => {
 	};
 
 	const handleDeleteClick = (id: GridRowId) => async () => {
-		const success = await DeleteTasks(id.toString());
+		const success = await DeleteTasks(id.toString(), axios);
 		if (success) {
 			// Jeśli usunięto zadanie pomyślnie, odświeżamy listę zadań
 			getAllTasks();
@@ -54,7 +60,7 @@ export const AdminRole = () => {
 				name: formData,
 			};
 
-			const success = await PostTask(newTask);
+			const success = await PostTask(newTask, axios);
 
 			if (success) {
 				getAllTasks();
