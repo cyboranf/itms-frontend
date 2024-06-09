@@ -1,20 +1,21 @@
-import instanceAxios from "../../helpers/axios/axios";
+import axios, { AxiosInstance } from "axios";
 import { Paths } from "./path";
 import { Task, TaskType, TaskProduct } from "./types";
 
-export const getAllTasks = async (): Promise<Task[]> => {
-	const data = await instanceAxios.get<Task[]>(Paths.TASKS);
+
+export const getAllTasks = async (axios: AxiosInstance): Promise<Task[]> => {
+	const data = await axios.get<Task[]>(Paths.TASKS);
 	return data.data;
 };
 
-export const getAllTasksTypes = async (): Promise<TaskType[]> => {
-	const data = await instanceAxios.get<TaskType[]>(Paths.TASK_TYPE);
+export const getAllTasksTypes = async (axios: AxiosInstance): Promise<TaskType[]> => {
+	const data = await axios.get<TaskType[]>(Paths.TASK_TYPE);
 	return data.data;
 };
 
-export const PostTask = async (params: Task) => {
+export const PostTask = async (params: Task, axios: AxiosInstance) => {
 	try {
-		const task = await instanceAxios.post(Paths.TASKS, params);
+		const task = await axios.post(Paths.TASKS, params);
 		return task.data;
 	}
 	catch (error){
@@ -25,14 +26,14 @@ export const PostTask = async (params: Task) => {
 
 export const DeleteTasks = async (id:string) => {
 	const url = Paths.TASKS_ID.replace('{id}', id);
-    await instanceAxios.delete(url);
+    await axios.delete(url);
     return true;
 }
 
 export const requestTaskReport = async (includeUsers: boolean, includeProducts: boolean, includeWarehouses: boolean, includePieChart: boolean, taskId: string[], userId: string[], priority: string[], state: string[]) => {
     try {
 		
-        const response = await instanceAxios.get(Paths.RAPORT, {
+        const response = await axios.get(Paths.RAPORT, {
             responseType: 'blob', // Ustawienie responseType na blob, aby uzyskać zawartość jako Blob
             params: {
                 includeUsers,
@@ -63,10 +64,10 @@ export const requestTaskReport = async (includeUsers: boolean, includeProducts: 
     }
 };
 
-export const PostTaskProduct = async (taskId: number, productId: number) => {
+export const PostTaskProduct = async (taskId: number, productId: number, axios: AxiosInstance) => {
 	try {
 		const url = `http://127.0.0.1:8080/api/tasks/${taskId}/join/products/${productId}`;
-		await instanceAxios.post(url);
+		await axios.post(url);
 		return true;
 	} catch (error) {
 		console.error("Błąd podczas PostTaskProduct:", error);
@@ -74,10 +75,10 @@ export const PostTaskProduct = async (taskId: number, productId: number) => {
 	}
 };
 
-export const PostTaskUsers = async (userId: number, taskId: number) => {
+export const PostTaskUsers = async (userId: number, taskId: number, axios: AxiosInstance) => {
 		try {
 		const url = `http://127.0.0.1:8080/api/users/${userId}/join/tasks/${taskId}`;
-		await instanceAxios.post(url);
+		await axios.post(url);
 		return true;
 	} catch (error) {
 		console.error("Błąd podczas PostTaskProduct:", error);

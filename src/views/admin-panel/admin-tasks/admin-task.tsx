@@ -20,8 +20,12 @@ import { Task } from "../../../service/tasks/types";
 import { PlusOutlined } from "@ant-design/icons";
 import TaskForm from "../../../components/forms/admin/admin-taks-form";
 import TaskReportForm from "../../../components/forms/admin/admin-taks-form-raport";
+import { useAxios } from "../../../helpers/axios/useAxios";
 
 export const AdminTask = () => {
+
+	const axios = useAxios();
+
 	const [tasks, setTasks] = React.useState<Task[]>([]);
 	const [rowModesModel, setRowModesModel] = React.useState<GridRowModesModel>({});
 	const [includeUsers, setIncludeUsers] = useState(false);
@@ -49,7 +53,7 @@ export const AdminTask = () => {
 
 	const getTasks = async () => {
 		try {
-			const res = await getAllTasks();
+			const res = await getAllTasks(axios);
 			setTasks(res);
 		} catch (err: unknown) {
 			console.log(err);
@@ -120,9 +124,9 @@ export const AdminTask = () => {
 						type_id: values.type_id,
 					};
 
-					const success = await PostTask(newTaskt);
+					const success = await PostTask(newTaskt, axios);
 					if (success) {
-						getAllTasks();
+						getAllTasks(axios);
 						onClose();
 					} else {
 						console.error("Error while adding the task.");
