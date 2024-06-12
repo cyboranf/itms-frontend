@@ -17,10 +17,11 @@ function Tasks() {
 						display: "flex",
 						alignItems: "center",
 						gap: "8px",
+
 					}}
 				>
 					<CalendarOutlined />
-					<Text size='sm' style={{ marginLeft: "0.7rem" }}>
+					<Text size='md' style={{ marginLeft: "0.7rem" }}>
 						Tasks
 					</Text>
 				</div>

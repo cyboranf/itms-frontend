@@ -20,6 +20,9 @@ body {
     border-radius: 0% 0% 130px 0%;
     transition: width 0.4s ease;
 }
+.nav-text{
+    font-size: 14px;
+}
 #navbar p{
     width: auto;
     height: auto;
@@ -43,7 +46,7 @@ body {
     font-size: large;
 }
 .navbar-logo img{
-    width: 50%;
+    width: 60%;
     display: block;
     margin: 0 auto;
 }
@@ -114,7 +117,7 @@ hr{
         width: 100%; 
     }
     .navbar-logo img{
-        width: 10%;
+        width: 20%;
         display: block;
         margin: 0 auto;
         display: none;

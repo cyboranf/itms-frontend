@@ -47,8 +47,8 @@ function products() {
 
         >
           <DollarOutlined />
-          <Text size='sm' style={{marginLeft: '0.5rem'}}>
-              Produckts
+          <Text size='md' style={{marginLeft: '0.5rem'}}>
+              Products
           </Text>
 
         </div>

@@ -22,12 +22,18 @@ const Dashboarduser = () => {
   ];
 
   return (
-    <Card headStyle={{padding: '16px'}} bodyStyle={{padding: '0 1rem'}} title={(<div style={{display: 'flex', alignItems: 'center', gap: '8px'}}><UnderlineOutlined /> <Text size='sm' style={{marginLeft: '0.5rem'}}>Working Users</Text></div>)}>
-        {isLoading ? (
-            <List 
-                itemLayout='horizontal'
-                dataSource={Array.from({length: 4}).map((_, i) => ({id: i}))}
-                renderItem={(_) => (
+    <Card headStyle={{padding: '16px'}} bodyStyle={{padding: '0 1rem'}} title={(
+        <div style={{display: 'flex', alignItems: 'center', gap: '8px', marginLeft: '6px'}}><UnderlineOutlined/> <Text
+            size='md' style={{marginLeft: '0.5rem'}}>Working Users</Text>
+          <div style={{display: 'flex', alignItems: 'center', gap: '8px', marginLeft: '730px'}}><UnderlineOutlined/> <Text
+              size='md' style={{marginLeft: '0.5rem'}}>Roles</Text></div>
+        </div>
+    )}>
+      {isLoading ? (
+          <List
+              itemLayout='horizontal'
+              dataSource={Array.from({length: 4}).map((_, i) => ({id: i}))}
+              renderItem={(_) => (
                     <Skeleton active/>
                 )}  
             />

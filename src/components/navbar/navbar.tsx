@@ -7,7 +7,6 @@ import {
 	SettingOutlined,
 	LogoutOutlined,
 	ShopOutlined,
-	XFilled,
 	ProductFilled,
 } from "@ant-design/icons";
 import { Layout, Menu } from "antd";
@@ -55,7 +54,7 @@ export const Navbar = () => {
 
 				<Menu.Item key='Seting' icon={<SettingOutlined />}>
 					<Link to='/seting'>
-						<span className='nav-text'>seting</span>
+						<span className='nav-text'>Settings</span>
 					</Link>
 				</Menu.Item>
 
@@ -65,11 +64,7 @@ export const Navbar = () => {
 					</Link>
 				</Menu.Item>
 
-				<Menu.Item key='Logout2' icon={<XFilled />}>
-					<Link to='/'>
-						<span className='nav-text'>NIGGA</span>
-					</Link>
-				</Menu.Item>
+
 			</Menu>
 		</Sider>
 	);
