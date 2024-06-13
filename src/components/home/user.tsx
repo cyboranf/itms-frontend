@@ -1,25 +1,33 @@
 import { UnderlineOutlined } from '@ant-design/icons'
 import { Card, List, Skeleton } from 'antd'
 import { Text } from '../text'
+import { useAxios } from '../../helpers/axios/useAxios';
+import { getAllUsers } from "../../service/users";
+import { User } from "../../service/users/types";
+import * as React from "react";
 
 const Dashboarduser = () => {
 
   const isLoading = false;
 
-  // Example user data
-  const userData = [
-    { id: 1, name: 'John Doe', role: 'Shipment' },
-    { id: 2, name: 'Jane Smith', role: 'Administrator Printer' },
-    { id: 3, name: 'Michael Johnson', role: 'Warehousmen' },
-    { id: 4, name: 'Emily Davis', role: 'Shipment' },
-    { id: 5, name: 'David Wilson', role: 'Administrator Printer' },
-    { id: 6, name: 'Sarah Brown', role: 'Warehousmen' },
-    { id: 7, name: 'Christopher Lee', role: 'Shipment' },
-    { id: 8, name: 'Amanda Martinez', role: 'Administrator Printer' },
-    { id: 9, name: 'Daniel Taylor', role: 'Warehousmen' },
-    { id: 10, name: 'Olivia Harris', role: 'Shipment' },
-    // Add more employees and roles as needed
-  ];
+  
+  const axios = useAxios();
+  const [users, setUsers] = React.useState<User[]>([]);
+
+  const getUsers = async () => {
+    try {
+      const user = await getAllUsers(axios);
+      setUsers(user.users.slice(0, 5));
+      
+    } catch (err: unknown) {
+      console.log(err);
+    }
+  };
+
+  React.useEffect(() => {
+    getUsers();
+  }, []);
+
 
   return (
     <Card headStyle={{padding: '16px'}} bodyStyle={{padding: '0 1rem'}} title={(
@@ -40,15 +48,15 @@ const Dashboarduser = () => {
         ):(
             <List 
                 itemLayout='horizontal'
-                dataSource={userData}
+                dataSource={users}
                 renderItem={(user) => (
                     <List.Item>
                         <List.Item.Meta
-                            title={<Text>{user.name}</Text>}
+                            title={<Text>{user.name} {user.lastname}</Text>}
                             
                         />
                         <List.Item.Meta
-                            title={<Text>{user.role}</Text>}
+                            title={<Text>{user.email}</Text>}
                             
                         />
                     </List.Item>

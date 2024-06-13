@@ -8,7 +8,8 @@ export type Task = {
 	state: number;
 	priority: number;
 	startDate: string;
-	endDate: string;	
+	endDate: string;
+	creationDate: string;
 }
 
 export type TaskType = {

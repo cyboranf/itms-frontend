@@ -33,7 +33,7 @@ export const AdminProducts = () => {
 	const GetItems = async () => {
 		try {
 			const res = await getAllItems(axios);
-			setRows(res); // Update local state with fetched data
+			setRows(res.items); // Update local state with fetched data
 		} catch (error) {
 			console.error("Error fetching items:", error);
 		}

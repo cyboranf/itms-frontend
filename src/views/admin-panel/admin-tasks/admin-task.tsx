@@ -54,7 +54,7 @@ export const AdminTask = () => {
 	const getTasks = async () => {
 		try {
 			const res = await getAllTasks(axios);
-			setTasks(res);
+			setTasks(res.tasks);
 		} catch (err: unknown) {
 			console.log(err);
 		}
@@ -122,6 +122,7 @@ export const AdminTask = () => {
 						startDate: values.startDate,
 						state: values.state,
 						type_id: values.type_id,
+						creationDate: Date().toString(),
 					};
 
 					const success = await PostTask(newTaskt, axios);
@@ -144,6 +145,7 @@ export const AdminTask = () => {
 		{ field: "name", headerName: "Name", width: 180, editable: false },
 		{ field: "priority", headerName: "Priority", width: 180, align: "left", headerAlign: "left", editable: false },
 		{ field: "creationDate", headerName: "Creation Date", width: 180, editable: false },
+		{ field: "startDate", headerName: "Creation Date", width: 180, editable: false },
 		{ field: "endDate", headerName: "End Date", width: 180, editable: false },
 		{ field: "state", headerName: "Status", width: 60, editable: false, flex: 1 },
 		{

@@ -3,10 +3,21 @@ import { toast } from "react-toastify";
 import { Paths } from "./path";
 import { Items, RequestItem } from "./types";
 
-export const getAllItems = async (axios: AxiosInstance): Promise<Items[]> => {
-	const data = await axios.get<Items[]>(Paths.ITEMS);
-	return data.data;
+export const getAllItems = async (axios: AxiosInstance): Promise<{ items: Items[], totalCount: number }> => {
+    try {
+        const response = await axios.get<Items[]>(Paths.ITEMS);
+        const items = response.data;
+        return {
+            items: items,
+            totalCount: items.length,
+        };
+    } catch (error) {
+        console.error("Błąd podczas pobierania przedmiotów:", error);
+        toast.error("Błąd podczas pobierania przedmiotów");
+        return { items: [], totalCount: 0 };
+    }
 };
+
 
 export const PostItems = async (params: RequestItem, axios: AxiosInstance) => {
 	try {

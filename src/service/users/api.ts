@@ -33,16 +33,21 @@ export async function PutTask(params: TaskValuesType, axios: AxiosInstance) {
 	}
 }
 
-export const getAllUsers = async (axios: AxiosInstance): Promise<User[]> => {
-	try {
-		const data = await axios.get<User[]>(Paths.ALL_USERS);
-		return data.data;
-	} catch (error) {
-		console.error("Błąd podczas pobierania użytkowników:", error);
-		toast.error("Błąd podczas pobierania użytkowników");
-		return [];
-	}
+export const getAllUsers = async (axios: AxiosInstance): Promise<{ users: User[], totalCount: number }> => {
+    try {
+        const response = await axios.get<User[]>(Paths.ALL_USERS);
+        const users = response.data;
+        return {
+            users: users,
+            totalCount: users.length,
+        };
+    } catch (error) {
+        console.error("Błąd podczas pobierania użytkowników:", error);
+        toast.error("Błąd podczas pobierania użytkowników");
+        return { users: [], totalCount: 0 };
+    }
 };
+
 
 export async function PutUsers(params: User, axios: AxiosInstance) {
 	try {

@@ -6,10 +6,36 @@ import {
   Products,
   Tasks,
 } from "../../../components/home";
+import { useAxios } from '../../../helpers/axios/useAxios';
+import { getAllTasks } from "../../../service/tasks";
+import { getAllUsers } from "../../../service/users";
+import { getAllItems } from "../../../service/items";
 
 export const Admindashboard = () => {
 
-    //TODO
+    
+      const axios = useAxios();
+      const [tasks, setTasksCount] = React.useState<number>(0);
+      const [users, setUsersCount] = React.useState<number>(0);
+      const [products, setProductCount] = React.useState<number>(0);
+
+      const getTasks = async () => {
+        try {
+          const task = await getAllTasks(axios);
+          const user = await getAllUsers(axios);
+          const items = await getAllItems(axios);
+          setTasksCount(task.totalCount);
+          setUsersCount(user.totalCount);
+          setProductCount(items.totalCount);
+        } catch (err: unknown) {
+          console.log(err);
+        }
+      };
+
+      React.useEffect(() => {
+        getTasks();
+      }, []);
+
     const [isLoading] = React.useState(false)
 
   return (
@@ -18,13 +44,13 @@ export const Admindashboard = () => {
         paddingTop: '20px'
       }}>
         <Col xs={24} sm={24} xl={8} >
-          <DashbordTotalCountCard resource="task" isLoading={isLoading} totalCount={25} />
+          <DashbordTotalCountCard resource="task" isLoading={isLoading} totalCount={tasks} />
         </Col>
         <Col xs={24} sm={24} xl={8}>
-          <DashbordTotalCountCard resource="product" isLoading={isLoading} totalCount={225} />
+          <DashbordTotalCountCard resource="user" isLoading={isLoading} totalCount={users} />
         </Col>
         <Col xs={24} sm={24} xl={8}>
-          <DashbordTotalCountCard resource="user" isLoading={isLoading} totalCount={125} />
+          <DashbordTotalCountCard resource="product" isLoading={isLoading} totalCount={products} />
         </Col>
       </Row>
 
