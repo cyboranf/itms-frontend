@@ -22,6 +22,7 @@ import UserForm from "../../../components/forms/admin/admin-users-form";
 import UserReportForm from "../../../components/forms/admin/admin-user-form-raport";
 import { useAxios } from "../../../helpers/axios/useAxios";
 import { Modal, DialogTitle, DialogContent, DialogContentText, DialogActions } from "@mui/material";
+import { flow } from "@ant-design/plots";
 
 const { Content } = Layout;
 
@@ -131,18 +132,11 @@ export const AdminPanel = () => {
 
 	return (
 		<>
-			<Layout className="layout-main"> {/* Ensure this class is used to apply full height */}
-				<Navbar />
-				<Layout>
-					<Content className="content"> {/* This class should apply the flex styles */}
+			<Box> 
 						<Box
 							sx={{
-								display: 'flex',
-								flexDirection: 'column',
-								flexGrow: 1,
+								height: "85vh",
 								width: "100%",
-								alignItems: 'center', // Center children horizontally
-								justifyContent: 'center', // Center children vertically
 								"& .actions": {
 									color: "text.secondary",
 								},
@@ -173,10 +167,10 @@ export const AdminPanel = () => {
 							</Drawer>
 
 							<div className="container">
-								<button className="button-gradient">
+								<button className="button-gradient" style={{marginRight: 'auto'}}>
 									Show employee tasks
 								</button>
-								<button className="button-gradient" onClick={showDrawer1}>
+								<button className="button-gradient" onClick={showDrawer1} style={{marginRight: '10px'}}>
 									Create Report
 								</button>
 							</div>
@@ -216,12 +210,16 @@ export const AdminPanel = () => {
 								rowModesModel={rowModesModel}
 								onRowModesModelChange={handleRowModesModelChange}
 								onRowEditStop={handleRowEditStop}
-								style={{ flex: 1, minHeight: 0, width: '100%' }} // Ensures DataGrid takes the remaining space
+								style={{ flex: 1, minHeight: 0, width: '100%' }}
+								sx={{
+									"& .MuiDataGrid-footerContainer ": {
+										bgcolor: "#b3d5e0",
+									},
+								}} // Ensures DataGrid takes the remaining space
 							/>
 						</Box>
-					</Content>
-				</Layout>
-			</Layout>
+					
+				</Box>
 			<Modal open={isDeleteUserOpen} onClose={() => setIsDeleteUserOpen(false)}>
 				<Box
 					sx={{

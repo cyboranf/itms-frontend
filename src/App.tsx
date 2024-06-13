@@ -27,7 +27,7 @@ export const Layout1 = () => {
 			<Layout style={{ minHeight: "100vh" }}>
 				<Navbar />
 				<Layout>
-					<Content style={{ margin: "0 16px" }}>
+					<Content style={{ margin: "0 10px" }}>
 						<Outlet />
 					</Content>
 				</Layout>
@@ -90,6 +90,14 @@ const router = createHashRouter([
 					</ProtectedRoute>
 				),
 			},
+			{
+				path: "/users",
+			element: (
+				<ProtectedRoute requiredRoles={[ROLES.ADMIN]}>
+					<AdminPanel />
+				</ProtectedRoute>
+		),
+			},
 		],
 	},
 	{
@@ -100,14 +108,7 @@ const router = createHashRouter([
 		path: "/register",
 		element: <SignUp />,
 	},
-	{
-		path: "/users",
-		element: (
-			<ProtectedRoute requiredRoles={[ROLES.ADMIN]}>
-				<AdminPanel />
-			</ProtectedRoute>
-		),
-	},
+
 	{
 		path: "/warehouseman/home",
 		element: (
