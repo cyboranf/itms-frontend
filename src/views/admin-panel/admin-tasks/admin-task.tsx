@@ -190,7 +190,7 @@ export const AdminTask = () => {
 		<Box>
 			<Box
 				sx={{
-					height: 500,
+					height: "85vh",
 					width: "100%",
 					"& .actions": {
 						color: "text.secondary",
@@ -200,7 +200,7 @@ export const AdminTask = () => {
 					},
 				}}
 			>
-				<Breadcrumb style={{ margin: "16px 0" }}>
+				<Breadcrumb style={{ margin: "12px 0", fontSize: "22px", fontWeight: "bold" }}>
 					<Breadcrumb.Item>Dashboard</Breadcrumb.Item>
 					<Breadcrumb.Item>Task</Breadcrumb.Item>
 				</Breadcrumb>
@@ -269,15 +269,14 @@ export const AdminTask = () => {
 				>
 					Manage Tasks
 				</Typography>
-				<div style={{ margin: 10 }}>
-					<Button type='primary' onClick={showDrawer} icon={<PlusOutlined />}>
+				<div className="container">
+					<button  onClick={showDrawer}  className="button-gradient" style={{marginRight: 'auto'}}>
 						Add Task
-					</Button>
-				</div>
-				<div style={{ margin: 10 }}>
-					<Button type='primary' onClick={showDrawer1} icon={<PlusOutlined />}>
+					</button>
+			
+					<button  onClick={showDrawer1}  className="button-gradient"  style={{marginRight: '10px'}}>
 						Creat Raport
-					</Button>
+					</button>
 				</div>
 				<DataGrid
 					rows={tasks}
