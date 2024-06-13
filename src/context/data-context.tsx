@@ -1,10 +1,10 @@
 import { createContext, Dispatch, ReactNode, SetStateAction, useState } from "react";
 
 export enum ROLES {
-	ADMIN = "ADMIN",
-	MANAGER = "MANAGER",
-	WAREHOUSEMAN = "WAREHOUSEMAN",
-	PRINTER = "PRINTER",
+	ADMIN = "Admin",
+	MANAGER = "Manager",
+	WAREHOUSEMAN = "Warehouseman",
+	PRINTER = "Printer",
 }
 
 export type CurrentUser = {

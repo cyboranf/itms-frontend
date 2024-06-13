@@ -74,7 +74,7 @@ const TaskForm: React.FC<TaskFormProps> = ({ form, onClose, handleCreateTask }) 
 
 		const fetchedTaskTypes = async () => {
 			try {
-				const response = await getAllTasksTypes();
+				const response = await getAllTasksTypes(axios);
 
 				setTasksTypes(response.map(products => ({
 					id: products.id,
@@ -107,12 +107,12 @@ const TaskForm: React.FC<TaskFormProps> = ({ form, onClose, handleCreateTask }) 
 
 		try {
 			
-			const taskCreated = await PostTask(taskParams);
+			const taskCreated = await PostTask(taskParams, axios);
 			
 			if (taskCreated) {
 				console.log(taskCreated.id + " " + " " + values.assignee); 
-				await PostTaskProduct(taskCreated.id, values.assignee);
-				await PostTaskUsers(values.assignee, taskCreated.id)
+				await PostTaskProduct(taskCreated.id, values.assignee, axios);
+				await PostTaskUsers(values.assignee, taskCreated.id, axios)
 				toast.success("Stworzona tasks");
 				
 			} else {

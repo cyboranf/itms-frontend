@@ -16,6 +16,8 @@ import { PrinterDashboard } from "./views/printer-panel/printer-dashboard";
 import AdminProducts from "./views/admin-panel/admin-products/admin-products";
 import { ToastContainer } from "react-toastify";
 import "react-toastify/dist/ReactToastify.css";
+import { DataProvider, ROLES } from "./context/data-context";
+import ProtectedRoute from "./components/auth/ProtectedRoute";
 
 const { Content } = Layout;
 
@@ -38,7 +40,11 @@ export const Layout1 = () => {
 const router = createHashRouter([
 	{
 		path: "/",
-		element: <Layout1 />,
+		element: (
+			<ProtectedRoute>
+				<Layout1 />
+			</ProtectedRoute>
+		),
 		children: [
 			{
 				path: "/",
@@ -46,23 +52,43 @@ const router = createHashRouter([
 			},
 			{
 				path: "/roles",
-				element: <AdminRole />,
+				element: (
+					<ProtectedRoute requiredRoles={[ROLES.ADMIN, ROLES.MANAGER]}>
+						<AdminRole />
+					</ProtectedRoute>
+				),
 			},
 			{
 				path: "/warehouses",
-				element: <AdminWarehouse />,
+				element: (
+					<ProtectedRoute requiredRoles={[ROLES.ADMIN]}>
+						<AdminWarehouse />
+					</ProtectedRoute>
+				),
 			},
 			{
 				path: "/products",
-				element: <AdminProducts />,
+				element: (
+					<ProtectedRoute requiredRoles={[ROLES.ADMIN]}>
+						<AdminProducts />
+					</ProtectedRoute>
+				),
 			},
 			{
 				path: "/tasks",
-				element: <AdminTask />,
+				element: (
+					<ProtectedRoute requiredRoles={[ROLES.ADMIN]}>
+						<AdminTask />
+					</ProtectedRoute>
+				),
 			},
 			{
 				path: "/home",
-				element: <Admindashboard />,
+				element: (
+					<ProtectedRoute requiredRoles={[ROLES.ADMIN]}>
+						<Admindashboard />
+					</ProtectedRoute>
+				),
 			},
 		],
 	},
@@ -76,24 +102,38 @@ const router = createHashRouter([
 	},
 	{
 		path: "/users",
-		element: <AdminPanel />,
+		element: (
+			<ProtectedRoute requiredRoles={[ROLES.ADMIN]}>
+				<AdminPanel />
+			</ProtectedRoute>
+		),
 	},
 	{
 		path: "/warehouseman/home",
-		element: <WarehouseManDashboard />,
+		element: (
+			<ProtectedRoute requiredRoles={[ROLES.WAREHOUSEMAN]}>
+				<WarehouseManDashboard />
+			</ProtectedRoute>
+		),
 	},
 	{
 		path: "/printer/home",
-		element: <PrinterDashboard />,
+		element: (
+			<ProtectedRoute requiredRoles={[ROLES.PRINTER]}>
+				<PrinterDashboard />
+			</ProtectedRoute>
+		),
 	},
 ]);
 
 function App() {
 	return (
-		<div className='App'>
-			<RouterProvider router={router} />
-			<ToastContainer autoClose={3000} position='top-center' />
-		</div>
+		<DataProvider>
+			<div className="App">
+				<RouterProvider router={router} />
+				<ToastContainer autoClose={3000} position="top-center" />
+			</div>
+		</DataProvider>
 	);
 }
 

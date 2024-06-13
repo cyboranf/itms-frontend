@@ -50,7 +50,22 @@ export const SignIn = () => {
 			};
 
 			setCurrentUser(user);
-			navigate("/");
+
+			// Navigate to the appropriate dashboard based on user role
+			switch (userRole) {
+				case ROLES.WAREHOUSEMAN:
+					navigate("/warehouseman/home");
+					break;
+				case ROLES.PRINTER:
+					navigate("/printer/home");
+					break;
+				case ROLES.ADMIN:
+					navigate("/home");
+					break;
+				default:
+					navigate("/");
+					break;
+			}
 		} catch (err: unknown) {
 			console.log(err);
 		}

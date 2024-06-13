@@ -294,6 +294,7 @@ export const AdminWarehouse = () => {
 					</DialogActions>
 				</Box>
 			</Modal>
+			
 		</>
 	);
 };
