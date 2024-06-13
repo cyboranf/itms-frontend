@@ -67,7 +67,7 @@
 
 .container {
   display: flex;
-  justify-content: center; // Center buttons horizontally
+  justify-content: space-between; // Center buttons horizontally
   align-items: center; // Center buttons vertically
   margin: 10px;
   width: 100%; // Ensure it spans the full width
