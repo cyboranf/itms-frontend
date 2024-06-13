@@ -1,3 +1,4 @@
+import React, { useState, useContext } from "react";
 import "./sign-in.scss";
 import humanLogo from "../../assets/human-logo.webp";
 import logo from "../../assets/logo.webp";
@@ -5,9 +6,9 @@ import { useForm } from "react-hook-form";
 import Input from "../../components/input/input";
 import { loginUser } from "../../service/auth";
 import { RegexpValidators } from "../../utils/reg-exp";
-import { useNavigate } from "react-router-dom";
-import { useContext } from "react";
+import { useNavigate, Link } from "react-router-dom";
 import { CurrentUser, DataContext, ROLES } from "../../context/data-context";
+import { FaEye, FaEyeSlash } from "react-icons/fa"; // Importing eye icons
 
 export type LoginValuesType = {
 	username: string;
@@ -17,6 +18,7 @@ export type LoginValuesType = {
 export const SignIn = () => {
 	const navigate = useNavigate();
 	const { setCurrentUser } = useContext(DataContext);
+	const [showPassword, setShowPassword] = useState(false); // State to toggle password visibility
 
 	const {
 		register,
@@ -71,6 +73,10 @@ export const SignIn = () => {
 		}
 	};
 
+	const togglePasswordVisibility = () => {
+		setShowPassword(!showPassword);
+	};
+
 	return (
 		<div className='signin-container'>
 			<div className='signin-logo'>
@@ -81,29 +87,42 @@ export const SignIn = () => {
 					<h1>Sign in</h1>
 					<p className='welcome-back'>Welcome back!</p>
 					<form onSubmit={handleSubmit(onSubmit)}>
-						<Input
-							placeholder='Username'
-							register={register("username", {
-								minLength: 3,
-								maxLength: 18,
-								pattern: {
-									value: RegexpValidators.USERNAME_LETTERS_ONLY,
-									message: "Use only letters",
-								},
-								required: "Required",
-							})}
-							error={errors}
-						/>
+						<div className='input-container'>
+							<Input
+								placeholder='Username'
+								register={register("username", {
+									minLength: 3,
+									maxLength: 18,
+									pattern: {
+										value: RegexpValidators.USERNAME_LETTERS_ONLY,
+										message: "Use only letters",
+									},
+									required: "Required",
+								})}
+								error={errors}
+							/>
+						</div>
 
-						<Input
-							placeholder='Password'
-							register={register("password", {
-								minLength: 5,
-								maxLength: 50,
-								required: "Required",
-							})}
-							error={errors}
-						/>
+						<div className='input-container password-input-container'>
+							<Input
+								placeholder='Password'
+								type={showPassword ? "text" : "password"} // Toggle type based on state
+								register={register("password", {
+									minLength: 5,
+									maxLength: 50,
+									required: "Required",
+								})}
+								error={errors}
+							/>
+							<button
+								type='button'
+								className='password-toggle-button'
+								onClick={togglePasswordVisibility}
+							>
+								{showPassword ? <FaEyeSlash /> : <FaEye />}
+							</button>
+						</div>
+
 						<div className='forgot-password'>
 							<a href='#'>Forgot password?</a>
 						</div>
@@ -111,6 +130,9 @@ export const SignIn = () => {
 							Sign in
 						</button>
 					</form>
+					<div className='signup-link'>
+						<Link to='/register'>New to ITMS? Create an account</Link>
+					</div>
 				</div>
 			</div>
 			<div className='signin-footer'>
