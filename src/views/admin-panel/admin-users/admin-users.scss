@@ -1,3 +1,7 @@
+@mixin horizontal-gradient($color1, $color2, $color3, $color4, $color5, $color6) {
+  background: linear-gradient(to right, $color1, $color2, $color3, $color4, $color5, $color6);
+}
+
 .layout-main {
   display: flex;
   flex-direction: column;

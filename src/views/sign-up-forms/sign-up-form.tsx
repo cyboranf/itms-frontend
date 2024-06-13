@@ -7,7 +7,7 @@ import { RegexpValidators } from "../../utils/reg-exp";
 import { RegisterValuesTypes } from "../../service/auth/types";
 import { SetStateAction } from "react";
 import { Controller, Control } from "react-hook-form";
-import { useNavigate } from "react-router-dom";
+import { useNavigate, Link } from "react-router-dom";
 
 type SignUpFormProps = {
 	register: UseFormRegister<RegisterValuesTypes>;
@@ -23,14 +23,14 @@ type SignUpFormProps = {
 };
 
 export const SignUpForm: React.FC<SignUpFormProps> = ({
-	register,
-	errors,
-	roleOptions,
-	passwordValue,
-	setCurrentStep,
-	trigger,
-	control,
-}) => {
+														  register,
+														  errors,
+														  roleOptions,
+														  passwordValue,
+														  setCurrentStep,
+														  trigger,
+														  control,
+													  }) => {
 	const navigate = useNavigate();
 	const [wasSubmitted, setWasSubmitted] = useState(false);
 
@@ -51,7 +51,7 @@ export const SignUpForm: React.FC<SignUpFormProps> = ({
 				<form
 					onSubmit={(e) => {
 						e.preventDefault();
-						validateAndGoNext;
+						validateAndGoNext();
 					}}
 				>
 					<Input
@@ -72,7 +72,7 @@ export const SignUpForm: React.FC<SignUpFormProps> = ({
 						register={register("email", {
 							pattern: {
 								value: RegexpValidators.EMAIL,
-								message: "Wrong email fromat",
+								message: "Wrong email format",
 							},
 							required: "Required",
 						})}
@@ -106,7 +106,7 @@ export const SignUpForm: React.FC<SignUpFormProps> = ({
 						error={errors}
 					/>
 
-					<div className='singin-form__select'>
+					<div className='signin-form__select'>
 						<Controller
 							control={control}
 							name='role'
@@ -117,7 +117,7 @@ export const SignUpForm: React.FC<SignUpFormProps> = ({
 								<Select
 									ref={field.ref}
 									className='category-list__select category-list__select--wider'
-									inputId='companies'
+									inputId='role'
 									options={roleOptions}
 									placeholder='Role'
 									value={roleOptions.find((c) => c.value === field.value)}
@@ -127,7 +127,7 @@ export const SignUpForm: React.FC<SignUpFormProps> = ({
 						></Controller>
 						{wasSubmitted && errors.role && (
 							<div className='signin-form__error'>
-								<span>{errors.role.message}</span>{" "}
+								<span>{errors.role.message}</span>
 							</div>
 						)}
 					</div>
@@ -142,9 +142,11 @@ export const SignUpForm: React.FC<SignUpFormProps> = ({
 					>
 						Next
 					</button>
-					<button onClick={() => navigate("/")}></button>
 					<div className='form-progress'>1/2</div>
 				</form>
+				<div className='login-link'>
+					<Link to='/login'>Already have an account?</Link>
+				</div>
 			</div>
 		</div>
 	);

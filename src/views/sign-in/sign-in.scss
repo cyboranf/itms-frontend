@@ -42,12 +42,11 @@
         margin-bottom: 50px;
     }
 
-    .form-field {
-        margin-top: 20px;
+    .input-container {
+        position: relative;
 
-        input[type="text"],
-        input[type="password"] {
-            width: calc(100% - 1.5rem);
+        input {
+            width: calc(100% - 40px); // Adjust width to leave space for icon
             padding: 12px;
             border: 1px solid #CCC;
             border-radius: 30px;
@@ -58,11 +57,23 @@
         input::placeholder {
             color: #AAA;
         }
+
+        .password-toggle-button {
+            background: none;
+            border: none;
+            position: absolute;
+            right: -37%;
+            top: 40%;
+            transform: translateY(-50%);
+            cursor: pointer;
+            color: #6F6F6F;
+            font-size: 1.2rem;
+        }
     }
 
     .forgot-password {
-        margin-bottom: 30px;
         text-align: right;
+        margin-right: 15px;
 
         a {
             color: #000000;
@@ -82,9 +93,19 @@
         cursor: pointer;
         transition: background-color 0.3s;
 
+
         &:hover {
             background-color: #7a1c8e; // Darken color on hover
         }
+    }
+}
+.signup-link {
+    margin-bottom: 5px;
+
+    a {
+        color: #000000;
+        text-decoration: none;
+        font-size: 1rem;
     }
 }
 

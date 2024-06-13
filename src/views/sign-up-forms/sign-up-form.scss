@@ -100,12 +100,18 @@
 
 .form-progress {
 	text-align: center;
-	margin-top: 10px;
+	font-size: 14px;
+	font-weight: bold;
+	margin-top: 5px;
 	color: black;
 }
 
-.singin-form{
-    width: 100%;
+.signin-form__select {
+	margin-top: 20px;
+
+	.category-list__select--wider {
+		border-radius: 30px;
+	}
 }
 
 .signin-form__error {
@@ -114,4 +120,14 @@
 	padding-left: 10px;
 	text-align: left;
 	width: 100%;
+}
+
+.login-link {
+	margin-bottom: 10px;
+
+	a {
+		color: #000000;
+		text-decoration: none;
+		font-size: 1rem;
+	}
 }
