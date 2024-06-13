@@ -132,10 +132,10 @@ export const AdminPanel = () => {
 
 	return (
 		<>
-			<Box> 
+			<Box>
 						<Box
 							sx={{
-								height: "85vh",
+								height: "89.5vh",
 								width: "100%",
 								"& .actions": {
 									color: "text.secondary",
@@ -168,7 +168,7 @@ export const AdminPanel = () => {
 
 							<div className="container">
 								<button className="button-gradient" style={{marginRight: 'auto'}}>
-									Show employee tasks
+									Show employee roles
 								</button>
 								<button className="button-gradient" onClick={showDrawer1} style={{marginRight: '10px'}}>
 									Create Report
@@ -210,15 +210,16 @@ export const AdminPanel = () => {
 								rowModesModel={rowModesModel}
 								onRowModesModelChange={handleRowModesModelChange}
 								onRowEditStop={handleRowEditStop}
-								style={{ flex: 1, minHeight: 0, width: '100%' }}
+								style={{ flex: 1, minHeight: 0, width: '100%', fontSize: '16px', fontWeight: 'bold'}}
 								sx={{
 									"& .MuiDataGrid-footerContainer ": {
 										bgcolor: "#b3d5e0",
+										height: "10px",
 									},
 								}} // Ensures DataGrid takes the remaining space
 							/>
 						</Box>
-					
+
 				</Box>
 			<Modal open={isDeleteUserOpen} onClose={() => setIsDeleteUserOpen(false)}>
 				<Box

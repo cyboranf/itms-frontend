@@ -1,3 +1,4 @@
+import "./admin-product.scss";
 import React, { useState, useEffect } from "react";
 import Box from "@mui/material/Box";
 import EditIcon from "@mui/icons-material/Edit";
@@ -160,7 +161,7 @@ export const AdminProducts = () => {
 			<Box>
 				<Box
 					sx={{
-						height: "60vh",
+						height: "89.5vh",
 						width: "100%",
 						"& .actions": {
 							color: "text.secondary",
@@ -170,7 +171,7 @@ export const AdminProducts = () => {
 						},
 					}}
 				>
-					<Breadcrumb style={{ margin: "16px 0" }}>
+					<Breadcrumb style={{ margin: "12px 0", fontSize: "22px", fontWeight: "bold" }}>
 						<Breadcrumb.Item>Dashboard</Breadcrumb.Item>
 						<Breadcrumb.Item>
 							<Link to='/warehouses' style={{ textDecoration: "none" }}>
@@ -179,21 +180,11 @@ export const AdminProducts = () => {
 						</Breadcrumb.Item>
 						<Breadcrumb.Item>Products</Breadcrumb.Item>
 					</Breadcrumb>
-					<Typography
-						variant='h3'
-						component='h3'
-						sx={{
-							textAlign: "center",
-							p: 5,
-						}}
-					>
-						Manage products
-					</Typography>
 
-					<div style={{ margin: 10 }}>
-						<Button type='primary' onClick={showDrawer}>
+					<div className="container">
+						<button className="button-gradient" onClick={showDrawer} style={{marginRight: '10px'}}>
 							Add new product +
-						</Button>
+						</button>
 					</div>
 
 					<Drawer
@@ -228,23 +219,13 @@ export const AdminProducts = () => {
 						rowModesModel={rowModesModel}
 						onRowModesModelChange={handleRowModesModelChange}
 						onRowEditStop={handleRowEditStop}
-						slotProps={{
-							toolbar: { setRows, setRowModesModel },
-						}}
+						style={{ flex: 1, minHeight: 0, width: '100%', fontSize: '16px', fontWeight:'bold'}}
 						sx={{
-							boxShadow: 2,
-							border: 1,
-							"& .MuiDataGrid-cell:hover": {
-								color: "primary.main",
-							},
 							"& .MuiDataGrid-footerContainer ": {
-								bgcolor: "#EDF05E",
+								bgcolor: "#b3d5e0",
+								height: "10px",
 							},
-							"& .MuiDataGrid-toolbarContainer  ": {
-								bgcolor: "#EDF05E",
-							},
-							"& .MuiButtonBase-root  ": {},
-						}}
+						}} // Ensures DataGrid takes the remaining space
 					/>
 				</Box>
 			</Box>
@@ -281,7 +262,9 @@ export const AdminProducts = () => {
 					</DialogContent>
 					<DialogActions>
 						<Button onClick={() => setIsDeleteModalVisible(false)}>Cancel</Button>
-						<Button onClick={confirmDelete}>Confirm</Button>
+						<Button onClick={confirmDelete} color='error'>
+							Confirm
+						</Button>
 					</DialogActions>
 				</Box>
 			</Modal>
