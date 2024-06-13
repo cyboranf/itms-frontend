@@ -58,7 +58,7 @@ export const AdminPanel = () => {
 	const getUsers = async () => {
 		try {
 			const res = await getAllUsers(axios);
-			setRows(res);
+			setRows(res.users);
 		} catch (err: unknown) {
 			console.error(err);
 		}

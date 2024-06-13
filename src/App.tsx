@@ -18,6 +18,7 @@ import { ToastContainer } from "react-toastify";
 import "react-toastify/dist/ReactToastify.css";
 import { DataProvider, ROLES } from "./context/data-context";
 import ProtectedRoute from "./components/auth/ProtectedRoute";
+import Logout from "./components/auth/Logout";
 
 const { Content } = Layout;
 
@@ -103,6 +104,10 @@ const router = createHashRouter([
 	{
 		path: "/login",
 		element: <SignIn />,
+	},
+	{
+		path: "/logout",
+		element: <Logout />,
 	},
 	{
 		path: "/register",

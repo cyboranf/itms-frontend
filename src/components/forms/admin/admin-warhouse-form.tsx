@@ -42,7 +42,7 @@ const WarehouseForm: React.FC<CreateWarehouseFormProps> = ({
 	const GetItems = async () => {
 		try {
 			const res = await getAllItems(axios);
-			setProducts(res);
+			setProducts(res.items);
 		} catch (error) {
 			console.error("Error fetching items:", error);
 		}

@@ -3,9 +3,14 @@ import { Paths } from "./path";
 import { Task, TaskType, TaskProduct } from "./types";
 
 
-export const getAllTasks = async (axios: AxiosInstance): Promise<Task[]> => {
-	const data = await axios.get<Task[]>(Paths.TASKS);
-	return data.data;
+
+export const getAllTasks = async (axios: AxiosInstance): Promise<{ tasks: Task[], totalCount: number }> => {
+    const response = await axios.get<Task[]>(Paths.TASKS);
+    const tasks = response.data;
+    return {
+        tasks: tasks,
+        totalCount: tasks.length,
+    };
 };
 
 export const getAllTasksTypes = async (axios: AxiosInstance): Promise<TaskType[]> => {

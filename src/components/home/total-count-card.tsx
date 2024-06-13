@@ -11,6 +11,8 @@ type Props = {
 
 const DashbordTotalCountCard = ({ resource, isLoading, totalCount }: Props) => {
 
+
+
   const {primaryColor, secondaryColor, icon, title} = totalCountVariants[resource];
 
   const config: AreaConfig = {

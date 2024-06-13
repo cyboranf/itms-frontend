@@ -36,3 +36,11 @@ export const registerUser = async ({
 	const userData = data.data;
 	return userData;
 };
+
+export const logoutUser = async () => {
+	try {
+		await instanceAxios.post(Paths.LOGOUT);
+	} catch (error) {
+		console.error("Error during logout:", error);
+	}
+};

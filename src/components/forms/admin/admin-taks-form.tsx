@@ -6,7 +6,7 @@ import {getAllWarehouses } from '../../../service/warehouses';
 import {getAllItems} from '../../../service/items';
 import {getAllTasksTypes, PostTaskUsers, PostTask, PostTaskProduct } from '../../../service/tasks';
 import { useAxios } from "../../../helpers/axios/useAxios";
-import products from '../../home/products';
+import products from '../../home/TaskChart';
 import { toast } from "react-toastify";
 
 const { Option } = Select;
@@ -34,7 +34,7 @@ const TaskForm: React.FC<TaskFormProps> = ({ form, onClose, handleCreateTask }) 
             try {
                 const response = await getAllUsers(axios);
 
-                setUsers(response.map(user => ({
+                setUsers(response.users.map(user => ({
                     id: user.id,
                     name: `${user.name} ${user.lastname}`,
                 })));
@@ -62,7 +62,7 @@ const TaskForm: React.FC<TaskFormProps> = ({ form, onClose, handleCreateTask }) 
 			try {
 				const response = await getAllItems(axios);
 
-				setProduct(response.map(products => ({
+				setProduct(response.items.map(products => ({
 					id: products.id,
 					name: products.name
 				})));
@@ -102,6 +102,7 @@ const TaskForm: React.FC<TaskFormProps> = ({ form, onClose, handleCreateTask }) 
 			startDate: values.startDate,
 			endDate: values.endDate,
 			type_id: values.taskType,
+			creationDate: Date().toString(),
 		};
 		
 

@@ -34,7 +34,7 @@ export const totalCountVariants: {
     data: { index: string; value: number }[];
   };
 } = {
-    task: {
+  product: {
     primaryColor: "#1677FF",
     secondaryColor: "#BAE0FF",
     icon: (
@@ -71,7 +71,7 @@ export const totalCountVariants: {
       },
     ],
   },
-  product: {
+  user: {
     primaryColor: "#52C41A",
     secondaryColor: "#D9F7BE",
     icon: (
@@ -112,7 +112,7 @@ export const totalCountVariants: {
       },
     ],
   },
-  user: {
+  task: {
     primaryColor: "#FA541C",
     secondaryColor: "#FFD8BF",
     icon: (
