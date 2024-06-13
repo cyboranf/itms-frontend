@@ -131,114 +131,93 @@ export const AdminPanel = () => {
 
 	return (
 		<>
-			<Layout style={{ minHeight: "100vh" }}>
+			<Layout className="layout-main"> {/* Ensure this class is used to apply full height */}
 				<Navbar />
 				<Layout>
-					<Content style={{ margin: "0 16px" }}>
-						<Box>
-							<Box
-								sx={{
-									height: "60vh",
-									width: "100%",
-									"& .actions": {
-										color: "text.secondary",
-									},
-									"& .textPrimary": {
-										color: "text.primary",
-									},
-								}}
+					<Content className="content"> {/* This class should apply the flex styles */}
+						<Box
+							sx={{
+								display: 'flex',
+								flexDirection: 'column',
+								flexGrow: 1,
+								width: "100%",
+								alignItems: 'center', // Center children horizontally
+								justifyContent: 'center', // Center children vertically
+								"& .actions": {
+									color: "text.secondary",
+								},
+								"& .textPrimary": {
+									color: "text.primary",
+								},
+							}}
+						>
+							<Breadcrumb style={{ margin: "12px 0", fontSize: "22px", fontWeight: "bold" }}>
+								<Breadcrumb.Item>Dashboard</Breadcrumb.Item>
+								<Breadcrumb.Item>Admin Panel</Breadcrumb.Item>
+								<Breadcrumb.Item>Manage Users</Breadcrumb.Item>
+							</Breadcrumb>
+
+							<Drawer
+								title="Edit a User"
+								width={720}
+								onClose={onClose}
+								open={isEditUserOpen}
+								bodyStyle={{ paddingBottom: 80 }}
+								extra={
+									<Space>
+										<Button onClick={onClose}>Cancel</Button>
+									</Space>
+								}
 							>
-								<Breadcrumb style={{ margin: "16px 0" }}>
-									<Breadcrumb.Item>Dashboard</Breadcrumb.Item>
-									<Breadcrumb.Item>Users</Breadcrumb.Item>
-								</Breadcrumb>
+								<UserForm form={form} initialValues={selectedUser} refreshUsers={getUsers} />
+							</Drawer>
 
-								<Drawer
-									title='Edit a User'
-									width={720}
-									onClose={onClose}
-									open={isEditUserOpen}
-									bodyStyle={{ paddingBottom: 80 }}
-									extra={
-										<Space>
-											<Button onClick={onClose}>Cancel</Button>
-										</Space>
-									}
-								>
-									<UserForm form={form} initialValues={selectedUser} refreshUsers={() => getUsers()} />
-								</Drawer>
+							<div className="container">
+								<button className="button-gradient">
+									Show employee tasks
+								</button>
+								<button className="button-gradient" onClick={showDrawer1}>
+									Create Report
+								</button>
+							</div>
 
-								<Typography
-									variant='h3'
-									component='h3'
-									sx={{
-										textAlign: "center",
-										p: 5,
-									}}
-								>
-									Manage Users
-								</Typography>
-								<div style={{ margin: 10 }}>
-									<Button type='primary' style={{ marginRight: 5 }}>
-										<Link to='/roles' style={{ textDecoration: "none" }}>
-											Show Tasks
-										</Link>
-									</Button>
-								</div>
-								<div style={{ margin: 10 }}>
-									<Button type='primary' onClick={showDrawer1}>
-										Creat Raport
-									</Button>
-								</div>
-								<Drawer
-									title='Create a new Raport'
-									width={720}
-									onClose={onClose1}
-									open={open1}
-									bodyStyle={{ paddingBottom: 80 }}
-									extra={
-										<Space>
-											<Button onClick={onClose1}>Cancel</Button>
-											<Button onClick={getReports} type='primary'>
-												Submit
-											</Button>
-										</Space>
-									}
-								>
-									<UserReportForm
-										includeUsers={includeUsers}
-										setIncludeUsers={setIncludeUsers}
-										selectUserName={selectUserName}
-										setSelectUserName={setSelectUserName}
-										selectEmail={selectEmail}
-										setSelectEmail={setSelectEmail}
-										selectPhoneNumber={selectPhoneNumber}
-										setSelectPhoneNumber={setSelectPhoneNumber}
-										rows={rows}
-									/>
-								</Drawer>
-								<DataGrid
+							<Drawer
+								title="Create a new Report"
+								width={720}
+								onClose={onClose1}
+								open={open1}
+								bodyStyle={{ paddingBottom: 80 }}
+								extra={
+									<Space>
+										<Button onClick={onClose1}>Cancel</Button>
+										<Button onClick={getReports} type="primary">
+											Submit
+										</Button>
+									</Space>
+								}
+							>
+								<UserReportForm
+									includeUsers={includeUsers}
+									setIncludeUsers={setIncludeUsers}
+									selectUserName={selectUserName}
+									setSelectUserName={setSelectUserName}
+									selectEmail={selectEmail}
+									setSelectEmail={setSelectEmail}
+									selectPhoneNumber={selectPhoneNumber}
+									setSelectPhoneNumber={setSelectPhoneNumber}
 									rows={rows}
-									columns={columns}
-									editMode='row'
-									rowModesModel={rowModesModel}
-									onRowModesModelChange={handleRowModesModelChange}
-									onRowEditStop={handleRowEditStop}
-									sx={{
-										boxShadow: 2,
-										border: 1,
-										"& .MuiDataGrid-cell:hover": {
-											color: "primary.main",
-										},
-										"& .MuiDataGrid-footerContainer ": {
-											bgcolor: "#F1BCD9",
-										},
-										"& .MuiDataGrid-toolbarContainer  ": {
-											bgcolor: "#F1BCD9",
-										},
-									}}
 								/>
-							</Box>
+							</Drawer>
+
+							<DataGrid
+								rows={rows}
+								columns={columns}
+								editMode="row"
+								rowModesModel={rowModesModel}
+								onRowModesModelChange={handleRowModesModelChange}
+								onRowEditStop={handleRowEditStop}
+								style={{ flex: 1, minHeight: 0, width: '100%' }} // Ensures DataGrid takes the remaining space
+							/>
 						</Box>
 					</Content>
 				</Layout>
@@ -284,4 +263,4 @@ export const AdminPanel = () => {
 			</Modal>
 		</>
 	);
-};
+}

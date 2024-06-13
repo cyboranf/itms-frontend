@@ -1,4 +1,70 @@
-h3{
-    text-align: center;
-    
+.layout-main {
+  display: flex;
+  flex-direction: column;
+  align-items: center; // Ensure everything aligns center horizontally
+}
+
+.content {
+  flex: 1;
+  display: flex;
+  flex-direction: column;
+  align-items: center; // Center content horizontally within the main content area
+  width: 100%; // Ensure it takes full width to maintain the structure
+  overflow: auto;
+}
+
+.MuiDataGrid-root {
+  width: 100%; // Ensure grid takes full width
+  display: flex;
+  flex-direction: column;
+  justify-content: center; // Center grid content
+}
+
+
+.footer {
+  height: 60px;
+  background-color: #0f78b0;
+  color: white;
+  padding: 10px 20px;
+}
+
+.MuiDataGrid-footerContainer {
+  position: absolute;
+  bottom: 0;
+  width: 100%;
+}
+
+.MuiDataGrid-colCell {
+  font-weight: bold;
+  font-size: 16px;
+}
+
+.MuiDataGrid-cell {
+  font-size: 14px;
+}
+
+.button-gradient {
+  @include horizontal-gradient(#4ac4f3, #009bf3, #8961cb, #b33fc5, #e20bec, #d023d7);
+  color: black;
+  font-size: 14px;
+  font-weight: 580;
+  padding: 6px 20px;
+  border-radius: 4px;
+  box-shadow: 0 4px 6px rgba(43, 98, 168, 0.1);
+  text-align: center;
+  display: inline-block;
+  width: 220px;
+  transition: transform 0.3s ease-in-out;
+
+  &:hover {
+    transform: scale(1.05);
+  }
+}
+
+.container {
+  display: flex;
+  justify-content: center; // Center buttons horizontally
+  align-items: center; // Center buttons vertically
+  margin: 10px;
+  width: 100%; // Ensure it spans the full width
 }
