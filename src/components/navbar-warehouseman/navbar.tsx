@@ -39,7 +39,7 @@ export const NavbarWarhouseman = () => {
 					</Link>
 				</Menu.Item>
 				<Menu.Item key='Seting' icon={<SettingOutlined />}>
-					<Link to='/seting'>
+					<Link to='/settings'>
 						<span className='nav-text'>Settings</span>
 					</Link>
 				</Menu.Item>
