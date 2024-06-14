@@ -13,7 +13,6 @@ type SignUpFormProps = {
 	register: UseFormRegister<RegisterValuesTypes>;
 	setValue: UseFormSetValue<RegisterValuesTypes>;
 	errors: FieldErrors<RegisterValuesTypes>;
-	roleOptions: { value: string; label: string }[];
 	passwordValue: string;
 	trigger: UseFormTrigger<RegisterValuesTypes>;
 	setCurrentStep: React.Dispatch<SetStateAction<number>>;
@@ -106,31 +105,7 @@ export const SignUpForm: React.FC<SignUpFormProps> = ({
 						error={errors}
 					/>
 
-					<div className='signin-form__select'>
-						<Controller
-							control={control}
-							name='role'
-							rules={{
-								required: "Role is required.",
-							}}
-							render={({ field }) => (
-								<Select
-									ref={field.ref}
-									className='category-list__select category-list__select--wider'
-									inputId='role'
-									options={roleOptions}
-									placeholder='Role'
-									value={roleOptions.find((c) => c.value === field.value)}
-									onChange={(val) => val && field.onChange(val.value ?? "")}
-								/>
-							)}
-						></Controller>
-						{wasSubmitted && errors.role && (
-							<div className='signin-form__error'>
-								<span>{errors.role.message}</span>
-							</div>
-						)}
-					</div>
+
 
 					<div className='form-field form-field-break'></div>
 					<button
