@@ -7,6 +7,8 @@ export enum Paths {
   USERS_EDIT = '/users/edit/{id}',
   USERS_ID = '/users/{id}',
 
-  RAPORT = '/generate-user-report'
+  RAPORT = '/generate-user-report',
+
+  SELF = '/users/self',
 }
 

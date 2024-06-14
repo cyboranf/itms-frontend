@@ -109,3 +109,16 @@ export const requestUsersReport = async (
 		toast.error("Błąd sieci");
 	}
 };
+
+
+export const getSelf = async (axios: AxiosInstance): Promise<User> => {
+    try {
+        const response = await axios.get<User>(Paths.SELF);
+        
+        return response.data;
+    } catch (error) {
+        console.error("Błąd podczas pobierania użytkowników:", error);
+        toast.error("Błąd podczas pobierania użytkowników");
+        throw error;
+    }
+};

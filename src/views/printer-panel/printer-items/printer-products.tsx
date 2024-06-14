@@ -1,9 +1,7 @@
-import React, { useEffect, useState } from "react";
+import React, { useState, useEffect } from "react";
 import Box from "@mui/material/Box";
 import EditIcon from "@mui/icons-material/Edit";
 import DeleteIcon from "@mui/icons-material/DeleteOutlined";
-import SearchIcon from "@mui/icons-material/Search";
-import { useNavigate } from "react-router-dom";
 import {
 	GridRowModesModel,
 	DataGrid,
@@ -15,41 +13,38 @@ import {
 } from "@mui/x-data-grid";
 import { Typography, Modal, DialogTitle, DialogContent, DialogContentText, DialogActions } from "@mui/material";
 import { Breadcrumb, Button, Drawer, Space, Form } from "antd";
-import { deleteWarehouse, getAllWarehouses, requestWarehouseReport } from "../../../service/warehouses";
-import { Warehouse } from "../../../service/warehouses/types";
+import { Link } from "react-router-dom";
+import { getAllItems, requestItemsReport, deleteItem } from "../../../service/items";
+import { Items } from "../../../service/items/types";
 import { useAxios } from "../../../helpers/axios/useAxios";
-import WarehouseForm from "../../../components/forms/admin/admin-warhouse-form";
-import { get } from "react-hook-form";
+import ProductForm from "../../../components/forms/admin/admin-prodcut-form";
 
-export const AdminWarehouse = () => {
-	const navigate = useNavigate();
-	const [rows, setRows] = useState<Warehouse[]>([]);
-	const [rowModesModel, setRowModesModel] = useState<GridRowModesModel>({});
+export const PrinterProducts = () => {
+	const [rows, setRows] = useState<Items[]>([]);
+	const [rowModesModel, setRowModesModel] = React.useState<GridRowModesModel>({});
 	const [openDrawer, setOpenDrawer] = useState(false);
-	const [selectedWarehouse, setSelectedWarehouse] = useState<Warehouse | null>(null);
-	const [selectBuilding, setSelectBuilding] = useState<string[]>([]);
-	const [selectZone, setSelectZone] = useState<string[]>([]);
-	const [selectSpaceId, setSelectSpaceId] = useState<string[]>([]);
+	const [selectedProduct, setSelectedProduct] = useState<Items | null>(null);
+	const [selectName, setSelectName] = useState<string[]>([]);
+	const [selectCode, setSelectCode] = useState<string[]>([]);
 	const [isDeleteModalVisible, setIsDeleteModalVisible] = useState(false);
-	const [warehouseToDelete, setWarehouseToDelete] = useState<Warehouse | null>(null);
-
+	const [productToDelete, setProductToDelete] = useState<Items | null>(null);
 	const axios = useAxios();
 
-	const getWarehousesData = async () => {
+	const GetItems = async () => {
 		try {
-			const res = await getAllWarehouses(axios);
-			setRows(res);
-		} catch (err: unknown) {
-			console.error(err);
+			const res = await getAllItems(axios);
+			setRows(res.items); // Update local state with fetched data
+		} catch (error) {
+			console.error("Error fetching items:", error);
 		}
 	};
 
 	useEffect(() => {
-		getWarehousesData();
+		GetItems();
 	}, []);
 
 	const getReports = async () => {
-		requestWarehouseReport(selectBuilding, selectZone, selectSpaceId, axios);
+		requestItemsReport(selectName, selectCode, axios);
 	};
 
 	const handleRowEditStop: GridEventListener<"rowEditStop"> = (params, event) => {
@@ -59,25 +54,25 @@ export const AdminWarehouse = () => {
 	};
 
 	const handleEditClick = (id: GridRowId) => () => {
-		const warehouse = rows.find((row) => row.id === id);
-		if (warehouse) {
-			setSelectedWarehouse(warehouse);
+		const product = rows.find((row) => row.id === id);
+		if (product) {
+			setSelectedProduct(product);
 			setOpenDrawer(true);
 		}
 	};
 
 	const handleDeleteClick = (id: number) => () => {
-		const warehouse = rows.find((row) => row.id === id);
-		if (warehouse) {
-			setWarehouseToDelete(warehouse);
+		const product = rows.find((row) => row.id === id);
+		if (product) {
+			setProductToDelete(product);
 			setIsDeleteModalVisible(true);
 		}
 	};
 
 	const confirmDelete = async () => {
-		if (warehouseToDelete) {
-			await deleteWarehouse(warehouseToDelete.id, axios);
-			getWarehousesData();
+		if (productToDelete) {
+			await deleteItem(productToDelete.id, axios);
+			GetItems();
 			setIsDeleteModalVisible(false);
 		}
 	};
@@ -87,13 +82,12 @@ export const AdminWarehouse = () => {
 	};
 
 	const showDrawer = () => {
-		setSelectedWarehouse(null);
+		setSelectedProduct(null);
 		setOpenDrawer(true);
 	};
 
 	const onCloseDrawer = () => {
 		setOpenDrawer(false);
-		setSelectedWarehouse(null);
 	};
 
 	const [form] = Form.useForm();
@@ -106,45 +100,32 @@ export const AdminWarehouse = () => {
 			editable: false,
 		},
 		{
-			field: "building",
-			headerName: "Building",
+			field: "name",
+			headerName: "Name",
 			width: 180,
 			editable: false,
 		},
 		{
-			field: "zone",
-			headerName: "Zone",
+			field: "code",
+			headerName: "Code",
 			width: 180,
 			editable: false,
 		},
 		{
-			field: "spaceId",
-			headerName: "Space Id",
+			field: "width",
+			headerName: "Width",
 			width: 180,
 			editable: false,
 		},
 		{
-			field: "spaceHeight",
-			headerName: "Space Height",
+			field: "height",
+			headerName: "Height",
 			width: 100,
 			editable: false,
 		},
 		{
-			field: "spaceWidth",
-			headerName: "Space Width",
-			width: 220,
-			editable: false,
-		},
-		{
-			field: "spaceLength",
-			headerName: "Space Length",
-			width: 220,
-			editable: false,
-			flex: 1,
-		},
-		{
-			field: "productName",
-			headerName: "Product",
+			field: "length",
+			headerName: "Length",
 			width: 220,
 			editable: false,
 			flex: 1,
@@ -157,12 +138,6 @@ export const AdminWarehouse = () => {
 			cellClassName: "actions",
 			align: "right",
 			getActions: ({ id }) => [
-				<GridActionsCellItem
-					icon={<SearchIcon />}
-					label='Show Products'
-					onClick={() => navigate("/items")}
-					color='inherit'
-				/>,
 				<GridActionsCellItem
 					icon={<EditIcon />}
 					label='Edit'
@@ -198,16 +173,21 @@ export const AdminWarehouse = () => {
 					<Breadcrumb style={{ margin: "12px 0", fontSize: "22px", fontWeight: "bold" }}>
 						<Breadcrumb.Item>Dashboard</Breadcrumb.Item>
 						<Breadcrumb.Item>Admin Panel</Breadcrumb.Item>
-						<Breadcrumb.Item>Manage Warehouses</Breadcrumb.Item>
+						<Breadcrumb.Item>
+							<Link to='/warehouses' style={{ textDecoration: "none" }}>
+								Warehouses
+							</Link>
+						</Breadcrumb.Item>
+						<Breadcrumb.Item>Manage Products</Breadcrumb.Item>
 					</Breadcrumb>
-
 					<div className="container">
-						<button className="button-gradient" style={{marginRight: 'auto'}} onClick={showDrawer} >
-							Add Warehouse
+						<button className="button-gradient" style={{marginRight: 'auto'}} onClick={showDrawer}>
+							Add new product +
 						</button>
 					</div>
+
 					<Drawer
-						title={selectedWarehouse ? "Edit Warehouse" : "Create a new Warehouse"}
+						title={selectedProduct ? "Edit Product" : "Create a new Product"}
 						width={720}
 						onClose={onCloseDrawer}
 						open={openDrawer}
@@ -221,16 +201,13 @@ export const AdminWarehouse = () => {
 							</Space>
 						}
 					>
-						<WarehouseForm
+						<ProductForm
+							refreshProducts={() => {
+								GetItems();
+							}}
 							form={form}
 							onClose={onCloseDrawer}
-							refreshWarehouses={() => {
-								getWarehousesData();
-							}}
-							refreshWarehouse={() => {
-								setSelectedWarehouse(null);
-							}}
-							initialValues={selectedWarehouse}
+							initialValues={selectedProduct}
 						/>
 					</Drawer>
 
@@ -250,6 +227,7 @@ export const AdminWarehouse = () => {
 						}} // Ensures DataGrid takes the remaining space
 					/>
 				</Box>
+
 			</Box>
 			<Modal open={isDeleteModalVisible} onClose={() => setIsDeleteModalVisible(false)}>
 				<Box
@@ -266,21 +244,30 @@ export const AdminWarehouse = () => {
 				>
 					<DialogTitle>
 						<Typography variant='h4' component='div' sx={{ color: "red", fontWeight: "bold" }}>
-							Delete Warehouse
+							Delete Product
 						</Typography>
 					</DialogTitle>
 					<DialogContent>
-						<DialogContentText>Are you sure you want to delete this warehouse?</DialogContentText>
+						<DialogContentText>
+							<Typography variant='h6' component='div'>
+								Are you sure you want to delete the product?
+							</Typography>
+							{productToDelete && (
+								<p>
+									Name: {productToDelete.name} <br />
+									Code: {productToDelete.code}
+								</p>
+							)}
+						</DialogContentText>
 					</DialogContent>
 					<DialogActions>
 						<Button onClick={() => setIsDeleteModalVisible(false)}>Cancel</Button>
-						<Button onClick={confirmDelete}>Delete</Button>
+						<Button onClick={confirmDelete}>Confirm</Button>
 					</DialogActions>
 				</Box>
 			</Modal>
-			
 		</>
 	);
 };
 
-export default AdminWarehouse;
+export default PrinterProducts;
