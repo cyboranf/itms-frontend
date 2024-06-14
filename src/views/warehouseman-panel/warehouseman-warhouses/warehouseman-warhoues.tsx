@@ -21,7 +21,7 @@ import { useAxios } from "../../../helpers/axios/useAxios";
 import WarehouseForm from "../../../components/forms/admin/admin-warhouse-form";
 import { get } from "react-hook-form";
 
-export const AdminWarehouse = () => {
+export const WarehousmenWarehouse = () => {
 	const navigate = useNavigate();
 	const [rows, setRows] = useState<Warehouse[]>([]);
 	const [rowModesModel, setRowModesModel] = useState<GridRowModesModel>({});
@@ -197,12 +197,12 @@ export const AdminWarehouse = () => {
 				>
 					<Breadcrumb style={{ margin: "12px 0", fontSize: "22px", fontWeight: "bold" }}>
 						<Breadcrumb.Item>Dashboard</Breadcrumb.Item>
-						<Breadcrumb.Item>Admin Panel</Breadcrumb.Item>
+						<Breadcrumb.Item>Warehouseman</Breadcrumb.Item>
 						<Breadcrumb.Item>Manage Warehouses</Breadcrumb.Item>
 					</Breadcrumb>
 
 					<div className="container">
-						<button className="button-gradient" style={{marginRight: 'auto'}} onClick={showDrawer} >
+						<button className="button-gradient" style={{marginRight: 'auto'}} onClick={showDrawer}>
 							Add Warehouse
 						</button>
 					</div>
@@ -283,4 +283,4 @@ export const AdminWarehouse = () => {
 	);
 };
 
-export default AdminWarehouse;
+export default WarehousmenWarehouse;

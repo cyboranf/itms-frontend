@@ -27,8 +27,8 @@ export const registerUser = async ({
 		password,
 		confirmPassword: confirm_password,
 		roleId: 1,
-		firstName: first_name,
-		lastName: last_name,
+		name: first_name,
+		lastname: last_name,
 		pesel,
 		phoneNumber: phone_number,
 	});
