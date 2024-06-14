@@ -13,10 +13,8 @@ import SignUp from "./views/sign-up-main/sign-up-main";
 import { AdminTask } from "./views/admin-panel/admin-tasks";
 import { Admindashboard } from "./views/admin-panel/admin-dashboard";
 import { Layout } from "antd";
-import { WarehouseManDashboard } from "./views/warehouseman-panel/warehouseman-dashboard";
 import { WarehousmenWarehouse } from "./views/warehouseman-panel/warehouseman-warhouses";
 import { WarehousemanTasks } from "./views/warehouseman-panel/warehouseman-tasks";
-import { PrinterDashboard } from "./views/printer-panel/printer-dashboard";
 import { PrinterProducts } from "./views/printer-panel/printer-items";
 import { PrinterTask } from "./views/printer-panel/printer-tasks";
 import AdminProducts from "./views/admin-panel/admin-products/admin-products";
@@ -26,6 +24,7 @@ import { DataProvider, ROLES } from "./context/data-context";
 import ProtectedRoute from "./components/auth/ProtectedRoute";
 import Logout from "./components/auth/Logout";
 import { UserDashboard } from "./views/user-dashboard";
+import SettingsPanel from "./views/settings-panel/settings-panel";
 
 const { Content } = Layout;
 
@@ -132,11 +131,16 @@ const router = createHashRouter([
 			},
 			{
 				path: "/users",
-			element: (
-				<ProtectedRoute requiredRoles={[ROLES.ADMIN]}>
-					<AdminPanel />
-				</ProtectedRoute>
-		),
+				element: (
+					<ProtectedRoute requiredRoles={[ROLES.ADMIN]}>
+						<AdminPanel />
+					</ProtectedRoute>
+				),
+			},
+
+			{
+				path: "/settings",
+				element: <SettingsPanel />,
 			},
 		],
 	},
@@ -153,6 +157,8 @@ const router = createHashRouter([
 		element: <SignUp />,
 	},
 
+
+
 	{
 		path: "/warehouseman",
 		element: (
@@ -163,27 +169,27 @@ const router = createHashRouter([
 		children: [
 			{
 				path: "/warehouseman/home",
-			element:(
-				<ProtectedRoute requiredRoles={[ROLES.WAREHOUSEMAN]}>
-					<UserDashboard />
-				</ProtectedRoute>
-			)
+				element: (
+					<ProtectedRoute requiredRoles={[ROLES.WAREHOUSEMAN]}>
+						<UserDashboard />
+					</ProtectedRoute>
+				)
 			},
 			{
 				path: "/warehouseman/warehouses",
-			element:(
-				<ProtectedRoute requiredRoles={[ROLES.WAREHOUSEMAN]}>
-					<WarehousmenWarehouse />
-				</ProtectedRoute>
-			)
+				element: (
+					<ProtectedRoute requiredRoles={[ROLES.WAREHOUSEMAN]}>
+						<WarehousmenWarehouse />
+					</ProtectedRoute>
+				)
 			},
 			{
-			path: "/warehouseman/tasks",
-			element:(
-				<ProtectedRoute requiredRoles={[ROLES.WAREHOUSEMAN]}>
-					<WarehousemanTasks />
-				</ProtectedRoute>
-			)
+				path: "/warehouseman/tasks",
+				element: (
+					<ProtectedRoute requiredRoles={[ROLES.WAREHOUSEMAN]}>
+						<WarehousemanTasks />
+					</ProtectedRoute>
+				)
 			},
 		],
 	},
