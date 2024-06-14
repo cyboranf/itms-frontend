@@ -160,7 +160,7 @@ export const AdminProducts = () => {
 			<Box>
 				<Box
 					sx={{
-						height: "60vh",
+						height: "89.5vh",
 						width: "100%",
 						"& .actions": {
 							color: "text.secondary",
@@ -170,30 +170,20 @@ export const AdminProducts = () => {
 						},
 					}}
 				>
-					<Breadcrumb style={{ margin: "16px 0" }}>
+					<Breadcrumb style={{ margin: "12px 0", fontSize: "22px", fontWeight: "bold" }}>
 						<Breadcrumb.Item>Dashboard</Breadcrumb.Item>
+						<Breadcrumb.Item>Admin Panel</Breadcrumb.Item>
 						<Breadcrumb.Item>
 							<Link to='/warehouses' style={{ textDecoration: "none" }}>
 								Warehouses
 							</Link>
 						</Breadcrumb.Item>
-						<Breadcrumb.Item>Products</Breadcrumb.Item>
+						<Breadcrumb.Item>Manage Products</Breadcrumb.Item>
 					</Breadcrumb>
-					<Typography
-						variant='h3'
-						component='h3'
-						sx={{
-							textAlign: "center",
-							p: 5,
-						}}
-					>
-						Manage products
-					</Typography>
-
-					<div style={{ margin: 10 }}>
-						<Button type='primary' onClick={showDrawer}>
+					<div className="container">
+						<button className="button-gradient" style={{marginRight: 'auto'}}>
 							Add new product +
-						</Button>
+						</button>
 					</div>
 
 					<Drawer
@@ -224,29 +214,20 @@ export const AdminProducts = () => {
 					<DataGrid
 						rows={rows}
 						columns={columns}
-						editMode='row'
+						editMode="row"
 						rowModesModel={rowModesModel}
 						onRowModesModelChange={handleRowModesModelChange}
 						onRowEditStop={handleRowEditStop}
-						slotProps={{
-							toolbar: { setRows, setRowModesModel },
-						}}
+						style={{ flex: 1, minHeight: 0, width: '100%' }}
 						sx={{
-							boxShadow: 2,
-							border: 1,
-							"& .MuiDataGrid-cell:hover": {
-								color: "primary.main",
-							},
 							"& .MuiDataGrid-footerContainer ": {
-								bgcolor: "#EDF05E",
+								bgcolor: "#b3d5e0",
+								height: "30px",
 							},
-							"& .MuiDataGrid-toolbarContainer  ": {
-								bgcolor: "#EDF05E",
-							},
-							"& .MuiButtonBase-root  ": {},
-						}}
+						}} // Ensures DataGrid takes the remaining space
 					/>
 				</Box>
+
 			</Box>
 			<Modal open={isDeleteModalVisible} onClose={() => setIsDeleteModalVisible(false)}>
 				<Box

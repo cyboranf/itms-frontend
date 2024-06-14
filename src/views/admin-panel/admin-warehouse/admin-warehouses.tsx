@@ -1,4 +1,4 @@
-import { useEffect, useState } from "react";
+import React, { useEffect, useState } from "react";
 import Box from "@mui/material/Box";
 import EditIcon from "@mui/icons-material/Edit";
 import DeleteIcon from "@mui/icons-material/DeleteOutlined";
@@ -185,7 +185,7 @@ export const AdminWarehouse = () => {
 			<Box>
 				<Box
 					sx={{
-						height: "60vh",
+						height: "89.5vh",
 						width: "100%",
 						"& .actions": {
 							color: "text.secondary",
@@ -195,25 +195,16 @@ export const AdminWarehouse = () => {
 						},
 					}}
 				>
-					<Breadcrumb style={{ margin: "16px 0" }}>
+					<Breadcrumb style={{ margin: "12px 0", fontSize: "22px", fontWeight: "bold" }}>
 						<Breadcrumb.Item>Dashboard</Breadcrumb.Item>
-						<Breadcrumb.Item>Warehouses</Breadcrumb.Item>
+						<Breadcrumb.Item>Admin Panel</Breadcrumb.Item>
+						<Breadcrumb.Item>Manage Warehouses</Breadcrumb.Item>
 					</Breadcrumb>
 
-					<Typography
-						variant='h3'
-						component='h3'
-						sx={{
-							textAlign: "center",
-							p: 5,
-						}}
-					>
-						Manage Warehouses
-					</Typography>
-					<div style={{ margin: 10 }}>
-						<Button type='primary' onClick={showDrawer}>
+					<div className="container">
+						<button className="button-gradient" style={{marginRight: 'auto'}}>
 							Add Warehouse
-						</Button>
+						</button>
 					</div>
 					<Drawer
 						title={selectedWarehouse ? "Edit Warehouse" : "Create a new Warehouse"}
@@ -246,24 +237,17 @@ export const AdminWarehouse = () => {
 					<DataGrid
 						rows={rows}
 						columns={columns}
-						editMode='row'
+						editMode="row"
 						rowModesModel={rowModesModel}
 						onRowModesModelChange={handleRowModesModelChange}
 						onRowEditStop={handleRowEditStop}
+						style={{ flex: 1, minHeight: 0, width: '100%' }}
 						sx={{
-							boxShadow: 2,
-							border: 1,
-							"& .MuiDataGrid-cell:hover": {
-								color: "primary.main",
-							},
 							"& .MuiDataGrid-footerContainer ": {
-								bgcolor: "#F1BCD9",
+								bgcolor: "#b3d5e0",
+								height: "30px",
 							},
-							"& .MuiDataGrid-toolbarContainer  ": {
-								bgcolor: "#F1BCD9",
-							},
-							"& .MuiButtonBase-root  ": {},
-						}}
+						}} // Ensures DataGrid takes the remaining space
 					/>
 				</Box>
 			</Box>

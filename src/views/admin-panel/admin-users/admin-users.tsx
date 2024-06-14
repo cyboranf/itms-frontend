@@ -135,7 +135,7 @@ export const AdminPanel = () => {
 			<Box> 
 						<Box
 							sx={{
-								height: "85vh",
+								height: "89.5vh",
 								width: "100%",
 								"& .actions": {
 									color: "text.secondary",

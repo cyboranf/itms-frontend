@@ -192,7 +192,7 @@ export const AdminTask = () => {
 		<Box>
 			<Box
 				sx={{
-					height: "85vh",
+					height: "89.5vh",
 					width: "100%",
 					"& .actions": {
 						color: "text.secondary",
@@ -204,7 +204,8 @@ export const AdminTask = () => {
 			>
 				<Breadcrumb style={{ margin: "12px 0", fontSize: "22px", fontWeight: "bold" }}>
 					<Breadcrumb.Item>Dashboard</Breadcrumb.Item>
-					<Breadcrumb.Item>Task</Breadcrumb.Item>
+					<Breadcrumb.Item>Admin Panel</Breadcrumb.Item>
+					<Breadcrumb.Item>Manage Task</Breadcrumb.Item>
 				</Breadcrumb>
 
 				<Drawer
@@ -261,16 +262,6 @@ export const AdminTask = () => {
 					/>
 				</Drawer>
 
-				<Typography
-					variant='h3'
-					component='h3'
-					sx={{
-						textAlign: "center",
-						p: 5,
-					}}
-				>
-					Manage Tasks
-				</Typography>
 				<div className="container">
 					<button  onClick={showDrawer}  className="button-gradient" style={{marginRight: 'auto'}}>
 						Add Task
@@ -298,10 +289,12 @@ export const AdminTask = () => {
 							color: "primary.main",
 						},
 						"& .MuiDataGrid-footerContainer ": {
-							bgcolor: "#F1BCD9",
+							height: "30px",
+							bgcolor: '#b3d5e0',
 						},
 						"& .MuiDataGrid-toolbarContainer  ": {
-							bgcolor: "#F1BCD9",
+							height: "30px",
+							bgcolor: "#000000",
 						},
 						"& .MuiButtonBase-root  ": {},
 					}}
