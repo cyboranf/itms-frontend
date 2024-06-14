@@ -1,5 +1,6 @@
 import { createHashRouter, Outlet, RouterProvider } from "react-router-dom";
 import { Navbar } from "./components/navbar";
+import { NavbarWarhouseman } from "./components/navbar-warehouseman";
 import { Home } from "./views/home";
 import { SignIn } from "./views/sign-in";
 import { AdminPanel } from "./views/admin-panel/admin-users";
@@ -27,6 +28,22 @@ export const Layout1 = () => {
 		<ScrollToTop>
 			<Layout style={{ minHeight: "100vh" }}>
 				<Navbar />
+				<Layout>
+					<Content style={{ margin: "0 10px" }}>
+						<Outlet />
+					</Content>
+				</Layout>
+				{/* <Footer /> */}
+			</Layout>
+		</ScrollToTop>
+	);
+};
+
+export const Layout2 = () => {
+	return (
+		<ScrollToTop>
+			<Layout style={{ minHeight: "100vh" }}>
+				<NavbarWarhouseman />
 				<Layout>
 					<Content style={{ margin: "0 10px" }}>
 						<Outlet />
@@ -115,12 +132,22 @@ const router = createHashRouter([
 	},
 
 	{
-		path: "/warehouseman/home",
+		path: "/warehouseman",
 		element: (
-			<ProtectedRoute requiredRoles={[ROLES.WAREHOUSEMAN]}>
-				<WarehouseManDashboard />
+			<ProtectedRoute>
+				<Layout2 />
 			</ProtectedRoute>
 		),
+		children: [
+			{
+				path: "/warehouseman/home",
+			element:(
+				<ProtectedRoute requiredRoles={[ROLES.WAREHOUSEMAN]}>
+					<WarehouseManDashboard />
+				</ProtectedRoute>
+			)
+			}
+		],
 	},
 	{
 		path: "/printer/home",
