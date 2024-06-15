@@ -4,6 +4,11 @@ export type TaskValuesType = {
 	name: string,
 };
 
+export type Role = {
+	id: number;
+	name: string;
+};
+
 export type User = {
 	id: number;
 	username: string;
@@ -12,7 +17,7 @@ export type User = {
 	pesel: string;
 	email: string;
 	phoneNumber: string;
-	tasks: any[];
+	roles: string;
 };
 
 export type UserWithoutTasks = {
