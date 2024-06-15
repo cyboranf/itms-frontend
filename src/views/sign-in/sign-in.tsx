@@ -1,4 +1,4 @@
-import React, { useState, useContext } from "react";
+import { useState, useContext } from "react";
 import "./sign-in.scss";
 import humanLogo from "../../assets/human-logo.webp";
 import logo from "../../assets/logo.webp";
@@ -8,7 +8,8 @@ import { loginUser } from "../../service/auth";
 import { RegexpValidators } from "../../utils/reg-exp";
 import { useNavigate, Link } from "react-router-dom";
 import { CurrentUser, DataContext, ROLES } from "../../context/data-context";
-import { FaEye, FaEyeSlash } from "react-icons/fa"; // Importing eye icons
+import { FaEye, FaEyeSlash } from "react-icons/fa";
+import { toast } from "react-toastify";
 
 export type LoginValuesType = {
 	username: string;
@@ -18,7 +19,7 @@ export type LoginValuesType = {
 export const SignIn = () => {
 	const navigate = useNavigate();
 	const { setCurrentUser } = useContext(DataContext);
-	const [showPassword, setShowPassword] = useState(false); // State to toggle password visibility
+	const [showPassword, setShowPassword] = useState(false);
 
 	const {
 		register,
@@ -36,7 +37,7 @@ export const SignIn = () => {
 
 			const userRoles = res.rank.map((rank) => rank.authority).filter((authority) => rolesArray.includes(authority));
 
-			let userRole = ROLES.PRINTER as ROLES; // default to lowest role
+			let userRole = ROLES.PRINTER as ROLES;
 
 			for (const role of rolesArray) {
 				if (userRoles.includes(role)) {
@@ -49,11 +50,12 @@ export const SignIn = () => {
 				userName: res.userName,
 				accessToken: res.accessToken,
 				role: userRole,
+				id: res.id,
 			};
 
 			setCurrentUser(user);
 
-			// Navigate to the appropriate dashboard based on user role
+			toast.success("Logged in successfully");
 			switch (userRole) {
 				case ROLES.WAREHOUSEMAN:
 					navigate("/warehouseman/home");
@@ -69,6 +71,7 @@ export const SignIn = () => {
 					break;
 			}
 		} catch (err: unknown) {
+			toast.error("Wrong username or password");
 			console.log(err);
 		}
 	};
@@ -106,7 +109,7 @@ export const SignIn = () => {
 						<div className='input-container password-input-container'>
 							<Input
 								placeholder='Password'
-								type={showPassword ? "text" : "password"} // Toggle type based on state
+								type={showPassword ? "text" : "password"}
 								register={register("password", {
 									minLength: 5,
 									maxLength: 50,
@@ -114,11 +117,7 @@ export const SignIn = () => {
 								})}
 								error={errors}
 							/>
-							<button
-								type='button'
-								className='password-toggle-button'
-								onClick={togglePasswordVisibility}
-							>
+							<button type='button' className='password-toggle-button' onClick={togglePasswordVisibility}>
 								{showPassword ? <FaEyeSlash /> : <FaEye />}
 							</button>
 						</div>

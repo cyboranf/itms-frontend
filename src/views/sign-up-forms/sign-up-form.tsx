@@ -1,13 +1,11 @@
 import "./sign-up-form.scss";
-import Select from "react-select";
-import { useState } from "react";
 import Input from "../../components/input/input";
 import { FieldErrors, UseFormRegister, UseFormSetValue, UseFormTrigger } from "react-hook-form";
 import { RegexpValidators } from "../../utils/reg-exp";
 import { RegisterValuesTypes } from "../../service/auth/types";
 import { SetStateAction } from "react";
-import { Controller, Control } from "react-hook-form";
-import { useNavigate, Link } from "react-router-dom";
+import { Control } from "react-hook-form";
+import { Link } from "react-router-dom";
 
 type SignUpFormProps = {
 	register: UseFormRegister<RegisterValuesTypes>;
@@ -21,18 +19,7 @@ type SignUpFormProps = {
 	isSubmitted: boolean;
 };
 
-export const SignUpForm: React.FC<SignUpFormProps> = ({
-														  register,
-														  errors,
-														  roleOptions,
-														  passwordValue,
-														  setCurrentStep,
-														  trigger,
-														  control,
-													  }) => {
-	const navigate = useNavigate();
-	const [wasSubmitted, setWasSubmitted] = useState(false);
-
+export const SignUpForm: React.FC<SignUpFormProps> = ({ register, errors, passwordValue, setCurrentStep, trigger }) => {
 	const validateAndGoNext = async () => {
 		const isFirstStepValid = await trigger(["username", "email", "password", "confirm_password", "role"]);
 
@@ -105,13 +92,10 @@ export const SignUpForm: React.FC<SignUpFormProps> = ({
 						error={errors}
 					/>
 
-
-
 					<div className='form-field form-field-break'></div>
 					<button
 						onClick={(e) => {
 							e.preventDefault();
-							setWasSubmitted(true);
 							validateAndGoNext();
 						}}
 					>

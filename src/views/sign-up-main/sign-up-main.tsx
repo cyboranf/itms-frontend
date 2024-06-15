@@ -12,13 +12,6 @@ const SignUp = () => {
 	const [currentStep, setCurrentStep] = useState(0);
 	const navigate = useNavigate();
 
-	const roleOptions = [
-		{ value: "admin", label: "Admin" },
-		{ value: "manager", label: "Mangaer" },
-		{ value: "warehouseman", label: "Warehouseman" },
-		{ value: "printer", label: "Printer" },
-	];
-
 	const {
 		register,
 		handleSubmit,
@@ -71,7 +64,6 @@ const SignUp = () => {
 					register={register}
 					setCurrentStep={setCurrentStep}
 					setValue={setValue}
-					roleOptions={roleOptions}
 					passwordValue={passwordValue}
 					errors={errors}
 					trigger={trigger}

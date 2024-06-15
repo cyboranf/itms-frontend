@@ -33,33 +33,24 @@ export async function PutTask(params: TaskValuesType, axios: AxiosInstance) {
 	}
 }
 
-export const getAllUsers = async (axios: AxiosInstance): Promise<{ users: User[], totalCount: number }> => {
-    try {
-        const response = await axios.get<User[]>(Paths.ALL_USERS);
-        const users = response.data;
-        return {
-            users: users,
-            totalCount: users.length,
-        };
-    } catch (error) {
-        console.error("Błąd podczas pobierania użytkowników:", error);
-        toast.error("Błąd podczas pobierania użytkowników");
-        return { users: [], totalCount: 0 };
-    }
+export const getAllUsers = async (axios: AxiosInstance): Promise<{ users: User[]; totalCount: number }> => {
+	try {
+		const response = await axios.get<User[]>(Paths.ALL_USERS);
+		const users = response.data;
+		return {
+			users: users,
+			totalCount: users.length,
+		};
+	} catch (error) {
+		console.error("Błąd podczas pobierania użytkowników:", error);
+		toast.error("Błąd podczas pobierania użytkowników");
+		return { users: [], totalCount: 0 };
+	}
 };
 
-
-export async function PutUsers(params: User, axios: AxiosInstance) {
-	try {
-		console.log("sdadas");
-		await axios.put(Paths.USERS_EDIT.replace("{id}", params.id.toString()), params);
-		toast.success("Zaktualizowano użytkownika");
-		return true;
-	} catch (error) {
-		console.error("Błąd podczas aktualizacji użytkownika:", error);
-		toast.error("Błąd podczas aktualizacji użytkownika");
-		return false;
-	}
+export async function PutUsers(params: User, axios: AxiosInstance): Promise<{ data: User }> {
+	const res = await axios.put(Paths.USERS_EDIT.replace("{id}", params.id.toString()), params);
+	return res.data;
 }
 
 export async function DeleteUsers(id: number, axios: AxiosInstance) {
@@ -110,46 +101,45 @@ export const requestUsersReport = async (
 	}
 };
 
-
 export const getSelf = async (axios: AxiosInstance): Promise<User> => {
-    try {
-        const response = await axios.get<User>(Paths.SELF);
-        
-        return response.data;
-    } catch (error) {
-        console.error("Błąd podczas pobierania użytkowników:", error);
-        toast.error("Błąd podczas pobierania użytkowników");
-        throw error;
-    }
+	try {
+		const response = await axios.get<User>(Paths.SELF);
+
+		return response.data;
+	} catch (error) {
+		console.error("Błąd podczas pobierania użytkowników:", error);
+		toast.error("Błąd podczas pobierania użytkowników");
+		throw error;
+	}
 };
 
 export const updateUserRole = async (userId: number, roleId: number, axios: AxiosInstance): Promise<boolean> => {
-    try {
-        const response = await axios.put(Paths.ROLES.replace("{id}", userId.toString()), null, {
-            params: { role: roleId }
-        });
-        if (response.status === 200) {
-            toast.success("Zaktualizowano rolę użytkownika");
-            return true;
-        } else {
-            toast.error("Błąd podczas aktualizacji roli użytkownika");
-            return false;
-        }
-    } catch (error) {
-        console.error("Błąd podczas aktualizacji roli użytkownika:", error);
-        toast.error("Błąd podczas aktualizacji roli użytkownika");
-        return false;
-    }
+	try {
+		const response = await axios.put(Paths.ROLES.replace("{id}", userId.toString()), null, {
+			params: { role: roleId },
+		});
+		if (response.status === 200) {
+			toast.success("Zaktualizowano rolę użytkownika");
+			return true;
+		} else {
+			toast.error("Błąd podczas aktualizacji roli użytkownika");
+			return false;
+		}
+	} catch (error) {
+		console.error("Błąd podczas aktualizacji roli użytkownika:", error);
+		toast.error("Błąd podczas aktualizacji roli użytkownika");
+		return false;
+	}
 };
 
 export const getRoles = async (axios: AxiosInstance): Promise<Role[]> => {
-    try {
-        const response = await axios.get<Role[]>(Paths.ROLES);
-        
-        return response.data;
-    } catch (error) {
-        console.error("Błąd podczas pobierania roli:", error);
-        toast.error("Błąd podczas pobierania roli");
-        throw error;
-    }
+	try {
+		const response = await axios.get<Role[]>(Paths.ROLES);
+
+		return response.data;
+	} catch (error) {
+		console.error("Błąd podczas pobierania roli:", error);
+		toast.error("Błąd podczas pobierania roli");
+		throw error;
+	}
 };

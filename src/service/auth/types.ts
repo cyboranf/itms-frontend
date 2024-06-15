@@ -11,6 +11,7 @@ export type UserData = {
 	userName: string;
 	accessToken: string;
 	rank: Rank[];
+	id: number;
 };
 
 export type RegisterValuesTypes = {

@@ -11,6 +11,7 @@ export type CurrentUser = {
 	userName: string;
 	accessToken: string;
 	role: ROLES;
+	id: number;
 };
 
 type Props = {

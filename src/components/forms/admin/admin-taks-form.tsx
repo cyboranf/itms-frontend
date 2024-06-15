@@ -1,12 +1,11 @@
 import React, { useEffect, useState } from 'react';
-import { Form, Input, Button, Select, Row, Col, Table, DatePicker } from 'antd';
+import { Form, Input, Button, Select, DatePicker } from 'antd';
 import { FormInstance } from 'antd/es/form';
 import {getAllUsers } from '../../../service/users';
 import {getAllWarehouses } from '../../../service/warehouses';
 import {getAllItems} from '../../../service/items';
 import {getAllTasksTypes, PostTaskUsers, PostTask, PostTaskProduct } from '../../../service/tasks';
 import { useAxios } from "../../../helpers/axios/useAxios";
-import products from '../../home/TaskChart';
 import { toast } from "react-toastify";
 
 const { Option } = Select;
@@ -20,7 +19,7 @@ interface TaskFormProps {
 
 
 
-const TaskForm: React.FC<TaskFormProps> = ({ form, onClose, handleCreateTask }) => {
+const TaskForm: React.FC<TaskFormProps> = ({ form, onClose }) => {
 
 	const axios = useAxios();
 
