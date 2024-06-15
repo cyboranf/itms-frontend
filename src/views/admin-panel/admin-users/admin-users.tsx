@@ -148,6 +148,12 @@ export const AdminPanel = () => {
 							<Breadcrumb style={{ margin: "12px 0", fontSize: "22px", fontWeight: "bold" }}>
 								<Breadcrumb.Item>Dashboard</Breadcrumb.Item>
 								<Breadcrumb.Item>Admin Panel</Breadcrumb.Item>
+								<Breadcrumb.Item>
+								 {/*TODO: Change the link to the correct one i ogarnac front, zeby przenosilo/wyswietlalo Userow z Rola user*/}
+									<Link to='/warehouses' style={{ textDecoration: "none" }}>
+										Manage User's Role
+									</Link>
+								</Breadcrumb.Item>
 								<Breadcrumb.Item>Manage Users</Breadcrumb.Item>
 							</Breadcrumb>
 
@@ -168,6 +174,7 @@ export const AdminPanel = () => {
 
 							<div className="container">
 								<button className="button-gradient" style={{marginRight: 'auto'}}>
+									{/*TODO: Podlaczyc sie do endpointu, ktory wyswietla taski uzytkownika po peselu (nie wiem jak wyciagnac info z tej tabeli)*/}
 									Show employee tasks
 								</button>
 								<button className="button-gradient" onClick={showDrawer1} style={{marginRight: '10px'}}>
