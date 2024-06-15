@@ -1,6 +1,6 @@
 import { AxiosInstance } from "axios";
 import { Paths } from "./path";
-import { TaskValuesType, User } from "./types";
+import { TaskValuesType, User, Role } from "./types";
 import { toast } from "react-toastify";
 
 export async function GetTasks(axios: AxiosInstance): Promise<TaskValuesType[]> {
@@ -119,6 +119,37 @@ export const getSelf = async (axios: AxiosInstance): Promise<User> => {
     } catch (error) {
         console.error("Błąd podczas pobierania użytkowników:", error);
         toast.error("Błąd podczas pobierania użytkowników");
+        throw error;
+    }
+};
+
+export const updateUserRole = async (userId: number, roleId: number, axios: AxiosInstance): Promise<boolean> => {
+    try {
+        const response = await axios.put(Paths.ROLES.replace("{id}", userId.toString()), null, {
+            params: { role: roleId }
+        });
+        if (response.status === 200) {
+            toast.success("Zaktualizowano rolę użytkownika");
+            return true;
+        } else {
+            toast.error("Błąd podczas aktualizacji roli użytkownika");
+            return false;
+        }
+    } catch (error) {
+        console.error("Błąd podczas aktualizacji roli użytkownika:", error);
+        toast.error("Błąd podczas aktualizacji roli użytkownika");
+        return false;
+    }
+};
+
+export const getRoles = async (axios: AxiosInstance): Promise<Role[]> => {
+    try {
+        const response = await axios.get<Role[]>(Paths.ROLES);
+        
+        return response.data;
+    } catch (error) {
+        console.error("Błąd podczas pobierania roli:", error);
+        toast.error("Błąd podczas pobierania roli");
         throw error;
     }
 };

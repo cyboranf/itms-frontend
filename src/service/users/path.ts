@@ -10,5 +10,6 @@ export enum Paths {
   RAPORT = '/generate-user-report',
 
   SELF = '/users/self',
+  ROLES = '/users/roles',
 }
 
