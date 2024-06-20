@@ -11,5 +11,9 @@ export enum Paths {
 
   SELF = '/users/self',
   ROLES = '/users/roles',
+
+  USERS_TASK = '/tasks/user/{id}',
+
+  USER_WITH_USER_ROLE = '/users/users-with-role-user'
 }
 

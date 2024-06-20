@@ -2,6 +2,7 @@ import { AxiosInstance } from "axios";
 import { Paths } from "./path";
 import { TaskValuesType, User, Role } from "./types";
 import { toast } from "react-toastify";
+import {Task} from '../tasks/types';
 
 export async function GetTasks(axios: AxiosInstance): Promise<TaskValuesType[]> {
 	const response = await axios.get(Paths.TASK_TYPE);
@@ -143,3 +144,26 @@ export const getRoles = async (axios: AxiosInstance): Promise<Role[]> => {
 		throw error;
 	}
 };
+
+export const getTasks = async (axios: AxiosInstance, id: string): Promise<Task[]> => {
+	try {
+		const response = await axios.get<Task[]>(Paths.USERS_TASK.replace("{id}", id.toString()));
+
+		return response.data;
+	} catch (error) {
+		console.error("Błąd podczas pobierania tasków:", error);
+		toast.error("Błąd podczas pobierania roli");
+		throw error;
+	}
+}
+
+export const getUsersWithUserRole = async (axios: AxiosInstance): Promise<User[]> => {
+	try {
+	  const response = await axios.get<User[]>(Paths.USER_WITH_USER_ROLE);
+	  return response.data;
+	} catch (error) {
+	  console.error("Błąd podczas pobierania użytkowników z rolą 'user':", error);
+	  toast.error("Błąd podczas pobierania użytkowników z rolą 'user'");
+	  throw error;
+	}
+  };
