@@ -58,6 +58,7 @@ const UserRoleUsers: React.FC = () => {
   const handleDeleteUser = async () => {
     if (selectedUser) {
       await DeleteUsers(selectedUser.id, axios);
+      getUsers();
       setIsDeleteUserOpen(false);
     }
   };
