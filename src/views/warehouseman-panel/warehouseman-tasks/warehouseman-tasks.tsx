@@ -13,11 +13,9 @@ import {
 	GridRowModel,
 	GridRowEditStopReasons,
 } from "@mui/x-data-grid";
-import { Typography } from "@mui/material";
 import { Form, Button, Breadcrumb, Drawer, Space } from "antd";
 import { DeleteTasks, PostTask, getAllTasks, requestTaskReport } from "../../../service/tasks";
 import { Task } from "../../../service/tasks/types";
-import { PlusOutlined } from "@ant-design/icons";
 import TaskForm from "../../../components/forms/admin/admin-taks-form";
 import TaskReportForm from "../../../components/forms/admin/admin-taks-form-raport";
 import { useAxios } from "../../../helpers/axios/useAxios";

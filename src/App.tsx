@@ -25,6 +25,8 @@ import ProtectedRoute from "./components/auth/ProtectedRoute";
 import Logout from "./components/auth/Logout";
 import { UserDashboard } from "./views/user-dashboard";
 import SettingsPanel from "./views/settings-panel/settings-panel";
+import  UserTasks  from "./views/admin-panel/admin-user-tasks/admin-user-tasks";
+import UserRoleUsers from "./views/admin-panel/user-with-no-roles/user-with-no-roles";
 
 const { Content } = Layout;
 
@@ -142,6 +144,22 @@ const router = createHashRouter([
 				path: "/settings",
 				element: <SettingsPanel />,
 			},
+			{
+				path: "/tasks/user/:id",
+				element : (
+					<ProtectedRoute requiredRoles={[ROLES.ADMIN]}>
+						<UserTasks />
+					</ProtectedRoute>
+				)
+			},
+			{
+				path: "/users-with-role-user",
+				element : (
+					<ProtectedRoute requiredRoles={[ROLES.ADMIN]}>
+						<UserRoleUsers />
+					</ProtectedRoute>
+				)
+			}
 		],
 	},
 	{
