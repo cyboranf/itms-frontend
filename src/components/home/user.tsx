@@ -52,11 +52,11 @@ const Dashboarduser = () => {
                 renderItem={(user) => (
                     <List.Item>
                         <List.Item.Meta
-                            title={<Text>{user.name} {user.lastname}</Text>}
+                            title={<Text>{user.name} {user.roles}</Text>}
                             
                         />
                         <List.Item.Meta
-                            title={<Text>{user.email}</Text>}
+                            title={<Text>{user.roles}</Text>}
                             
                         />
                     </List.Item>

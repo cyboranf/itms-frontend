@@ -90,3 +90,31 @@ export const PostTaskUsers = async (userId: number, taskId: number, axios: Axios
 		return false;
 	}
 } 
+
+export const PostTaskWarhouse = async (taskId: number, warehouseId: number, axios: AxiosInstance) => {
+    try {
+    const url = `http://127.0.0.1:8080/api/tasks/${taskId}/join/warehouse/${warehouseId}`;
+    await axios.post(url);
+    return true;
+} catch (error) {
+    console.error("Błąd podczas PostTaskProduct:", error);
+    return false;
+}
+} 
+
+
+export const getAllTasksSelf = async (axios: AxiosInstance): Promise<{ tasks: Task[], totalCount: number }> => {
+    const response = await axios.get<Task[]>(Paths.TASK_SELF);
+    const tasks = response.data;
+    return {
+        tasks: tasks,
+        totalCount: tasks.length,
+    };
+};
+
+export const TaskFinished = async(id: string, axios: AxiosInstance) => {
+    console.log(id);
+    const url = Paths.TASK_FINISHED.replace('{taskId}', id);
+    await axios.post(url);
+    return true;
+}

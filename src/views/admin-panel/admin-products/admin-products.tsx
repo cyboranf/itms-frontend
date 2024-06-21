@@ -181,7 +181,7 @@ export const AdminProducts = () => {
 						<Breadcrumb.Item>Manage Products</Breadcrumb.Item>
 					</Breadcrumb>
 					<div className="container">
-						<button className="button-gradient" style={{marginRight: 'auto'}}>
+						<button className="button-gradient" style={{marginRight: 'auto'}} onClick={showDrawer}>
 							Add new product +
 						</button>
 					</div>

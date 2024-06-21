@@ -145,6 +145,21 @@ export const getRoles = async (axios: AxiosInstance): Promise<Role[]> => {
 	}
 };
 
+export const putRoles = async (id: number, role: string,axios: AxiosInstance): Promise<Role[]> => {
+	try {
+		const response = await axios.put<Role[]>(Paths.USER_ROLE.replace("{userId}", id.toString()), null,{
+			params: {
+				role
+			}
+		});
+
+		return response.data;
+	} catch (error) {
+		console.error("Błąd podczas zmieniania roli:", error);
+		toast.error("Błąd podczas zmieniania roli: " + `${error}`);
+		throw error;
+	}
+};
 export const getTasks = async (axios: AxiosInstance, id: string): Promise<Task[]> => {
 	try {
 		const response = await axios.get<Task[]>(Paths.USERS_TASK.replace("{id}", id.toString()));

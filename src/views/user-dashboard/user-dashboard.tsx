@@ -5,7 +5,7 @@ import { Pie } from '@ant-design/plots';
 import { useAxios } from "../../helpers/axios/useAxios";
 import { User } from "../../service/users/types";
 import { getSelf } from "../../service/users";
-import { getAllTasks } from "../../service/tasks"; // Importuj funkcję do pobierania zadań
+import { getAllTasks, getAllTasksSelf } from "../../service/tasks"; // Importuj funkcję do pobierania zadań
 import type { DescriptionsProps } from 'antd';
 import type { Task } from "../../service/tasks/types"; // Importuj typ Task
 
@@ -27,7 +27,7 @@ export const UserDashboard = () => {
 
     const getTasks = async () => {
         try {
-            const res = await getAllTasks(axios);
+            const res = await getAllTasksSelf(axios);
             setTasks(res.tasks);
         } catch (err: unknown) {
             console.log(err);
@@ -48,9 +48,10 @@ export const UserDashboard = () => {
             };
 
             tasks.forEach(task => {
-                if (task.state === 0) statusCounts['Not Started']++;
-                if (task.state === 1) statusCounts['In Progress']++;
-                if (task.state === 2) statusCounts['Completed']++;
+                if (task.type_id === 0) statusCounts['Import']++;
+                if (task.type_id === 1) statusCounts['Shipment']++;
+                if (task.type_id === 2) statusCounts['Move']++;
+                if (task.type_id === 2) statusCounts['Print']++;
             });
 
             const statusData = Object.keys(statusCounts).map(status => ({
