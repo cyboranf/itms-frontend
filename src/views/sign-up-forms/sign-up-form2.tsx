@@ -4,6 +4,7 @@ import { RegisterValuesTypes } from "../../service/auth/types";
 import { SetStateAction } from "react";
 import { RegexpValidators } from "../../utils/reg-exp";
 import Input from "../../components/input/input";
+
 type SignUpForm2Props = {
 	register: UseFormRegister<RegisterValuesTypes>;
 	errors: FieldErrors<RegisterValuesTypes>;
@@ -27,8 +28,14 @@ export const SignUpForm2: React.FC<SignUpForm2Props> = ({
 					<Input
 						placeholder='First name'
 						register={register("first_name", {
-							minLength: 3,
-							maxLength: 18,
+							minLength: {
+								value: 3,
+								message: "First name must be at least 3 characters long",
+							},
+							maxLength: {
+								value: 18,
+								message: "First name must be no more than 18 characters long",
+							},
 							required: "Required",
 						})}
 						error={errors}
@@ -36,8 +43,14 @@ export const SignUpForm2: React.FC<SignUpForm2Props> = ({
 					<Input
 						placeholder='Last name'
 						register={register("last_name", {
-							minLength: 3,
-							maxLength: 18,
+							minLength: {
+								value: 3,
+								message: "Last name must be at least 3 characters long",
+							},
+							maxLength: {
+								value: 18,
+								message: "Last name must be no more than 18 characters long",
+							},
 							required: "Required",
 						})}
 						error={errors}
