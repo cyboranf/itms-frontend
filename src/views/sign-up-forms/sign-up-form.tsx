@@ -43,8 +43,14 @@ export const SignUpForm: React.FC<SignUpFormProps> = ({ register, errors, passwo
 					<Input
 						placeholder='Username'
 						register={register("username", {
-							minLength: 3,
-							maxLength: 18,
+							minLength: {
+								value: 6,
+								message: "Username must be at least 6 characters long",
+							},
+							maxLength: {
+								value: 12,
+								message: "Username must be no more than 12 characters long",
+							},
 							pattern: {
 								value: RegexpValidators.USERNAME_LETTERS_ONLY,
 								message: "Use only letters",
@@ -72,6 +78,12 @@ export const SignUpForm: React.FC<SignUpFormProps> = ({ register, errors, passwo
 								digits: (value) => RegexpValidators.PASSWORD_NUMBER.test(value) || "Must contain at least one digit",
 								specialChar: (value) =>
 									RegexpValidators.SPECIAL_CHARACTERS.test(value) || "Must contain at least one special character",
+								bigLetter: (value) =>
+									RegexpValidators.BIG_LETTER.test(value) || "Must contain at least one uppercase letter",
+								smallLetter: (value) =>
+									RegexpValidators.SMALL_LETTER.test(value) || "Must contain at least one lowercase letter",
+								length: (value) =>
+									RegexpValidators.PASSWORD_LENGTH.test(value) || "Password must be between 8 to 50 characters long",
 							},
 							required: "Required",
 						})}
