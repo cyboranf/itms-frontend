@@ -25,7 +25,7 @@ import ProtectedRoute from "./components/auth/ProtectedRoute";
 import Logout from "./components/auth/Logout";
 import { UserDashboard } from "./views/user-dashboard";
 import SettingsPanel from "./views/settings-panel/settings-panel";
-import  UserTasks  from "./views/admin-panel/admin-user-tasks/admin-user-tasks";
+import UserTasks from "./views/admin-panel/admin-user-tasks/admin-user-tasks";
 import UserRoleUsers from "./views/admin-panel/user-with-no-roles/user-with-no-roles";
 
 const { Content } = Layout;
@@ -139,14 +139,17 @@ const router = createHashRouter([
 					</ProtectedRoute>
 				),
 			},
-
 			{
 				path: "/settings",
-				element: <SettingsPanel />,
+				element: (
+					<ProtectedRoute requiredRoles={[ROLES.ADMIN]}>
+						<SettingsPanel />
+					</ProtectedRoute>
+				),
 			},
 			{
 				path: "/tasks/user/:id",
-				element : (
+				element: (
 					<ProtectedRoute requiredRoles={[ROLES.ADMIN]}>
 						<UserTasks />
 					</ProtectedRoute>
@@ -154,7 +157,7 @@ const router = createHashRouter([
 			},
 			{
 				path: "/users-with-role-user",
-				element : (
+				element: (
 					<ProtectedRoute requiredRoles={[ROLES.ADMIN]}>
 						<UserRoleUsers />
 					</ProtectedRoute>
@@ -209,6 +212,14 @@ const router = createHashRouter([
 					</ProtectedRoute>
 				)
 			},
+			{
+				path: "/warehouseman/settings",
+				element: (
+					<ProtectedRoute requiredRoles={[ROLES.WAREHOUSEMAN]}>
+						<SettingsPanel />
+					</ProtectedRoute>
+				),
+			},
 		],
 	},
 	{
@@ -242,6 +253,14 @@ const router = createHashRouter([
 						<PrinterTask />
 					</ProtectedRoute>
 				)
+			},
+			{
+				path: "/printer/settings",
+				element: (
+					<ProtectedRoute requiredRoles={[ROLES.PRINTER]}>
+						<SettingsPanel />
+					</ProtectedRoute>
+				),
 			},
 		]
 	},
