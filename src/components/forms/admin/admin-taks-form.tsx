@@ -120,6 +120,11 @@ const TaskForm: React.FC<TaskFormProps> = ({ form, onClose }) => {
 					PostTaskWarhouse(taskCreated.id,values.warehouse, axios);
 					PostTaskWarhouse(taskCreated.id,values.warehouse1, axios);
 				}
+				if(selectedTaskType === 4){
+					PostTaskUsers( self.id, taskCreated.id, axios); // admin
+					PostTaskUsers(values.Warehouseman, taskCreated.id, axios); // dodanie warehouseman
+					PostTaskUsers(values.printer, taskCreated.id, axios);
+				}
 
 				toast.success("Stworzona tasks");
 				

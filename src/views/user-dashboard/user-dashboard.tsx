@@ -19,6 +19,7 @@ export const UserDashboard = () => {
     const getUser = async () => {
         try {
             const res = await getSelf(axios);
+            
             setUser(res);
         } catch (err: unknown) {
             console.log(err);
@@ -28,6 +29,7 @@ export const UserDashboard = () => {
     const getTasks = async () => {
         try {
             const res = await getAllTasksSelf(axios);
+            console.log(res);
             setTasks(res.tasks);
         } catch (err: unknown) {
             console.log(err);
@@ -42,16 +44,17 @@ export const UserDashboard = () => {
     useEffect(() => {
         if (tasks.length > 0) {
             const statusCounts: { [key: string]: number } = {
-                'Not Started': 0,
-                'In Progress': 0,
-                'Completed': 0,
+                'Import': 0,
+                'Shipment': 0,
+                'Move': 0,
+                'Print': 0,
             };
 
             tasks.forEach(task => {
                 if (task.type_id === 0) statusCounts['Import']++;
                 if (task.type_id === 1) statusCounts['Shipment']++;
-                if (task.type_id === 2) statusCounts['Move']++;
-                if (task.type_id === 2) statusCounts['Print']++;
+                if (task.type_id === 3) statusCounts['Move']++;
+                if (task.type_id === 4) statusCounts['Print']++;
             });
 
             const statusData = Object.keys(statusCounts).map(status => ({
