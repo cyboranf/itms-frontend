@@ -185,7 +185,7 @@ export const AdminPanel = () => {
               </Space>
             }
           >
-            <UserForm form={form} initialValues={selectedUser} refreshUsers={getUsers} />
+            <UserForm form={form} initialValues={selectedUser} refreshUsers={getUsers} onClose={onClose}/>
           </Drawer>
 
           <div className="container">

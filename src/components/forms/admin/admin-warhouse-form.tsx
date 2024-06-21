@@ -144,6 +144,7 @@ const WarehouseForm: React.FC<CreateWarehouseFormProps> = ({
 							placeholder='Please enter space Id'
 							value={warehouse.spaceId}
 							onChange={handleInputChange}
+							type="number"
 						/>
 					</Form.Item>
 				</Col>

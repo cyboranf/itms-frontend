@@ -1,6 +1,6 @@
 import React, { useState } from "react";
 import Box from "@mui/material/Box";
-import EditIcon from "@mui/icons-material/Edit";
+import DoneIcon from '@mui/icons-material/Done';
 import DeleteIcon from "@mui/icons-material/DeleteOutlined";
 import {
 	GridRowModesModel,
@@ -14,11 +14,12 @@ import {
 	GridRowEditStopReasons,
 } from "@mui/x-data-grid";
 import { Form, Button, Breadcrumb, Drawer, Space } from "antd";
-import { DeleteTasks, PostTask, getAllTasks, requestTaskReport } from "../../../service/tasks";
+import { DeleteTasks, PostTask, TaskFinished, getAllTasks, getAllTasksSelf, requestTaskReport } from "../../../service/tasks";
 import { Task } from "../../../service/tasks/types";
 import TaskForm from "../../../components/forms/admin/admin-taks-form";
 import TaskReportForm from "../../../components/forms/admin/admin-taks-form-raport";
 import { useAxios } from "../../../helpers/axios/useAxios";
+import { toast } from "react-toastify";
 
 export const WarehousemanTasks = () => {
 	const axios = useAxios();
@@ -50,7 +51,7 @@ export const WarehousemanTasks = () => {
 
 	const getTasks = async () => {
 		try {
-			const res = await getAllTasks(axios);
+			const res = await getAllTasksSelf(axios);
 			setTasks(res.tasks);
 		} catch (err: unknown) {
 			console.log(err);
@@ -67,14 +68,18 @@ export const WarehousemanTasks = () => {
 		}
 	};
 
-	const handleEditClick = (id: GridRowId) => () => {
-		setRowModesModel({ ...rowModesModel, [id]: { mode: GridRowModes.Edit } });
+	const handleDoneIcon = async (id: GridRowId) => {
+		const task = await TaskFinished(id.toString(), axios);
+
+		if(task){
+			toast.success("Task Complidet");
+			getAllTasksSelf(axios);
+		}else{
+			toast.success("Error whit ending the task");
+		}
 	};
 
-	const handleDeleteClick = (id: GridRowId) => () => {
-		DeleteTasks(id.toString());
-		setTasks(tasks.filter((row) => row.id !== id));
-	};
+
 
 	const processRowUpdate = (newRow: GridRowModel) => {
 		return newRow;
@@ -178,8 +183,7 @@ export const WarehousemanTasks = () => {
 			align: "right",
 			getActions: ({ id }) => {
 				return [
-					<GridActionsCellItem icon={<EditIcon />} label='Edit' onClick={handleEditClick(id)} />,
-					<GridActionsCellItem icon={<DeleteIcon />} label='Delete' onClick={handleDeleteClick(id)} />,
+					<GridActionsCellItem icon={<DoneIcon />} label='Edit' onClick={() => handleDoneIcon(id)} />,
 				];
 			},
 		},
@@ -260,10 +264,6 @@ export const WarehousemanTasks = () => {
 				</Drawer>
 
 				<div className="container">
-					<button  onClick={showDrawer}  className="button-gradient" style={{marginRight: 'auto'}}>
-						Add Task
-					</button>
-			
 					<button  onClick={showDrawer1}  className="button-gradient"  style={{marginRight: '10px'}}>
 						Creat Raport
 					</button>

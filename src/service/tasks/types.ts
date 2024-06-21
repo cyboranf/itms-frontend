@@ -5,11 +5,11 @@ export type Task = {
 	id: number;
 	name: string;
 	description: string;
-	state: number;
 	priority: number;
 	startDate: string;
 	endDate: string;
 	creationDate: string;
+	type_id: number;
 }
 
 export type TaskType = {

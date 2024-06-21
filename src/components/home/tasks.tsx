@@ -74,7 +74,7 @@ function Tasks() {
             return (
               <List.Item>
                 <List.Item.Meta
-                  avatar={<Badge status={getStatusBadgeType(item.state)} />}
+                  avatar={<Badge status={getStatusBadgeType(item.priority)} />}
                   title={<Text>{ new Date(item.creationDate).toISOString().split('T')[0]}</Text>}
                   description={
                     <Text ellipsis={{ tooltip: true }} strong>

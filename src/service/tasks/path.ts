@@ -5,6 +5,7 @@ export enum Paths {
   TASK_TYPE = '/tasks/types',
   TASK_PRODUCT = '/tasks/{taskId}/join/products/{producId}',
   TASK_USER = '/users/{userId}/join/tasks/{taskId}',
-  TASK_WAREHOUSE = '',
+  TASK_SELF = '/tasks/self/assigned',
+  TASK_FINISHED = '/tasks/{taskId}/finished'
 }
 
