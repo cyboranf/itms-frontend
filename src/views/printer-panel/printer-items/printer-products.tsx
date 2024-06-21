@@ -172,7 +172,7 @@ export const PrinterProducts = () => {
 				>
 					<Breadcrumb style={{ margin: "12px 0", fontSize: "22px", fontWeight: "bold" }}>
 						<Breadcrumb.Item>Dashboard</Breadcrumb.Item>
-						<Breadcrumb.Item>Admin Panel</Breadcrumb.Item>
+						<Breadcrumb.Item>Printer Panel</Breadcrumb.Item>
 						<Breadcrumb.Item>
 							<Link to='/warehouses' style={{ textDecoration: "none" }}>
 								Warehouses

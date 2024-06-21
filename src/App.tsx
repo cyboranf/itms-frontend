@@ -27,6 +27,8 @@ import { UserDashboard } from "./views/user-dashboard";
 import SettingsPanel from "./views/settings-panel/settings-panel";
 import UserTasks from "./views/admin-panel/admin-user-tasks/admin-user-tasks";
 import UserRoleUsers from "./views/admin-panel/user-with-no-roles/user-with-no-roles";
+import { ManagerTasks } from "./views/manager-panel/manager-tasks/manager-tasks";
+import { NavbarManager } from "./components/navbar-manager";
 
 const { Content } = Layout;
 
@@ -67,6 +69,22 @@ export const Layout3 = () => {
 		<ScrollToTop>
 			<Layout style={{ minHeight: "100vh" }}>
 				<NavbarPrinter />
+				<Layout>
+					<Content style={{ margin: "0 10px" }}>
+						<Outlet />
+					</Content>
+				</Layout>
+				{/* <Footer /> */}
+			</Layout>
+		</ScrollToTop>
+	);
+};
+
+export const Layout4 = () => {
+	return (
+		<ScrollToTop>
+			<Layout style={{ minHeight: "100vh" }}>
+				<NavbarManager />
 				<Layout>
 					<Content style={{ margin: "0 10px" }}>
 						<Outlet />
@@ -178,8 +196,6 @@ const router = createHashRouter([
 		element: <SignUp />,
 	},
 
-
-
 	{
 		path: "/warehouseman",
 		element: (
@@ -258,6 +274,41 @@ const router = createHashRouter([
 				path: "/printer/settings",
 				element: (
 					<ProtectedRoute requiredRoles={[ROLES.PRINTER]}>
+						<SettingsPanel />
+					</ProtectedRoute>
+				),
+			},
+		]
+	},
+
+	{
+		path: "/manager",
+		element: (
+			<ProtectedRoute>
+				<Layout4 />
+			</ProtectedRoute>
+		),
+		children: [
+			{
+				path: "/manager/home",
+				element: (
+					<ProtectedRoute requiredRoles={[ROLES.MANAGER]}>
+						<UserDashboard />
+					</ProtectedRoute>
+				)
+			},
+			{
+				path: "/manager/tasks",
+				element: (
+					<ProtectedRoute requiredRoles={[ROLES.MANAGER]}>
+						<ManagerTasks />
+					</ProtectedRoute>
+				)
+			},
+			{
+				path: "/manager/settings",
+				element: (
+					<ProtectedRoute requiredRoles={[ROLES.MANAGER]}>
 						<SettingsPanel />
 					</ProtectedRoute>
 				),

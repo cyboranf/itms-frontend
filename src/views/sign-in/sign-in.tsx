@@ -63,6 +63,9 @@ export const SignIn = () => {
 				case ROLES.PRINTER:
 					navigate("/printer/home");
 					break;
+				case ROLES.MANAGER:
+						navigate("/manager/home");
+						break;
 				case ROLES.ADMIN:
 					navigate("/home");
 					break;

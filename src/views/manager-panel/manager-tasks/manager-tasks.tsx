@@ -13,17 +13,14 @@ import {
 	GridRowModel,
 	GridRowEditStopReasons,
 } from "@mui/x-data-grid";
-import { Typography } from "@mui/material";
 import { Form, Button, Breadcrumb, Drawer, Space } from "antd";
 import { DeleteTasks, PostTask, getAllTasks, requestTaskReport } from "../../../service/tasks";
 import { Task } from "../../../service/tasks/types";
-import { PlusOutlined } from "@ant-design/icons";
 import TaskForm from "../../../components/forms/admin/admin-taks-form";
 import TaskReportForm from "../../../components/forms/admin/admin-taks-form-raport";
 import { useAxios } from "../../../helpers/axios/useAxios";
 
-export const PrinterTask = () => {
-
+export const ManagerTasks = () => {
 	const axios = useAxios();
 
 	const [tasks, setTasks] = React.useState<Task[]>([]);
@@ -204,7 +201,7 @@ export const PrinterTask = () => {
 			>
 				<Breadcrumb style={{ margin: "12px 0", fontSize: "22px", fontWeight: "bold" }}>
 					<Breadcrumb.Item>Dashboard</Breadcrumb.Item>
-					<Breadcrumb.Item>Printer Panel</Breadcrumb.Item>
+					<Breadcrumb.Item>Manager Panel</Breadcrumb.Item>
 					<Breadcrumb.Item>Manage Task</Breadcrumb.Item>
 				</Breadcrumb>
 
@@ -304,4 +301,4 @@ export const PrinterTask = () => {
 	);
 };
 
-export default PrinterTask;
+export default ManagerTasks;
