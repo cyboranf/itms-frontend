@@ -5,6 +5,7 @@ export enum ROLES {
 	MANAGER = "Manager",
 	WAREHOUSEMAN = "Warehouseman",
 	PRINTER = "Printer",
+	USER = "User"
 }
 
 export type CurrentUser = {

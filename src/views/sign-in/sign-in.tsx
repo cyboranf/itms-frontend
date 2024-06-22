@@ -69,8 +69,11 @@ export const SignIn = () => {
 				case ROLES.ADMIN:
 					navigate("/home");
 					break;
+				case ROLES.USER:
+					navigate("/waiting");
+					break;
 				default:
-					navigate("/");
+					navigate("/login");
 					break;
 			}
 		} catch (err: unknown) {
