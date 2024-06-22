@@ -13,6 +13,21 @@ export type Task = {
 	state: number;
 }
 
+export type TaskReturn = {
+	id: number;
+	name: string;
+	description: string;
+	state: number;
+	priority: number;
+	type: string;
+	creationDate: string;
+	startDate: string;
+	endDate: string;
+	users: any[];
+	products: any[];
+	warehouses: any[];
+	isActive: boolean;
+}
 export type TaskType = {
 	id: number;
 	name: string;	

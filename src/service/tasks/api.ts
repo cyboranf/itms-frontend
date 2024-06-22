@@ -1,6 +1,7 @@
-import axios, { AxiosInstance } from "axios";
+import { AxiosInstance } from "axios";
 import { Paths } from "./path";
-import { Task, TaskType, TaskProduct } from "./types";
+import { Task, TaskType, TaskReturn } from "./types";
+
 
 
 
@@ -29,45 +30,53 @@ export const PostTask = async (params: Task, axios: AxiosInstance) => {
 	}
 } 
 
-export const DeleteTasks = async (id:string) => {
+export const DeleteTasks = async (id:string, axios: AxiosInstance) => {
 	const url = Paths.TASKS_ID.replace('{id}', id);
     await axios.delete(url);
     return true;
 }
 
-export const requestTaskReport = async (includeUsers: boolean, includeProducts: boolean, includeWarehouses: boolean, includePieChart: boolean, taskId: string[], userId: string[], priority: string[], state: string[]) => {
+export const requestTaskReport = async (
+    includeUsers: boolean,
+    includeProducts: boolean,
+    includeWarehouses: boolean,
+    includePieChart: boolean,
+    taskId: string[],
+    userId: string,
+    priority: string[],
+    state: string[],
+    axios: AxiosInstance
+  ) => {
     try {
-		
         const response = await axios.get(Paths.RAPORT, {
-            responseType: 'blob', // Ustawienie responseType na blob, aby uzyskać zawartość jako Blob
+            responseType: "blob",
             params: {
                 includeUsers,
-                includeProducts,
                 includeWarehouses,
                 includePieChart,
+                includeProducts,
                 taskId,
-				userId,
-				priority,
-				state
-
+                userId,
+                priority,
+                state,
             }
         });
-        
+
         if (response.status === 200) {
-            const url = window.URL.createObjectURL(new Blob([response.data]));
-            const link = document.createElement('a');
-            link.href = url;
-            link.setAttribute('download', 'task-report.pdf');
-            document.body.appendChild(link);
-            link.click();
-            window.URL.revokeObjectURL(url);
-        } else {
-            console.error('Błąd podczas pobierania raportu:', response);
-        }
+			const url = window.URL.createObjectURL(new Blob([response.data]));
+			const link = document.createElement("a");
+			link.href = url;
+			link.setAttribute("download", "task-report.pdf");
+			document.body.appendChild(link);
+			link.click();
+			window.URL.revokeObjectURL(url);
+		} else {
+			console.error("Błąd podczas pobierania raportu:", response);
+		}
     } catch (error) {
-        console.error('Błąd sieci:', error);
-    }
-};
+		console.error("Błąd sieci:", error);
+	}
+  };
 
 export const PostTaskProduct = async (taskId: number, productId: number, axios: AxiosInstance) => {
 	try {
@@ -105,6 +114,15 @@ export const PostTaskWarhouse = async (taskId: number, warehouseId: number, axio
 
 export const getAllTasksSelf = async (axios: AxiosInstance): Promise<{ tasks: Task[], totalCount: number }> => {
     const response = await axios.get<Task[]>(Paths.TASK_SELF);
+    const tasks = response.data;
+    return {
+        tasks: tasks,
+        totalCount: tasks.length,
+    };
+};
+
+export const getAllTasksSelfDashboard = async (axios: AxiosInstance): Promise<{ tasks: TaskReturn[], totalCount: number }> => {
+    const response = await axios.get<TaskReturn[]>(Paths.TASK_SELF);
     const tasks = response.data;
     return {
         tasks: tasks,
