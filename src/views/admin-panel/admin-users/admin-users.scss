@@ -5,23 +5,23 @@
 .layout-main {
   display: flex;
   flex-direction: column;
-  align-items: center; // Ensure everything aligns center horizontally
+  align-items: center;
 }
 
 .content {
   flex: 1;
   display: flex;
   flex-direction: column;
-  align-items: center; // Center content horizontally within the main content area
-  width: 100%; // Ensure it takes full width to maintain the structure
+  align-items: center;
+  width: 100%;
   overflow: auto;
 }
 
 .MuiDataGrid-root {
-  width: 100%; // Ensure grid takes full width
+  width: 100%;
   display: flex;
   flex-direction: column;
-  justify-content: center; // Center grid content
+  justify-content: center;
 }
 
 
@@ -67,8 +67,8 @@
 
 .container {
   display: flex;
-  justify-content: space-between; // Center buttons horizontally
-  align-items: center; // Center buttons vertically
+  justify-content: space-between;
+  align-items: center;
   margin: 10px;
-  width: 100%; // Ensure it spans the full width
+  width: 100%;
 }

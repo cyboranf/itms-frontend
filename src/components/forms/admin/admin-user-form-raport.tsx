@@ -1,7 +1,7 @@
 // src/components/forms/admin/UserReportForm.tsx
 
 import React from "react";
-import { Form, Select, Switch, Row, Col } from "antd";
+import { Form, Select, Switch, Row } from "antd";
 import { User } from "../../../service/users/types";
 
 interface UserReportFormProps {

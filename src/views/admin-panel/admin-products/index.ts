@@ -1,1 +1,1 @@
-export * from "./admin-items";
+export * from "./admin-products";

@@ -13,11 +13,9 @@ import {
 	GridRowModel,
 	GridRowEditStopReasons,
 } from "@mui/x-data-grid";
-import { Typography } from "@mui/material";
 import { Form, Button, Breadcrumb, Drawer, Space } from "antd";
 import { DeleteTasks, PostTask, getAllTasks, requestTaskReport } from "../../../service/tasks";
 import { Task } from "../../../service/tasks/types";
-import { PlusOutlined } from "@ant-design/icons";
 import TaskForm from "../../../components/forms/admin/admin-taks-form";
 import TaskReportForm from "../../../components/forms/admin/admin-taks-form-raport";
 import { useAxios } from "../../../helpers/axios/useAxios";
@@ -263,11 +261,11 @@ export const AdminTask = () => {
 				</Drawer>
 
 				<div className="container">
-					<button  onClick={showDrawer}  className="button-gradient" style={{marginRight: 'auto'}}>
+					<button onClick={showDrawer} className="button-gradient" style={{ marginRight: 'auto' }}>
 						Add Task
 					</button>
-			
-					<button  onClick={showDrawer1}  className="button-gradient"  style={{marginRight: '10px'}}>
+
+					<button onClick={showDrawer1} className="button-gradient" style={{ marginRight: '10px' }}>
 						Creat Raport
 					</button>
 				</div>

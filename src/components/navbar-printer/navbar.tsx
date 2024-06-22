@@ -1,12 +1,10 @@
 import "./navbar.scss";
 import { useState } from "react";
 import {
-	UserOutlined,
 	TableOutlined,
 	HomeOutlined,
 	SettingOutlined,
 	LogoutOutlined,
-	ShopOutlined,
 	ProductFilled,
 } from "@ant-design/icons";
 import { Layout, Menu } from "antd";
@@ -27,7 +25,7 @@ export const NavbarPrinter = () => {
 						<span className='nav-text'>Home</span>
 					</Link>
 				</Menu.Item>
-				
+
 				<Menu.Item key='Warehouses' icon={<ProductFilled />}>
 					<Link to='/printer/products'>
 						<span className='nav-text'>Products</span>

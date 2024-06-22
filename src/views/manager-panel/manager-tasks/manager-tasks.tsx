@@ -260,11 +260,11 @@ export const ManagerTasks = () => {
 				</Drawer>
 
 				<div className="container">
-					<button  onClick={showDrawer}  className="button-gradient" style={{marginRight: 'auto'}}>
+					<button onClick={showDrawer} className="button-gradient" style={{ marginRight: 'auto' }}>
 						Add Task
 					</button>
-			
-					<button  onClick={showDrawer1}  className="button-gradient"  style={{marginRight: '10px'}}>
+
+					<button onClick={showDrawer1} className="button-gradient" style={{ marginRight: '10px' }}>
 						Creat Raport
 					</button>
 				</div>

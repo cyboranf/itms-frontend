@@ -185,7 +185,7 @@ const UserRoleUsers: React.FC = () => {
               </Space>
             }
           >
-            <UserForm form={form} initialValues={selectedUser} refreshUsers={getUsers} />
+            <UserForm form={form} initialValues={selectedUser} refreshUsers={getUsers} onClose={onClose}/>
           </Drawer>
       </Box>
     </Box>

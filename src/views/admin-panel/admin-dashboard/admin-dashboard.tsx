@@ -1,7 +1,7 @@
 import { Col, Row } from "antd";
 import * as React from "react";
 import {
-    Dashboarduser,
+  Dashboarduser,
   DashbordTotalCountCard,
   Products,
   Tasks,
@@ -13,30 +13,30 @@ import { getAllItems } from "../../../service/items";
 
 export const Admindashboard = () => {
 
-    
-      const axios = useAxios();
-      const [tasks, setTasksCount] = React.useState<number>(0);
-      const [users, setUsersCount] = React.useState<number>(0);
-      const [products, setProductCount] = React.useState<number>(0);
 
-      const getTasks = async () => {
-        try {
-          const task = await getAllTasks(axios);
-          const user = await getAllUsers(axios);
-          const items = await getAllItems(axios);
-          setTasksCount(task.totalCount);
-          setUsersCount(user.totalCount);
-          setProductCount(items.totalCount);
-        } catch (err: unknown) {
-          console.log(err);
-        }
-      };
+  const axios = useAxios();
+  const [tasks, setTasksCount] = React.useState<number>(0);
+  const [users, setUsersCount] = React.useState<number>(0);
+  const [products, setProductCount] = React.useState<number>(0);
 
-      React.useEffect(() => {
-        getTasks();
-      }, []);
+  const getTasks = async () => {
+    try {
+      const task = await getAllTasks(axios);
+      const user = await getAllUsers(axios);
+      const items = await getAllItems(axios);
+      setTasksCount(task.totalCount);
+      setUsersCount(user.totalCount);
+      setProductCount(items.totalCount);
+    } catch (err: unknown) {
+      console.log(err);
+    }
+  };
 
-    const [isLoading] = React.useState(false)
+  React.useEffect(() => {
+    getTasks();
+  }, []);
+
+  const [isLoading] = React.useState(false)
 
   return (
     <div>
@@ -90,11 +90,11 @@ export const Admindashboard = () => {
         </Col>
       </Row>
 
-     <Row gutter={[32, 32]} style={{ marginTop: '32px'}}>
+      <Row gutter={[32, 32]} style={{ marginTop: '32px' }}>
         <Col xs={24}>
-            <Dashboarduser />
+          <Dashboarduser />
         </Col>
-     </Row>
+      </Row>
 
     </div>
   );

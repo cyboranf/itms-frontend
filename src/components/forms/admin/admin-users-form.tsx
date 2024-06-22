@@ -68,14 +68,14 @@ const UserForm: React.FC<UserFormProps> = ({ form, initialValues, refreshUsers, 
       console.log(selectedRole?.name);
       await putRoles(user.id, selectedRole?.name || "User", axios);
 
-      if (succ){
+      if (succ) {
         toast.success("Success");
         refreshUsers();
         onClose(); // Close the drawer after successful submission
-      }else{
+      } else {
         toast.error("Error");
       }
-      
+
     } catch (err) {
       console.error("Error during form submission:", err);
     }

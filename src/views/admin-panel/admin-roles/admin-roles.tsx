@@ -15,7 +15,7 @@ export const AdminRole = () => {
 
 	const axios = useAxios();
 
-	const [rows, setRows] = useState<TaskValuesType[]>([]); // Use local state instead of props
+	const [rows, setRows] = useState<TaskValuesType[]>([]); 
 	const [open, setOpen] = useState(false);
 	const [open1, setOpen1] = useState(false);
 	const [id, setId] = useState<GridRowId>("");
@@ -88,7 +88,7 @@ export const AdminRole = () => {
 				name: formData1,
 			};
 
-			const success = await PutTask(newTask);
+			const success = await PutTask(newTask, axios);
 
 			if (success) {
 				getAllTasks();

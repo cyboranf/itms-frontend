@@ -37,38 +37,38 @@ const UserTasks: React.FC = () => {
 
   return (
     <Box>
-        <Box
-            sx={{
-                height: "89.5vh",
-                width: "100%",
-                "& .actions": {
-                  color: "text.secondary",
-                },
-                "& .textPrimary": {
-                  color: "text.primary",
-                },
-              }}
-        >
-      <Breadcrumb style={{ margin: "12px 0", fontSize: "22px", fontWeight: "bold" }}>
-            <Breadcrumb.Item>
-            <Link to="/home" style={{ textDecoration: "none" }}>
-				Dashboard
-              </Link>
-            </Breadcrumb.Item>
-            <Breadcrumb.Item>
-              <Link to="/users" style={{ textDecoration: "none" }}>
-                    Manage Users
-              </Link>
-            </Breadcrumb.Item>
-            <Breadcrumb.Item>User Tasks</Breadcrumb.Item>
-          </Breadcrumb>
-      <DataGrid rows={tasks} columns={columns} style={{ flex: 1, minHeight: 0, width: "100%" }}
+      <Box
         sx={{
+          height: "89.5vh",
+          width: "100%",
+          "& .actions": {
+            color: "text.secondary",
+          },
+          "& .textPrimary": {
+            color: "text.primary",
+          },
+        }}
+      >
+        <Breadcrumb style={{ margin: "12px 0", fontSize: "22px", fontWeight: "bold" }}>
+          <Breadcrumb.Item>
+            <Link to="/home" style={{ textDecoration: "none" }}>
+              Dashboard
+            </Link>
+          </Breadcrumb.Item>
+          <Breadcrumb.Item>
+            <Link to="/users" style={{ textDecoration: "none" }}>
+              Manage Users
+            </Link>
+          </Breadcrumb.Item>
+          <Breadcrumb.Item>User Tasks</Breadcrumb.Item>
+        </Breadcrumb>
+        <DataGrid rows={tasks} columns={columns} style={{ flex: 1, minHeight: 0, width: "100%" }}
+          sx={{
             "& .MuiDataGrid-footerContainer ": {
               bgcolor: "#b3d5e0",
             },
           }}
-      />
+        />
       </Box>
     </Box>
   );
