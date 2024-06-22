@@ -30,6 +30,8 @@ import UserRoleUsers from "./views/admin-panel/user-with-no-roles/user-with-no-r
 import { ManagerTasks } from "./views/manager-panel/manager-tasks/manager-tasks";
 import { NavbarManager } from "./components/navbar-manager";
 import WaitingPanel from "./views/waiting-panel/waiting-panel";
+import AdminFinishedTasks from "./views/admin-panel/admin-finished-tasks/admin-finished-tasks"
+import MenagerFinishedTasks from "./views/manager-panel/manager-finishe-tasks/manager-finishe-tasks";
 
 const { Content } = Layout;
 
@@ -181,6 +183,14 @@ const router = createHashRouter([
 						<UserRoleUsers />
 					</ProtectedRoute>
 				)
+			},
+			{
+				path: "/finnished-tasks",
+				element: (
+					<ProtectedRoute requiredRoles={[ROLES.ADMIN]}>
+						<AdminFinishedTasks />
+					</ProtectedRoute>
+				)
 			}
 		],
 	},
@@ -322,6 +332,14 @@ const router = createHashRouter([
 					</ProtectedRoute>
 				),
 			},
+			{
+				path: "/manager/finnished-tasks",
+				element: (
+					<ProtectedRoute requiredRoles={[ROLES.MANAGER]}>
+						<MenagerFinishedTasks />
+					</ProtectedRoute>
+				)
+			}
 		]
 	},
 ]);

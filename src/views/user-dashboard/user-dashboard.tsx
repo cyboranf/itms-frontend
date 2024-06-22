@@ -1,13 +1,28 @@
-import { useState, useEffect } from "react";
+import  { useState, useEffect } from "react";
 import Box from "@mui/material/Box";
 import { Breadcrumb, Typography, Layout, Descriptions } from "antd";
 import { Pie } from '@ant-design/plots';
 import { useAxios } from "../../helpers/axios/useAxios";
 import { User } from "../../service/users/types";
 import { getSelf } from "../../service/users";
-import { getAllTasksSelf } from "../../service/tasks"; 
+import {  getAllTasksSelfDashboard } from "../../service/tasks";
 import type { DescriptionsProps } from 'antd';
-import type { Task } from "../../service/tasks/types"; 
+
+interface Task {
+  id: number;
+  name: string;
+  description: string;
+  state: number;
+  priority: number;
+  type: string;
+  creationDate: string;
+  startDate: string;
+  endDate: string;
+  users: any[];
+  products: any[];
+  warehouses: any[];
+  isActive: boolean;
+}
 
 export const UserDashboard = () => {
     const { Content } = Layout;
@@ -19,7 +34,6 @@ export const UserDashboard = () => {
     const getUser = async () => {
         try {
             const res = await getSelf(axios);
-            
             setUser(res);
         } catch (err: unknown) {
             console.log(err);
@@ -28,7 +42,7 @@ export const UserDashboard = () => {
 
     const getTasks = async () => {
         try {
-            const res = await getAllTasksSelf(axios);
+            const res = await getAllTasksSelfDashboard(axios);
             console.log(res);
             setTasks(res.tasks);
         } catch (err: unknown) {
@@ -43,18 +57,14 @@ export const UserDashboard = () => {
 
     useEffect(() => {
         if (tasks.length > 0) {
-            const statusCounts: { [key: string]: number } = {
-                'Import': 0,
-                'Shipment': 0,
-                'Move': 0,
-                'Print': 0,
-            };
+            const statusCounts: { [key: string]: number } = {};
 
             tasks.forEach(task => {
-                if (task.type_id === 0) statusCounts['Import']++;
-                if (task.type_id === 1) statusCounts['Shipment']++;
-                if (task.type_id === 3) statusCounts['Move']++;
-                if (task.type_id === 4) statusCounts['Print']++;
+                const type = task.type;
+                if (!statusCounts[type]) {
+                    statusCounts[type] = 0;
+                }
+                statusCounts[type]++;
             });
 
             const statusData = Object.keys(statusCounts).map(status => ({
