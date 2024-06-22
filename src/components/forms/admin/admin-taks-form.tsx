@@ -4,7 +4,7 @@ import { FormInstance } from 'antd/es/form';
 import { getAllUsers, getSelf } from '../../../service/users';
 import { getAllWarehouses } from '../../../service/warehouses';
 import { getAllItems } from '../../../service/items';
-import { getAllTasksTypes, PostTaskUsers, PostTask, PostTaskWarhouse } from '../../../service/tasks';
+import { getAllTasksTypes, PostTaskUsers, PostTask, PostTaskWarhouse, PostTaskProduct } from '../../../service/tasks';
 import { useAxios } from "../../../helpers/axios/useAxios";
 import { toast } from "react-toastify";
 
@@ -22,7 +22,7 @@ const TaskForm: React.FC<TaskFormProps> = ({ form, onClose }) => {
 
 	const [users, setUsers] = useState<{ id: number; name: string, roles: string }[]>([]);
 	const [warehouses, setWarhouse] = useState<{ id: number; building: string }[]>([]);
-	const [, setProduct] = useState<{ id: number, name: string }[]>([]);
+	const [product, setProduct] = useState<{ id: number, name: string }[]>([]);
 	const [tasksTypes, setTasksTypes] = useState<{ id: number, name: string }[]>([]);
 	const [selectedTaskType, setSelectedTaskType] = useState<number | null>(null);
 
@@ -112,22 +112,27 @@ const TaskForm: React.FC<TaskFormProps> = ({ form, onClose }) => {
 					PostTaskUsers(self.id, taskCreated.id, axios); // admin
 					PostTaskUsers(values.Warehouseman, taskCreated.id, axios); // dodanie warehouseman
 					PostTaskWarhouse(taskCreated.id, values.warehouse, axios);
-					//TaskFinished(taskCreated.id, axios);
+					PostTaskProduct(taskCreated.id, values.product, axios);
 				}
 				if (selectedTaskType === 3) {
 					PostTaskUsers(self.id, taskCreated.id, axios); // admin
 					PostTaskUsers(values.Warehouseman, taskCreated.id, axios); // dodanie warehouseman
 					PostTaskWarhouse(taskCreated.id, values.warehouse, axios);
 					PostTaskWarhouse(taskCreated.id, values.warehouse1, axios);
+					PostTaskProduct(taskCreated.id, values.product, axios);
+
 				}
 				if (selectedTaskType === 4) {
 					PostTaskUsers(self.id, taskCreated.id, axios); // admin
 					PostTaskUsers(values.Warehouseman, taskCreated.id, axios); // dodanie warehouseman
 					PostTaskUsers(values.printer, taskCreated.id, axios);
 				}
-
+				if (selectedTaskType === 5 || selectedTaskType === 6) {
+					PostTaskUsers(self.id, values.admin, axios); // admin
+					
+				}
 				toast.success("Stworzona tasks");
-
+				onClose();
 			} else {
 				toast.error("Bład przy tworzeniu taska")
 			}
@@ -205,6 +210,22 @@ const TaskForm: React.FC<TaskFormProps> = ({ form, onClose }) => {
 							))}
 						</Select>
 					</Form.Item>
+					<Form.Item label="Product" name="product" rules={[{ required: true, message: 'Please select a Product' }]}>
+						<Select
+							showSearch
+							placeholder="Select a Product"
+							optionFilterProp="children"
+							filterOption={(input, option) =>
+								(option?.children as unknown as string).toLowerCase().includes(input.toLowerCase())
+							}
+						>
+							{product.map(product => (
+								<Option key={product.id} value={product.id}>
+									{product.name}
+								</Option>
+							))}
+						</Select>
+					</Form.Item>
 					<Form.Item label="Warehouse" name="warehouse" rules={[{ required: true, message: 'Please select a Warehouse' }]}>
 						<Select
 							showSearch
@@ -241,6 +262,22 @@ const TaskForm: React.FC<TaskFormProps> = ({ form, onClose }) => {
 							))}
 						</Select>
 					</Form.Item>
+					<Form.Item label="Product" name="product" rules={[{ required: true, message: 'Please select a Product' }]}>
+						<Select
+							showSearch
+							placeholder="Select a Product"
+							optionFilterProp="children"
+							filterOption={(input, option) =>
+								(option?.children as unknown as string).toLowerCase().includes(input.toLowerCase())
+							}
+						>
+							{product.map(product => (
+								<Option key={product.id} value={product.id}>
+									{product.name}
+								</Option>
+							))}
+						</Select>
+					</Form.Item>
 					<Form.Item label="Warehouse" name="warehouse" rules={[{ required: true, message: 'Please select a Warehouse' }]}>
 						<Select
 							showSearch
@@ -273,6 +310,22 @@ const TaskForm: React.FC<TaskFormProps> = ({ form, onClose }) => {
 							{filteredUsersWarehouseman.map(user => (
 								<Option key={user.id} value={user.id}>
 									{user.name}
+								</Option>
+							))}
+						</Select>
+					</Form.Item>
+					<Form.Item label="Product" name="product" rules={[{ required: true, message: 'Please select a Product' }]}>
+						<Select
+							showSearch
+							placeholder="Select a Product"
+							optionFilterProp="children"
+							filterOption={(input, option) =>
+								(option?.children as unknown as string).toLowerCase().includes(input.toLowerCase())
+							}
+						>
+							{product.map(product => (
+								<Option key={product.id} value={product.id}>
+									{product.name}
 								</Option>
 							))}
 						</Select>

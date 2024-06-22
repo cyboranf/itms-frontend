@@ -25,7 +25,7 @@ const UserTasks: React.FC = () => {
       }
     };
     fetchTasks();
-  }, [id, axios]);
+  }, [id]);
 
   const columns: GridColDef[] = [
     { field: "name", headerName: "Name", width: 300, editable: false },

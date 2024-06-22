@@ -1,10 +1,8 @@
 import React, { useState } from "react";
 import Box from "@mui/material/Box";
-//import EditIcon from "@mui/icons-material/Edit";
-import DeleteIcon from "@mui/icons-material/DeleteOutlined";
+import DoneIcon from '@mui/icons-material/Done';
 import {
 	GridRowModesModel,
-	
 	DataGrid,
 	GridColDef,
 	GridActionsCellItem,
@@ -13,15 +11,16 @@ import {
 	GridRowModel,
 	GridRowEditStopReasons,
 } from "@mui/x-data-grid";
-import { Form, Button, Breadcrumb, Drawer, Space,  } from "antd";
-import { DeleteTasks, PostTask, getAllTasks, requestTaskReport } from "../../../service/tasks";
+import { Form, Button, Breadcrumb, Drawer, Space } from "antd";
+import { PostTask, TaskFinished, getAllTasks, getAllTasksSelf, requestTaskReport } from "../../../service/tasks";
 import { Task } from "../../../service/tasks/types";
 import TaskForm from "../../../components/forms/admin/admin-taks-form";
 import TaskReportForm from "../../../components/forms/admin/admin-taks-form-raport";
 import { useAxios } from "../../../helpers/axios/useAxios";
+import { toast } from "react-toastify";
 import { Link } from "react-router-dom";
-export const AdminTask = () => {
 
+export const AdminFinishedTasks = () => {
 	const axios = useAxios();
 
 	const [tasks, setTasks] = React.useState<Task[]>([]);
@@ -31,7 +30,7 @@ export const AdminTask = () => {
 	const [includeWarehouses, setIncludeWarehouses] = useState(false);
 	const [includePieChart, setIncludePieChart] = useState(false);
 	const [selectedTasks, setSelectedTasks] = useState<string[]>([]);
-	const [selectedUser, setSelectedUser] = useState<string>("");
+	const [selectedUser, setSelectedUser] = useState<string[]>([]);
 	const [selectState, setSelectState] = useState<string[]>([]);
 	const [selectPriority, setSelectPriority] = useState<string[]>([]);
 
@@ -45,14 +44,13 @@ export const AdminTask = () => {
 			selectedTasks,
 			selectedUser,
 			selectPriority,
-			selectState,
-			axios
+			selectState
 		);
 	};
 
 	const getTasks = async () => {
 		try {
-			const res = await getAllTasks(axios);
+			const res = await getAllTasksSelf(axios);
 			setTasks(res.tasks);
 		} catch (err: unknown) {
 			console.log(err);
@@ -61,7 +59,6 @@ export const AdminTask = () => {
 
 	React.useEffect(() => {
 		getTasks();
-		
 	}, []);
 
 	const handleRowEditStop: GridEventListener<"rowEditStop"> = (params, event) => {
@@ -70,14 +67,18 @@ export const AdminTask = () => {
 		}
 	};
 
-	// const handleEditClick = (id: GridRowId) => () => {
-	// 	setRowModesModel({ ...rowModesModel, [id]: { mode: GridRowModes.Edit } });
-	// };
+	const handleDoneIcon = async (id: GridRowId) => {
+		const task = await TaskFinished(id.toString(), axios);
 
-	const handleDeleteClick = (id: GridRowId) => () => {
-		DeleteTasks(id.toString(), axios);
-		setTasks(tasks.filter((row) => row.id !== id));
+		if (task) {
+			toast.success("Task Complidet");
+			getAllTasksSelf(axios);
+		} else {
+			toast.success("Error whit ending the task");
+		}
 	};
+
+
 
 	const processRowUpdate = (newRow: GridRowModel) => {
 		return newRow;
@@ -87,9 +88,6 @@ export const AdminTask = () => {
 		setRowModesModel(newRowModesModel);
 	};
 
-	const showDrawer = () => {
-		setOpen(true);
-	};
 	const showDrawer1 = () => {
 		setOpen1(true);
 	};
@@ -181,8 +179,7 @@ export const AdminTask = () => {
 			align: "right",
 			getActions: ({ id }) => {
 				return [
-					//<GridActionsCellItem icon={<EditIcon />} label='Edit' onClick={handleEditClick(id)} />,
-					<GridActionsCellItem icon={<DeleteIcon />} label='Delete' onClick={handleDeleteClick(id)} />,
+					<GridActionsCellItem icon={<DoneIcon />} label='Edit' onClick={() => handleDoneIcon(id)} />,
 				];
 			},
 		},
@@ -203,9 +200,10 @@ export const AdminTask = () => {
 				}}
 			>
 				<Breadcrumb style={{ margin: "12px 0", fontSize: "22px", fontWeight: "bold" }}>
-					<Breadcrumb.Item>Dashboard</Breadcrumb.Item>
-					<Breadcrumb.Item>Admin Panel</Breadcrumb.Item>
-					<Breadcrumb.Item>Manage Task</Breadcrumb.Item>
+					<Breadcrumb.Item><Link to="/home">Dashboard</Link></Breadcrumb.Item>
+					<Breadcrumb.Item><Link to="">Admin Panel</Link></Breadcrumb.Item>
+					<Breadcrumb.Item><Link to="/tasks">Manage Task</Link> </Breadcrumb.Item>
+					<Breadcrumb.Item>Finished Task</Breadcrumb.Item>
 				</Breadcrumb>
 
 				<Drawer
@@ -263,17 +261,9 @@ export const AdminTask = () => {
 				</Drawer>
 
 				<div className="container">
-					<button onClick={showDrawer} className="button-gradient" style={{ marginRight: 'auto' }}>
-						Add Task
-					</button>
-					<button className="button-gradient" style={{ marginRight: '10px' }}>
-						<Link to="/finnished-tasks" style={{color: "black"}}>Show Finished Tasks</Link>
-					</button>
 					<button onClick={showDrawer1} className="button-gradient" style={{ marginRight: '10px' }}>
 						Creat Raport
 					</button>
-
-					
 				</div>
 				<DataGrid
 					rows={tasks}
@@ -308,4 +298,4 @@ export const AdminTask = () => {
 	);
 };
 
-export default AdminTask;
+export default AdminFinishedTasks;

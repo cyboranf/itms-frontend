@@ -16,8 +16,8 @@ interface TaskReportFormProps {
     setIncludePieChart: (value: boolean) => void;
     selectedTasks: string[];
     setSelectedTasks: (value: string[]) => void;
-    selectedUser: string[];
-    setSelectedUser: (value: string[]) => void;
+    selectedUser: string;
+    setSelectedUser: (value: string) => void;
     selectState: string[];
     setSelectState: (value: string[]) => void;
     selectPriority: string[];
@@ -34,8 +34,6 @@ const TaskReportForm: React.FC<TaskReportFormProps> = ({
     setIncludeWarehouses,
     includePieChart,
     setIncludePieChart,
-    selectedTasks,
-    setSelectedTasks,
     selectedUser,
     setSelectedUser,
     selectState,
@@ -60,17 +58,9 @@ const TaskReportForm: React.FC<TaskReportFormProps> = ({
                 </Form.Item>
             </Row>
 
-            <Form.Item label="Tasks" name="tasks" rules={[{ required: false, message: "Please select task" }]}>
-                <Select value={selectedTasks} onChange={setSelectedTasks} mode="multiple">
-                    {tasks.map(task => (
-                        <Select.Option key={task.id} value={task.id}>
-                            {task.name}
-                        </Select.Option>
-                    ))}
-                </Select>
-            </Form.Item>
+
             <Form.Item label="Users" name="users" rules={[{ required: false, message: "Please select users" }]}>
-                <Select value={selectedUser} onChange={setSelectedUser} mode="multiple">
+                <Select value={selectedUser} onChange={setSelectedUser}  >
                     {tasks.map(task => (
                         task.users.map((user: any) => (
                             <Select.Option key={user.id} value={user.id}>
@@ -81,7 +71,7 @@ const TaskReportForm: React.FC<TaskReportFormProps> = ({
                 </Select>
             </Form.Item>
             <Form.Item label="State" name="state" rules={[{ required: false, message: "Please select state" }]}>
-                <Select value={selectState} onChange={setSelectState} mode="multiple">
+                <Select value={selectState} onChange={setSelectState}  >
                     {tasks.map(task => (
                         <Select.Option key={task.state} value={task.state}>
                             {task.state}
@@ -90,7 +80,7 @@ const TaskReportForm: React.FC<TaskReportFormProps> = ({
                 </Select>
             </Form.Item>
             <Form.Item label="Priority" name="priority" rules={[{ required: false, message: "Please select priority" }]}>
-                <Select value={selectPriority} onChange={setSelectPriority} mode="multiple">
+                <Select value={selectPriority} onChange={setSelectPriority}  >
                     {tasks.map(task => (
                         <Select.Option key={task.priority} value={task.priority}>
                             {task.priority}

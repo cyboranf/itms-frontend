@@ -12,9 +12,9 @@ import {
 	GridActionsCellItem,
 } from "@mui/x-data-grid";
 import { Typography, Modal, DialogTitle, DialogContent, DialogContentText, DialogActions } from "@mui/material";
-import { Breadcrumb, Button, Drawer, Space, Form } from "antd";
+import { Breadcrumb, Button,Drawer, Space, Form, Select } from "antd";
 import { Link } from "react-router-dom";
-import { getAllItems, deleteItem } from "../../../service/items";
+import { getAllItems, deleteItem, requestItemsReport } from "../../../service/items";
 import { Items } from "../../../service/items/types";
 import { useAxios } from "../../../helpers/axios/useAxios";
 import ProductForm from "../../../components/forms/admin/admin-prodcut-form";
@@ -26,7 +26,18 @@ export const AdminProducts = () => {
 	const [selectedProduct, setSelectedProduct] = useState<Items | null>(null);
 	const [isDeleteModalVisible, setIsDeleteModalVisible] = useState(false);
 	const [productToDelete, setProductToDelete] = useState<Items | null>(null);
+	const [open1, setOpen1] = useState(false);
+	const [selectName, setSelectName] = useState<string[]>([]);
+	const [selectCode, setSelectCode] = useState<string[]>([]);
 	const axios = useAxios();
+
+	const showDrawer1 = () => {
+		setOpen1(true);
+	}
+
+	const onClose1 = () => {
+		setOpen1(false);
+	  };
 
 	const GetItems = async () => {
 		try {
@@ -83,6 +94,10 @@ export const AdminProducts = () => {
 	const onCloseDrawer = () => {
 		setOpenDrawer(false);
 	};
+
+	const getReports = async () => {
+		requestItemsReport(selectName, selectCode,axios);
+	  };
 
 	const [form] = Form.useForm();
 
@@ -178,6 +193,9 @@ export const AdminProducts = () => {
 						<button className="button-gradient" style={{ marginRight: 'auto' }} onClick={showDrawer}>
 							Add new product +
 						</button>
+						<button className="button-gradient" onClick={showDrawer1}>
+							Add new product +
+						</button>
 					</div>
 
 					<Drawer
@@ -204,7 +222,45 @@ export const AdminProducts = () => {
 							initialValues={selectedProduct}
 						/>
 					</Drawer>
+					
+				<Drawer
+                title='Create a new Raport'
+                width={720}
+                onClose={onClose1}
+                open={open1}
+                bodyStyle={{ paddingBottom: 80 }}
+                extra={
+                  <Space>
+                    <Button onClick={onClose1}>Cancel</Button>
+                    <Button onClick={getReports} type='primary'>
+                      Submit
+                    </Button>
+                  </Space>
+                }
+              >
+                   <Form layout="vertical">
+				
+						<Form.Item label="Name" name="name" rules={[{ required: false, message: "Please select name" }]}>
+							<Select value={selectName} onChange={setSelectName}>
+							{rows.map((row) => (
+								<Select.Option key={row.name} value={row.name}>
+								{row.name}
+								</Select.Option>
+							))}
+							</Select>
+						</Form.Item>
 
+						<Form.Item label="Code" name="code" rules={[{ required: false, message: "Please select code" }]}>
+							<Select value={selectCode} onChange={setSelectCode}>
+							{rows.map((row) => (
+								<Select.Option key={row.code} value={row.code}>
+								{row.code}
+								</Select.Option>
+							))}
+							</Select>
+						</Form.Item>
+						</Form>
+              </Drawer>
 					<DataGrid
 						rows={rows}
 						columns={columns}

@@ -15,35 +15,30 @@ import { Form, Button, Breadcrumb, Drawer, Space } from "antd";
 import { PostTask, TaskFinished, getAllTasks, getAllTasksSelf, requestTaskReport } from "../../../service/tasks";
 import { Task } from "../../../service/tasks/types";
 import TaskForm from "../../../components/forms/admin/admin-taks-form";
-import TaskReportForm from "../../../components/forms/admin/admin-taks-form-raport";
 import { useAxios } from "../../../helpers/axios/useAxios";
 import { toast } from "react-toastify";
+import { getSelf } from "../../../service/users";
 
 export const WarehousemanTasks = () => {
 	const axios = useAxios();
 
 	const [tasks, setTasks] = React.useState<Task[]>([]);
 	const [rowModesModel, setRowModesModel] = React.useState<GridRowModesModel>({});
-	const [includeUsers, setIncludeUsers] = useState(false);
-	const [includeProducts, setIncludeProducts] = useState(false);
-	const [includeWarehouses, setIncludeWarehouses] = useState(false);
-	const [includePieChart, setIncludePieChart] = useState(false);
-	const [selectedTasks, setSelectedTasks] = useState<string[]>([]);
-	const [selectedUser, setSelectedUser] = useState<string[]>([]);
-	const [selectState, setSelectState] = useState<string[]>([]);
-	const [selectPriority, setSelectPriority] = useState<string[]>([]);
+	const [selectedUser, setSelectedUser] = useState<string>("");
+
+	
 
 	const getReports = async () => {
-		console.log(selectPriority);
 		requestTaskReport(
-			includeUsers,
-			includeProducts,
-			includeWarehouses,
-			includePieChart,
-			selectedTasks,
+			false,
+			false,
+			false,
+			false,
+			[],
 			selectedUser,
-			selectPriority,
-			selectState
+			[],
+			[],
+			axios,
 		);
 	};
 
@@ -55,9 +50,18 @@ export const WarehousemanTasks = () => {
 			console.log(err);
 		}
 	};
+	const getself = async () => {
+		try {
+			const res = await getSelf(axios);
+			setSelectedUser(res.id.toString());
+		} catch (err: unknown) {
+			console.log(err);
+		}
+	}
 
 	React.useEffect(() => {
 		getTasks();
+		getself();
 	}, []);
 
 	const handleRowEditStop: GridEventListener<"rowEditStop"> = (params, event) => {
@@ -87,12 +91,9 @@ export const WarehousemanTasks = () => {
 		setRowModesModel(newRowModesModel);
 	};
 
-	const showDrawer1 = () => {
-		setOpen1(true);
-	};
+
 
 	const [open, setOpen] = useState(false);
-	const [open1, setOpen1] = useState(false);
 
 	const [form] = Form.useForm();
 
@@ -100,9 +101,6 @@ export const WarehousemanTasks = () => {
 		setOpen(false);
 	};
 
-	const onClose1 = () => {
-		setOpen1(false);
-	};
 
 	const handleCreateTask = () => {
 		try {
@@ -222,44 +220,10 @@ export const WarehousemanTasks = () => {
 					<TaskForm form={form} onClose={onClose} handleCreateTask={handleCreateTask} />
 				</Drawer>
 
-				<Drawer
-					title='Create a Report'
-					width={720}
-					onClose={onClose1}
-					open={open1}
-					bodyStyle={{ paddingBottom: 80 }}
-					extra={
-						<Space>
-							<Button onClick={onClose1}>Cancel</Button>
-							<Button onClick={getReports} type='primary'>
-								Submit
-							</Button>
-						</Space>
-					}
-				>
-					<TaskReportForm
-						tasks={tasks}
-						includeUsers={includeUsers}
-						setIncludeUsers={setIncludeUsers}
-						includeProducts={includeProducts}
-						setIncludeProducts={setIncludeProducts}
-						includeWarehouses={includeWarehouses}
-						setIncludeWarehouses={setIncludeWarehouses}
-						includePieChart={includePieChart}
-						setIncludePieChart={setIncludePieChart}
-						selectedTasks={selectedTasks}
-						setSelectedTasks={setSelectedTasks}
-						selectedUser={selectedUser}
-						setSelectedUser={setSelectedUser}
-						selectState={selectState}
-						setSelectState={setSelectState}
-						selectPriority={selectPriority}
-						setSelectPriority={setSelectPriority}
-					/>
-				</Drawer>
+
 
 				<div className="container">
-					<button onClick={showDrawer1} className="button-gradient" style={{ marginRight: '10px' }}>
+					<button onClick={getReports} className="button-gradient" style={{ marginRight: '10px' }}>
 						Creat Raport
 					</button>
 				</div>
