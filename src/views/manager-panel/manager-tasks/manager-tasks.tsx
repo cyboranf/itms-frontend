@@ -14,7 +14,7 @@ import {
 	GridRowEditStopReasons,
 } from "@mui/x-data-grid";
 import { Breadcrumb, Button,Drawer, Space, Form, Select } from "antd";
-import { DeleteTasks, PostTask, getAllTasks, requestTaskReport } from "../../../service/tasks";
+import { DeleteTask, PostTask, getAllTasks, requestTaskReport } from "../../../service/tasks";
 import { Task } from "../../../service/tasks/types";
 import TaskForm from "../../../components/forms/admin/admin-taks-form";
 import TaskReportForm from "../../../components/forms/admin/admin-taks-form-raport";
@@ -146,7 +146,7 @@ export const ManagerTasks = () => {
 	};
 
 	const handleDeleteClick = (id: GridRowId) => () => {
-		DeleteTasks(id.toString(),axios);
+		DeleteTask(id.toString(),axios);
 		setTasks(tasks.filter((row) => row.id !== id));
 	};
 
