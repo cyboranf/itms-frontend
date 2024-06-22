@@ -198,7 +198,7 @@ export const PrinterTask = () => {
 			>
 				<Breadcrumb style={{ margin: "12px 0", fontSize: "22px", fontWeight: "bold" }}>
 					<Breadcrumb.Item>Dashboard</Breadcrumb.Item>
-					<Breadcrumb.Item>Warehouseman Panel</Breadcrumb.Item>
+					<Breadcrumb.Item>Printer Panel</Breadcrumb.Item>
 					<Breadcrumb.Item>Manage Task</Breadcrumb.Item>
 				</Breadcrumb>
 
