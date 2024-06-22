@@ -9,7 +9,7 @@ const WaitingPanel = () => {
     };
 
     return (
-        <div className="container">
+        <div className="container1">
             <p className="message">Proszę czekać na nadanie roli przez administratora</p>
             <button className="button" onClick={handleGoToLogin}>Cofnij</button>
         </div>

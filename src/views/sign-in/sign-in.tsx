@@ -73,7 +73,7 @@ export const SignIn = () => {
 					navigate("/waiting");
 					break;
 				default:
-					navigate("/login");
+					navigate("/");
 					break;
 			}
 		} catch (err: unknown) {
