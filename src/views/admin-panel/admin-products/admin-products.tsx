@@ -191,10 +191,10 @@ export const AdminProducts = () => {
 					</Breadcrumb>
 					<div className="container">
 						<button className="button-gradient" style={{ marginRight: 'auto' }} onClick={showDrawer}>
-							Add new product +
+							Add new product 
 						</button>
 						<button className="button-gradient" onClick={showDrawer1}>
-							Add new product +
+							Creat raport
 						</button>
 					</div>
 
