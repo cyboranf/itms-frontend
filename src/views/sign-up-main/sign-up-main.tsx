@@ -7,6 +7,7 @@ import { useForm } from "react-hook-form";
 import { RegisterValuesTypes } from "../../service/auth/types";
 import { registerUser } from "../../service/auth";
 import SignUpForm2 from "../sign-up-forms/sign-up-form2";
+import { toast } from "react-toastify";
 
 const SignUp = () => {
 	const [currentStep, setCurrentStep] = useState(0);
@@ -46,9 +47,10 @@ const SignUp = () => {
 				phone_number,
 			});
 			console.log(res);
-			navigate("/");
+			navigate("/login");
 		} catch (err: unknown) {
 			console.log(err);
+			toast.error("Błąd przy towrzeniu urzytkownika: " + err);
 		}
 	};
 

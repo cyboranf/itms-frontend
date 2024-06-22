@@ -2,7 +2,6 @@ import { useEffect, useState } from "react";
 import Box from "@mui/material/Box";
 import EditIcon from "@mui/icons-material/Edit";
 import DeleteIcon from "@mui/icons-material/DeleteOutlined";
-import SearchIcon from "@mui/icons-material/Search";
 import { useNavigate } from "react-router-dom";
 import {
   GridRowModesModel,
@@ -170,12 +169,6 @@ export const AdminWarehouse = () => {
       cellClassName: "actions",
       align: "right",
       getActions: ({ id }) => [
-        <GridActionsCellItem
-          icon={<SearchIcon />}
-          label="Show Products"
-          onClick={() => navigate("/items")}
-          color="inherit"
-        />,
         <GridActionsCellItem
           icon={<EditIcon />}
           label="Edit"

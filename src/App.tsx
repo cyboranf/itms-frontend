@@ -29,8 +29,10 @@ import UserTasks from "./views/admin-panel/admin-user-tasks/admin-user-tasks";
 import UserRoleUsers from "./views/admin-panel/user-with-no-roles/user-with-no-roles";
 import { ManagerTasks } from "./views/manager-panel/manager-tasks/manager-tasks";
 import { NavbarManager } from "./components/navbar-manager";
+import WaitingPanel from "./views/waiting-panel/waiting-panel";
 import AdminFinishedTasks from "./views/admin-panel/admin-finished-tasks/admin-finished-tasks"
 import MenagerFinishedTasks from "./views/manager-panel/manager-finishe-tasks/manager-finishe-tasks";
+
 const { Content } = Layout;
 
 export const Layout1 = () => {
@@ -203,6 +205,14 @@ const router = createHashRouter([
 	{
 		path: "/register",
 		element: <SignUp />,
+	},
+	{
+		path: "/waiting",
+		element: (
+			<ProtectedRoute requiredRoles={[ROLES.USER]}>
+				<WaitingPanel />
+			</ProtectedRoute>
+		)
 	},
 
 	{
