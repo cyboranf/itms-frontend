@@ -10,6 +10,7 @@ export type Task = {
 	endDate: string;
 	creationDate: string;
 	type_id: number;
+	state: number;
 }
 
 export type TaskType = {

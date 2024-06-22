@@ -4,13 +4,13 @@ import Box from "@mui/material/Box";
 import EditIcon from "@mui/icons-material/Edit";
 import DeleteIcon from "@mui/icons-material/DeleteOutlined";
 import {
-	GridRowModesModel,
-	DataGrid,
-	GridColDef,
-	GridActionsCellItem,
-	GridEventListener,
-	GridRowId,
-	GridRowEditStopReasons,
+  GridRowModesModel,
+  DataGrid,
+  GridColDef,
+  GridActionsCellItem,
+  GridEventListener,
+  GridRowId,
+  GridRowEditStopReasons,
 } from "@mui/x-data-grid";
 import { Typography } from "@mui/material";
 import { Link, useNavigate } from "react-router-dom";
@@ -113,7 +113,7 @@ export const AdminPanel = () => {
     { field: "pesel", headerName: "Pesel", width: 180, editable: false },
     { field: "email", headerName: "Email", width: 180, flex: 1, editable: false },
     { field: "phoneNumber", headerName: "Phone Number", width: 180, editable: false },
-	{ field: "roles", headerName: "User Role", width: 180, editable: false },
+    { field: "roles", headerName: "User Role", width: 180, editable: false },
     {
       field: "actions",
       type: "actions",
@@ -162,13 +162,13 @@ export const AdminPanel = () => {
         >
           <Breadcrumb style={{ margin: "12px 0", fontSize: "22px", fontWeight: "bold" }}>
             <Breadcrumb.Item>
-			<Link to="/home" style={{ textDecoration: "none" }}>
-				Dashboard
+              <Link to="/home" style={{ textDecoration: "none" }}>
+                Dashboard
               </Link>
-			</Breadcrumb.Item>
+            </Breadcrumb.Item>
             <Breadcrumb.Item>
               <Link to="/users" style={{ textDecoration: "none" }}>
-			  Manage Users
+                Manage Users
               </Link>
             </Breadcrumb.Item>
           </Breadcrumb>
@@ -185,14 +185,14 @@ export const AdminPanel = () => {
               </Space>
             }
           >
-            <UserForm form={form} initialValues={selectedUser} refreshUsers={getUsers} onClose={onClose}/>
+            <UserForm form={form} initialValues={selectedUser} refreshUsers={getUsers} onClose={onClose} />
           </Drawer>
 
           <div className="container">
             <button className="button-gradient" style={{ marginRight: "auto" }}>
-				<Link to="/users-with-role-user" style={{ textDecoration: "none" , color: "black"}}>
-					Show users with no roles 
-				</Link>
+              <Link to="/users-with-role-user" style={{ textDecoration: "none", color: "black" }}>
+                Show users with no roles
+              </Link>
             </button>
             <button className="button-gradient" onClick={showDrawer1} style={{ marginRight: "10px" }}>
               Create Report

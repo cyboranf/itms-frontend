@@ -1,13 +1,11 @@
 import "./navbar.scss";
 import { useState } from "react";
 import {
-	UserOutlined,
 	TableOutlined,
 	HomeOutlined,
 	SettingOutlined,
 	LogoutOutlined,
 	ShopOutlined,
-	ProductFilled,
 } from "@ant-design/icons";
 import { Layout, Menu } from "antd";
 import { Link } from "react-router-dom";
@@ -27,7 +25,7 @@ export const NavbarWarhouseman = () => {
 						<span className='nav-text'>Home</span>
 					</Link>
 				</Menu.Item>
-				
+
 				<Menu.Item key='Warehouses' icon={<ShopOutlined />}>
 					<Link to='/warehouseman/warehouses'>
 						<span className='nav-text'>Warehouses</span>

@@ -14,7 +14,7 @@ import {
 import { Typography, Modal, DialogTitle, DialogContent, DialogContentText, DialogActions } from "@mui/material";
 import { Breadcrumb, Button, Drawer, Space, Form } from "antd";
 import { Link } from "react-router-dom";
-import { getAllItems, requestItemsReport, deleteItem } from "../../../service/items";
+import { getAllItems, deleteItem } from "../../../service/items";
 import { Items } from "../../../service/items/types";
 import { useAxios } from "../../../helpers/axios/useAxios";
 import ProductForm from "../../../components/forms/admin/admin-prodcut-form";
@@ -24,8 +24,6 @@ export const PrinterProducts = () => {
 	const [rowModesModel, setRowModesModel] = React.useState<GridRowModesModel>({});
 	const [openDrawer, setOpenDrawer] = useState(false);
 	const [selectedProduct, setSelectedProduct] = useState<Items | null>(null);
-	const [selectName, setSelectName] = useState<string[]>([]);
-	const [selectCode, setSelectCode] = useState<string[]>([]);
 	const [isDeleteModalVisible, setIsDeleteModalVisible] = useState(false);
 	const [productToDelete, setProductToDelete] = useState<Items | null>(null);
 	const axios = useAxios();
@@ -42,10 +40,6 @@ export const PrinterProducts = () => {
 	useEffect(() => {
 		GetItems();
 	}, []);
-
-	const getReports = async () => {
-		requestItemsReport(selectName, selectCode, axios);
-	};
 
 	const handleRowEditStop: GridEventListener<"rowEditStop"> = (params, event) => {
 		if (params.reason === GridRowEditStopReasons.rowFocusOut) {
@@ -181,7 +175,7 @@ export const PrinterProducts = () => {
 						<Breadcrumb.Item>Manage Products</Breadcrumb.Item>
 					</Breadcrumb>
 					<div className="container">
-						<button className="button-gradient" style={{marginRight: 'auto'}} onClick={showDrawer}>
+						<button className="button-gradient" style={{ marginRight: 'auto' }} onClick={showDrawer}>
 							Add new product +
 						</button>
 					</div>

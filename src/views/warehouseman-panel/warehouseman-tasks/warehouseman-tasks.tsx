@@ -1,10 +1,8 @@
 import React, { useState } from "react";
 import Box from "@mui/material/Box";
 import DoneIcon from '@mui/icons-material/Done';
-import DeleteIcon from "@mui/icons-material/DeleteOutlined";
 import {
 	GridRowModesModel,
-	GridRowModes,
 	DataGrid,
 	GridColDef,
 	GridActionsCellItem,
@@ -14,7 +12,7 @@ import {
 	GridRowEditStopReasons,
 } from "@mui/x-data-grid";
 import { Form, Button, Breadcrumb, Drawer, Space } from "antd";
-import { DeleteTasks, PostTask, TaskFinished, getAllTasks, getAllTasksSelf, requestTaskReport } from "../../../service/tasks";
+import { PostTask, TaskFinished, getAllTasks, getAllTasksSelf, requestTaskReport } from "../../../service/tasks";
 import { Task } from "../../../service/tasks/types";
 import TaskForm from "../../../components/forms/admin/admin-taks-form";
 import TaskReportForm from "../../../components/forms/admin/admin-taks-form-raport";
@@ -71,10 +69,10 @@ export const WarehousemanTasks = () => {
 	const handleDoneIcon = async (id: GridRowId) => {
 		const task = await TaskFinished(id.toString(), axios);
 
-		if(task){
+		if (task) {
 			toast.success("Task Complidet");
 			getAllTasksSelf(axios);
-		}else{
+		} else {
 			toast.success("Error whit ending the task");
 		}
 	};
@@ -89,9 +87,6 @@ export const WarehousemanTasks = () => {
 		setRowModesModel(newRowModesModel);
 	};
 
-	const showDrawer = () => {
-		setOpen(true);
-	};
 	const showDrawer1 = () => {
 		setOpen1(true);
 	};
@@ -264,7 +259,7 @@ export const WarehousemanTasks = () => {
 				</Drawer>
 
 				<div className="container">
-					<button  onClick={showDrawer1}  className="button-gradient"  style={{marginRight: '10px'}}>
+					<button onClick={showDrawer1} className="button-gradient" style={{ marginRight: '10px' }}>
 						Creat Raport
 					</button>
 				</div>

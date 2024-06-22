@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from "react";
+import { useEffect, useState } from "react";
 import Box from "@mui/material/Box";
 import EditIcon from "@mui/icons-material/Edit";
 import DeleteIcon from "@mui/icons-material/DeleteOutlined";
@@ -15,11 +15,10 @@ import {
 } from "@mui/x-data-grid";
 import { Typography, Modal, DialogTitle, DialogContent, DialogContentText, DialogActions } from "@mui/material";
 import { Breadcrumb, Button, Drawer, Space, Form } from "antd";
-import { deleteWarehouse, getAllWarehouses, requestWarehouseReport } from "../../../service/warehouses";
+import { deleteWarehouse, getAllWarehouses } from "../../../service/warehouses";
 import { Warehouse } from "../../../service/warehouses/types";
 import { useAxios } from "../../../helpers/axios/useAxios";
 import WarehouseForm from "../../../components/forms/admin/admin-warhouse-form";
-import { get } from "react-hook-form";
 
 export const WarehousmenWarehouse = () => {
 	const navigate = useNavigate();
@@ -27,9 +26,6 @@ export const WarehousmenWarehouse = () => {
 	const [rowModesModel, setRowModesModel] = useState<GridRowModesModel>({});
 	const [openDrawer, setOpenDrawer] = useState(false);
 	const [selectedWarehouse, setSelectedWarehouse] = useState<Warehouse | null>(null);
-	const [selectBuilding, setSelectBuilding] = useState<string[]>([]);
-	const [selectZone, setSelectZone] = useState<string[]>([]);
-	const [selectSpaceId, setSelectSpaceId] = useState<string[]>([]);
 	const [isDeleteModalVisible, setIsDeleteModalVisible] = useState(false);
 	const [warehouseToDelete, setWarehouseToDelete] = useState<Warehouse | null>(null);
 
@@ -47,10 +43,6 @@ export const WarehousmenWarehouse = () => {
 	useEffect(() => {
 		getWarehousesData();
 	}, []);
-
-	const getReports = async () => {
-		requestWarehouseReport(selectBuilding, selectZone, selectSpaceId, axios);
-	};
 
 	const handleRowEditStop: GridEventListener<"rowEditStop"> = (params, event) => {
 		if (params.reason === GridRowEditStopReasons.rowFocusOut) {
@@ -202,7 +194,7 @@ export const WarehousmenWarehouse = () => {
 					</Breadcrumb>
 
 					<div className="container">
-						<button className="button-gradient" style={{marginRight: 'auto'}} onClick={showDrawer}>
+						<button className="button-gradient" style={{ marginRight: 'auto' }} onClick={showDrawer}>
 							Add Warehouse
 						</button>
 					</div>
@@ -278,7 +270,7 @@ export const WarehousmenWarehouse = () => {
 					</DialogActions>
 				</Box>
 			</Modal>
-			
+
 		</>
 	);
 };

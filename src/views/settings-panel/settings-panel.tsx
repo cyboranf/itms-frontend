@@ -1,6 +1,5 @@
 import "./settings-panel.scss";
 import { FaUserCircle } from "react-icons/fa";
-import { CheckOutlined, CloseOutlined } from "@ant-design/icons";
 import { useEffect, useState } from "react";
 import { getSelf } from "../../service/users";
 import { useAxios } from "../../helpers/axios/useAxios";
@@ -30,7 +29,7 @@ const SettingsPanel = () => {
 		<div className='main-container'>
 			<h2 className='main-title'>Settings</h2>
 			<div className='grid-container'>
-	
+
 				<div className='section'>
 					<h3>User Information</h3>
 					<div className='user-info'>

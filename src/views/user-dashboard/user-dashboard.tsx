@@ -1,13 +1,13 @@
-import React, { useState, useEffect } from "react";
+import { useState, useEffect } from "react";
 import Box from "@mui/material/Box";
 import { Breadcrumb, Typography, Layout, Descriptions } from "antd";
 import { Pie } from '@ant-design/plots';
 import { useAxios } from "../../helpers/axios/useAxios";
 import { User } from "../../service/users/types";
 import { getSelf } from "../../service/users";
-import { getAllTasks, getAllTasksSelf } from "../../service/tasks"; // Importuj funkcję do pobierania zadań
+import { getAllTasksSelf } from "../../service/tasks"; 
 import type { DescriptionsProps } from 'antd';
-import type { Task } from "../../service/tasks/types"; // Importuj typ Task
+import type { Task } from "../../service/tasks/types"; 
 
 export const UserDashboard = () => {
     const { Content } = Layout;
