@@ -30,7 +30,7 @@ export const AdminFinishedTasks = () => {
 	const [includeWarehouses, setIncludeWarehouses] = useState(false);
 	const [includePieChart, setIncludePieChart] = useState(false);
 	const [selectedTasks, setSelectedTasks] = useState<string[]>([]);
-	const [selectedUser, setSelectedUser] = useState<string[]>([]);
+	const [selectedUser, setSelectedUser] = useState<string>("");
 	const [selectState, setSelectState] = useState<string[]>([]);
 	const [selectPriority, setSelectPriority] = useState<string[]>([]);
 
@@ -44,7 +44,8 @@ export const AdminFinishedTasks = () => {
 			selectedTasks,
 			selectedUser,
 			selectPriority,
-			selectState
+			selectState,
+			axios
 		);
 	};
 

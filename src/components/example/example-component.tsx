@@ -29,6 +29,7 @@ export const ExampleComponent = () => {
 				userName: res.userName,
 				accessToken: res.accessToken,
 				role: userRole,
+				id: 0
 			};
 
 			setCurrentUser(user);
