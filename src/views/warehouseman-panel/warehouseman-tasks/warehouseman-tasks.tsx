@@ -1,6 +1,6 @@
 import React, { useState } from "react";
 import Box from "@mui/material/Box";
-import DoneIcon from '@mui/icons-material/Done';
+import DoneIcon from "@mui/icons-material/Done";
 import {
 	GridRowModesModel,
 	DataGrid,
@@ -13,7 +13,7 @@ import {
 } from "@mui/x-data-grid";
 import { Form, Button, Breadcrumb, Drawer, Space } from "antd";
 import { PostTask, TaskFinished, getAllTasks, getAllTasksSelf, requestTaskReport } from "../../../service/tasks";
-import { Task } from "../../../service/tasks/types";
+import { TaskReturn } from "../../../service/tasks/types";
 import TaskForm from "../../../components/forms/admin/admin-taks-form";
 import { useAxios } from "../../../helpers/axios/useAxios";
 import { toast } from "react-toastify";
@@ -22,24 +22,12 @@ import { getSelf } from "../../../service/users";
 export const WarehousemanTasks = () => {
 	const axios = useAxios();
 
-	const [tasks, setTasks] = React.useState<Task[]>([]);
+	const [tasks, setTasks] = React.useState<TaskReturn[]>([]);
 	const [rowModesModel, setRowModesModel] = React.useState<GridRowModesModel>({});
 	const [selectedUser, setSelectedUser] = useState<string>("");
 
-	
-
 	const getReports = async () => {
-		requestTaskReport(
-			false,
-			false,
-			false,
-			false,
-			[],
-			selectedUser,
-			[],
-			[],
-			axios,
-		);
+		requestTaskReport(false, false, false, false, [], selectedUser, [], [], axios);
 	};
 
 	const getTasks = async () => {
@@ -57,7 +45,7 @@ export const WarehousemanTasks = () => {
 		} catch (err: unknown) {
 			console.log(err);
 		}
-	}
+	};
 
 	React.useEffect(() => {
 		getTasks();
@@ -81,8 +69,6 @@ export const WarehousemanTasks = () => {
 		}
 	};
 
-
-
 	const processRowUpdate = (newRow: GridRowModel) => {
 		return newRow;
 	};
@@ -91,8 +77,6 @@ export const WarehousemanTasks = () => {
 		setRowModesModel(newRowModesModel);
 	};
 
-
-
 	const [open, setOpen] = useState(false);
 
 	const [form] = Form.useForm();
@@ -100,7 +84,6 @@ export const WarehousemanTasks = () => {
 	const onClose = () => {
 		setOpen(false);
 	};
-
 
 	const handleCreateTask = () => {
 		try {
@@ -175,9 +158,7 @@ export const WarehousemanTasks = () => {
 			cellClassName: "actions",
 			align: "right",
 			getActions: ({ id }) => {
-				return [
-					<GridActionsCellItem icon={<DoneIcon />} label='Edit' onClick={() => handleDoneIcon(id)} />,
-				];
+				return [<GridActionsCellItem icon={<DoneIcon />} label='Edit' onClick={() => handleDoneIcon(id)} />];
 			},
 		},
 	];
@@ -220,10 +201,8 @@ export const WarehousemanTasks = () => {
 					<TaskForm form={form} onClose={onClose} handleCreateTask={handleCreateTask} />
 				</Drawer>
 
-
-
-				<div className="container">
-					<button onClick={getReports} className="button-gradient" style={{ marginRight: '10px' }}>
+				<div className='container'>
+					<button onClick={getReports} className='button-gradient' style={{ marginRight: "10px" }}>
 						Creat Raport
 					</button>
 				</div>
@@ -246,7 +225,7 @@ export const WarehousemanTasks = () => {
 						},
 						"& .MuiDataGrid-footerContainer ": {
 							height: "30px",
-							bgcolor: '#b3d5e0',
+							bgcolor: "#b3d5e0",
 						},
 						"& .MuiDataGrid-toolbarContainer  ": {
 							height: "30px",

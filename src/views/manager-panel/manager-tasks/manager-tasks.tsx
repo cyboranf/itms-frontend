@@ -13,9 +13,9 @@ import {
 	GridRowModel,
 	GridRowEditStopReasons,
 } from "@mui/x-data-grid";
-import { Breadcrumb, Button,Drawer, Space, Form, Select } from "antd";
+import { Breadcrumb, Button, Drawer, Space, Form, Select } from "antd";
 import { DeleteTask, PostTask, getAllTasks, requestTaskReport } from "../../../service/tasks";
-import { Task } from "../../../service/tasks/types";
+import { TaskReturn } from "../../../service/tasks/types";
 import TaskForm from "../../../components/forms/admin/admin-taks-form";
 import TaskReportForm from "../../../components/forms/admin/admin-taks-form-raport";
 import { useAxios } from "../../../helpers/axios/useAxios";
@@ -30,7 +30,7 @@ import { getAllUsers, requestUsersReport } from "../../../service/users";
 export const ManagerTasks = () => {
 	const axios = useAxios();
 
-	const [tasks, setTasks] = React.useState<Task[]>([]);
+	const [tasks, setTasks] = React.useState<TaskReturn[]>([]);
 	const [rowModesModel, setRowModesModel] = React.useState<GridRowModesModel>({});
 	const [includeUsers, setIncludeUsers] = useState(false);
 	const [includeProducts, setIncludeProducts] = useState(false);
@@ -69,28 +69,18 @@ export const ManagerTasks = () => {
 	};
 
 	const getReportsItems = async () => {
-		requestItemsReport(selectName, selectCode,axios);
-	  };
+		requestItemsReport(selectName, selectCode, axios);
+	};
 	const getReportsWarhouse = async () => {
-		requestWarehouseReport(selectBultind,
-			selectZone,
-			selectspaceId,
-			axios);
-	  };
-	  const getReportsUser = async () => {
+		requestWarehouseReport(selectBultind, selectZone, selectspaceId, axios);
+	};
+	const getReportsUser = async () => {
 		try {
-		  await requestUsersReport(
-			includeUsers1,
-			selectUserName,
-			selectEmail,
-			selectPhoneNumber,
-			axios
-		  );
+			await requestUsersReport(includeUsers1, selectUserName, selectEmail, selectPhoneNumber, axios);
 		} catch (err) {
-		  console.error("Error requesting user report:", err);
+			console.error("Error requesting user report:", err);
 		}
-	  };
-	
+	};
 
 	const getTasks = async () => {
 		try {
@@ -126,7 +116,7 @@ export const ManagerTasks = () => {
 		} catch (err: unknown) {
 			console.log(err);
 		}
-	}
+	};
 
 	React.useEffect(() => {
 		getWarehouse();
@@ -146,7 +136,7 @@ export const ManagerTasks = () => {
 	};
 
 	const handleDeleteClick = (id: GridRowId) => () => {
-		DeleteTask(id.toString(),axios);
+		DeleteTask(id.toString(), axios);
 		setTasks(tasks.filter((row) => row.id !== id));
 	};
 
@@ -165,21 +155,20 @@ export const ManagerTasks = () => {
 		setOpen1(true);
 	};
 
-
 	const showDrawer2 = () => {
 		setOpen2(true);
-	}
+	};
 	const showDrawer3 = () => {
 		setOpen3(true);
-	}
+	};
 
 	const showReportDrawer = () => {
 		setOpenReportDrawer(true);
-	  };
-	
-	  const onCloseReportDrawer = () => {
+	};
+
+	const onCloseReportDrawer = () => {
 		setOpenReportDrawer(false);
-	  };
+	};
 
 	const [open, setOpen] = useState(false);
 	const [open1, setOpen1] = useState(false);
@@ -199,10 +188,10 @@ export const ManagerTasks = () => {
 
 	const onClose2 = () => {
 		setOpen2(false);
-	  };
-	  const onClose3 = () => {
+	};
+	const onClose3 = () => {
 		setOpen3(false);
-	  };
+	};
 
 	const handleCreateTask = () => {
 		try {
@@ -358,140 +347,139 @@ export const ManagerTasks = () => {
 						setSelectPriority={setSelectPriority}
 					/>
 				</Drawer>
-				
-				 
+
 				<Drawer
-                title='Create a new Raport'
-                width={720}
-                onClose={onClose2}
-                open={open2}
-                bodyStyle={{ paddingBottom: 80 }}
-                extra={
-                  <Space>
-                    <Button onClick={onClose2}>Cancel</Button>
-                    <Button onClick={getReportsItems} type='primary'>
-                      Submit
-                    </Button>
-                  </Space>
-                }
-              >
-                   <Form layout="vertical">
-				
-						<Form.Item label="Name" name="name" rules={[{ required: false, message: "Please select name" }]}>
+					title='Create a new Raport'
+					width={720}
+					onClose={onClose2}
+					open={open2}
+					bodyStyle={{ paddingBottom: 80 }}
+					extra={
+						<Space>
+							<Button onClick={onClose2}>Cancel</Button>
+							<Button onClick={getReportsItems} type='primary'>
+								Submit
+							</Button>
+						</Space>
+					}
+				>
+					<Form layout='vertical'>
+						<Form.Item label='Name' name='name' rules={[{ required: false, message: "Please select name" }]}>
 							<Select value={selectName} onChange={setSelectName}>
-							{items.map((row) => (
-								<Select.Option key={row.name} value={row.name}>
-								{row.name}
-								</Select.Option>
-							))}
+								{items.map((row) => (
+									<Select.Option key={row.name} value={row.name}>
+										{row.name}
+									</Select.Option>
+								))}
 							</Select>
 						</Form.Item>
 
-						<Form.Item label="Code" name="code" rules={[{ required: false, message: "Please select code" }]}>
+						<Form.Item label='Code' name='code' rules={[{ required: false, message: "Please select code" }]}>
 							<Select value={selectCode} onChange={setSelectCode}>
-							{items.map((row) => (
-								<Select.Option key={row.code} value={row.code}>
-								{row.code}
-								</Select.Option>
-							))}
+								{items.map((row) => (
+									<Select.Option key={row.code} value={row.code}>
+										{row.code}
+									</Select.Option>
+								))}
 							</Select>
 						</Form.Item>
-						</Form>
-              </Drawer>
-			
+					</Form>
+				</Drawer>
 
-			  <Drawer
-            title="Create Report"
-            width={720}
-            onClose={onCloseReportDrawer}
-            open={openReportDrawer}
-            bodyStyle={{ paddingBottom: 80 }}
-            extra={
-              <Space>
-                <Button onClick={onCloseReportDrawer}>Cancel</Button>
-                <Button onClick={getReportsWarhouse} type="primary">
-                  Submit
-                </Button>
-              </Space>
-            }
-          >
-            <Form layout="vertical">
-              <Form.Item label="Building" name="building">
-                <Select value={selectBultind} onChange={setSelectedBulidn}>
-                  {warehouse.map((row) => (
-                    <Select.Option key={row.building} value={row.building}>
-                      {row.building}
-                    </Select.Option>
-                  ))}
-                </Select>
-              </Form.Item>
-
-              <Form.Item label="Zone" name="zone">
-                <Select value={selectZone} onChange={setSelectedZone}>
-                  {warehouse.map((row) => (
-                    <Select.Option key={row.zone} value={row.zone}>
-                      {row.zone}
-                    </Select.Option>
-                  ))}
-                </Select>
-              </Form.Item>
-
-			  <Form.Item label="SpaceId" name="spaceId" rules={[{ required: false, message: "Please select spaceId" }]}>
-							<Select value={selectspaceId} onChange={setSelectedspaceId}>
-							{warehouse.map((row) => (
-								<Select.Option key={row.spaceId} value={row.spaceId}>
-								{row.spaceId}
-								</Select.Option>
-							))}
+				<Drawer
+					title='Create Report'
+					width={720}
+					onClose={onCloseReportDrawer}
+					open={openReportDrawer}
+					bodyStyle={{ paddingBottom: 80 }}
+					extra={
+						<Space>
+							<Button onClick={onCloseReportDrawer}>Cancel</Button>
+							<Button onClick={getReportsWarhouse} type='primary'>
+								Submit
+							</Button>
+						</Space>
+					}
+				>
+					<Form layout='vertical'>
+						<Form.Item label='Building' name='building'>
+							<Select value={selectBultind} onChange={setSelectedBulidn}>
+								{warehouse.map((row) => (
+									<Select.Option key={row.building} value={row.building}>
+										{row.building}
+									</Select.Option>
+								))}
 							</Select>
-			</Form.Item>
-            </Form>
-          </Drawer>
-		  <Drawer
-            title="Create a new Report"
-            width={720}
-            onClose={onClose3}
-            open={open3}
-            bodyStyle={{ paddingBottom: 80 }}
-            extra={
-              <Space>
-                <Button onClick={onClose3}>Cancel</Button>
-                <Button onClick={getReportsUser} type="primary">
-                  Submit
-                </Button>
-              </Space>
-            }
-          >
-            <UserReportForm
-              includeUsers={includeUsers1}
-              setIncludeUsers={setIncludeUsers1}
-              selectUserName={selectUserName}
-              setSelectUserName={setSelectUserName}
-              selectEmail={selectEmail}
-              setSelectEmail={setSelectEmail}
-              selectPhoneNumber={selectPhoneNumber}
-              setSelectPhoneNumber={setSelectPhoneNumber}
-              rows={user}
-            />
-          </Drawer>
+						</Form.Item>
 
-				<div className="container">
-					<button onClick={showDrawer} className="button-gradient" style={{ marginRight: '10px',  }} >
+						<Form.Item label='Zone' name='zone'>
+							<Select value={selectZone} onChange={setSelectedZone}>
+								{warehouse.map((row) => (
+									<Select.Option key={row.zone} value={row.zone}>
+										{row.zone}
+									</Select.Option>
+								))}
+							</Select>
+						</Form.Item>
+
+						<Form.Item label='SpaceId' name='spaceId' rules={[{ required: false, message: "Please select spaceId" }]}>
+							<Select value={selectspaceId} onChange={setSelectedspaceId}>
+								{warehouse.map((row) => (
+									<Select.Option key={row.spaceId} value={row.spaceId}>
+										{row.spaceId}
+									</Select.Option>
+								))}
+							</Select>
+						</Form.Item>
+					</Form>
+				</Drawer>
+				<Drawer
+					title='Create a new Report'
+					width={720}
+					onClose={onClose3}
+					open={open3}
+					bodyStyle={{ paddingBottom: 80 }}
+					extra={
+						<Space>
+							<Button onClick={onClose3}>Cancel</Button>
+							<Button onClick={getReportsUser} type='primary'>
+								Submit
+							</Button>
+						</Space>
+					}
+				>
+					<UserReportForm
+						includeUsers={includeUsers1}
+						setIncludeUsers={setIncludeUsers1}
+						selectUserName={selectUserName}
+						setSelectUserName={setSelectUserName}
+						selectEmail={selectEmail}
+						setSelectEmail={setSelectEmail}
+						selectPhoneNumber={selectPhoneNumber}
+						setSelectPhoneNumber={setSelectPhoneNumber}
+						rows={user}
+					/>
+				</Drawer>
+
+				<div className='container'>
+					<button onClick={showDrawer} className='button-gradient' style={{ marginRight: "10px" }}>
 						Add Task
 					</button>
-					<button className="button-gradient" style={{ marginRight: '10px' }}>
-						<Link to="/manager/finnished-tasks" style={{color: "black"}}>Show Finished Tasks</Link>
+					<button className='button-gradient' style={{ marginRight: "10px" }}>
+						<Link to='/manager/finnished-tasks' style={{ color: "black" }}>
+							Show Finished Tasks
+						</Link>
 					</button>
-					<button onClick={showDrawer3} className="button-gradient" style={{ marginRight: '10px' }}>
+					<button onClick={showDrawer3} className='button-gradient' style={{ marginRight: "10px" }}>
 						Creat Raport Users
 					</button>
-					<button onClick={showReportDrawer} className="button-gradient" style={{ marginRight: '10px' }}>
+					<button onClick={showReportDrawer} className='button-gradient' style={{ marginRight: "10px" }}>
 						Creat Raport Warhouse
 					</button>
-					<button onClick={showDrawer2} className="button-gradient" style={{ marginRight: '10px' }}>
+					<button onClick={showDrawer2} className='button-gradient' style={{ marginRight: "10px" }}>
 						Creat Raport Products
 					</button>
-					<button onClick={showDrawer1} className="button-gradient" style={{ marginRight: '10px' }}>
+					<button onClick={showDrawer1} className='button-gradient' style={{ marginRight: "10px" }}>
 						Creat Raport Tasks
 					</button>
 				</div>
@@ -514,7 +502,7 @@ export const ManagerTasks = () => {
 						},
 						"& .MuiDataGrid-footerContainer ": {
 							height: "30px",
-							bgcolor: '#b3d5e0',
+							bgcolor: "#b3d5e0",
 						},
 						"& .MuiDataGrid-toolbarContainer  ": {
 							height: "30px",

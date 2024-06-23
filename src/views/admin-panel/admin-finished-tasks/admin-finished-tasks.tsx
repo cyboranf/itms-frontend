@@ -1,6 +1,6 @@
 import React, { useState } from "react";
 import Box from "@mui/material/Box";
-import DoneIcon from '@mui/icons-material/Done';
+import DoneIcon from "@mui/icons-material/Done";
 import {
 	GridRowModesModel,
 	DataGrid,
@@ -13,7 +13,7 @@ import {
 } from "@mui/x-data-grid";
 import { Form, Button, Breadcrumb, Drawer, Space } from "antd";
 import { PostTask, TaskFinished, getAllTasks, getAllTasksSelf, requestTaskReport } from "../../../service/tasks";
-import { Task } from "../../../service/tasks/types";
+import { TaskReturn } from "../../../service/tasks/types";
 import TaskForm from "../../../components/forms/admin/admin-taks-form";
 import TaskReportForm from "../../../components/forms/admin/admin-taks-form-raport";
 import { useAxios } from "../../../helpers/axios/useAxios";
@@ -23,7 +23,7 @@ import { Link } from "react-router-dom";
 export const AdminFinishedTasks = () => {
 	const axios = useAxios();
 
-	const [tasks, setTasks] = React.useState<Task[]>([]);
+	const [tasks, setTasks] = React.useState<TaskReturn[]>([]);
 	const [rowModesModel, setRowModesModel] = React.useState<GridRowModesModel>({});
 	const [includeUsers, setIncludeUsers] = useState(false);
 	const [includeProducts, setIncludeProducts] = useState(false);
@@ -78,8 +78,6 @@ export const AdminFinishedTasks = () => {
 			toast.success("Error whit ending the task");
 		}
 	};
-
-
 
 	const processRowUpdate = (newRow: GridRowModel) => {
 		return newRow;
@@ -179,9 +177,7 @@ export const AdminFinishedTasks = () => {
 			cellClassName: "actions",
 			align: "right",
 			getActions: ({ id }) => {
-				return [
-					<GridActionsCellItem icon={<DoneIcon />} label='Edit' onClick={() => handleDoneIcon(id)} />,
-				];
+				return [<GridActionsCellItem icon={<DoneIcon />} label='Edit' onClick={() => handleDoneIcon(id)} />];
 			},
 		},
 	];
@@ -201,9 +197,15 @@ export const AdminFinishedTasks = () => {
 				}}
 			>
 				<Breadcrumb style={{ margin: "12px 0", fontSize: "22px", fontWeight: "bold" }}>
-					<Breadcrumb.Item><Link to="/home">Dashboard</Link></Breadcrumb.Item>
-					<Breadcrumb.Item><Link to="">Admin Panel</Link></Breadcrumb.Item>
-					<Breadcrumb.Item><Link to="/tasks">Manage Task</Link> </Breadcrumb.Item>
+					<Breadcrumb.Item>
+						<Link to='/home'>Dashboard</Link>
+					</Breadcrumb.Item>
+					<Breadcrumb.Item>
+						<Link to=''>Admin Panel</Link>
+					</Breadcrumb.Item>
+					<Breadcrumb.Item>
+						<Link to='/tasks'>Manage Task</Link>{" "}
+					</Breadcrumb.Item>
 					<Breadcrumb.Item>Finished Task</Breadcrumb.Item>
 				</Breadcrumb>
 
@@ -261,8 +263,8 @@ export const AdminFinishedTasks = () => {
 					/>
 				</Drawer>
 
-				<div className="container">
-					<button onClick={showDrawer1} className="button-gradient" style={{ marginRight: '10px' }}>
+				<div className='container'>
+					<button onClick={showDrawer1} className='button-gradient' style={{ marginRight: "10px" }}>
 						Creat Raport
 					</button>
 				</div>
@@ -285,7 +287,7 @@ export const AdminFinishedTasks = () => {
 						},
 						"& .MuiDataGrid-footerContainer ": {
 							height: "30px",
-							bgcolor: '#b3d5e0',
+							bgcolor: "#b3d5e0",
 						},
 						"& .MuiDataGrid-toolbarContainer  ": {
 							height: "30px",

@@ -114,8 +114,8 @@ export const PostTaskWarhouse = async (taskId: number, warehouseId: number, axio
 	}
 };
 
-export const getAllTasksSelf = async (axios: AxiosInstance): Promise<{ tasks: Task[]; totalCount: number }> => {
-	const response = await axios.get<Task[]>(Paths.TASK_SELF);
+export const getAllTasksSelf = async (axios: AxiosInstance): Promise<{ tasks: TaskReturn[]; totalCount: number }> => {
+	const response = await axios.get<TaskReturn[]>(Paths.TASK_SELF);
 	const tasks = response.data;
 	return {
 		tasks: tasks,

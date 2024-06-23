@@ -2,7 +2,6 @@ import { useEffect, useState } from "react";
 import Box from "@mui/material/Box";
 import EditIcon from "@mui/icons-material/Edit";
 import DeleteIcon from "@mui/icons-material/DeleteOutlined";
-import { useNavigate } from "react-router-dom";
 import {
   GridRowModesModel,
   DataGrid,
@@ -20,7 +19,6 @@ import { useAxios } from "../../../helpers/axios/useAxios";
 import WarehouseForm from "../../../components/forms/admin/admin-warhouse-form";
 
 export const AdminWarehouse = () => {
-  const navigate = useNavigate();
   const [rows, setRows] = useState<Warehouse[]>([]);
   const [rowModesModel, setRowModesModel] = useState<GridRowModesModel>({});
   const [openDrawer, setOpenDrawer] = useState(false);
