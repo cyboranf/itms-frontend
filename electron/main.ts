@@ -1,6 +1,7 @@
 import { app, BrowserWindow } from "electron";
 import path from "node:path";
-// import { spawn } from "child_process";
+import { spawn } from "child_process";
+import express from "express";
 
 // The built directory structure
 //
@@ -13,6 +14,13 @@ import path from "node:path";
 // │
 process.env.DIST = path.join(__dirname, "../dist");
 process.env.VITE_PUBLIC = app.isPackaged ? process.env.DIST : path.join(process.env.DIST, "../public");
+
+const serverapp = express();
+serverapp.use(express.static(process.resourcesPath));
+serverapp.get("*", (req, res) => {
+	res.sendFile(__filename);
+	console.log(req.path);
+});
 
 let win: BrowserWindow | null;
 // 🚧 Use ['ENV_NAME'] avoid vite:define plugin - Vite@2.x
@@ -37,22 +45,6 @@ function createWindow() {
 		// win.loadFile('dist/index.html')
 		win.loadFile(path.join(process.env.DIST, "index.html"));
 	}
-
-	//Odkomentowanie tego = odpala sie backend lokalnie
-	//nie polecam na developmencie bo to na kazdym rerenderze sie robi :)
-	// const javaProcess = spawn("java", ["-jar", "itms-0.0.1-SNAPSHOT.jar"]);
-
-	// javaProcess.stdout.on("data", (data) => {
-	// 	console.log(`stdout: ${data}`);
-	// });
-
-	// javaProcess.stderr.on("data", (data) => {
-	// 	console.error(`stderr: ${data}`);
-	// });
-
-	// javaProcess.on("close", (code) => {
-	// 	console.log(`Java process exited with code ${code}`);
-	// });
 }
 
 // Quit when all windows are closed, except on macOS. There, it's common
@@ -73,4 +65,27 @@ app.on("activate", () => {
 	}
 });
 
-app.whenReady().then(createWindow);
+app.on("ready", () => {
+	const jarPath = path.join(process.resourcesPath, "/itms-0.0.1-SNAPSHOT.jar");
+	console.log(jarPath);
+	console.log(process.resourcesPath);
+
+	const javaProcess = spawn("java", ["-jar", jarPath]);
+
+	javaProcess.stdout.on("data", (data) => {
+		console.log(`stdout: ${data}`);
+	});
+
+	javaProcess.stderr.on("data", (data) => {
+		console.error(`stderr: ${data}`);
+	});
+
+	javaProcess.on("close", (code) => {
+		console.log(`Java process exited with code ${code}`);
+	});
+
+	serverapp.listen(3000, () => {
+		console.log("Server started on http://localhost:3000");
+		createWindow();
+	});
+});
